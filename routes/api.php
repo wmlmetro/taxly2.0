@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BuyerInvoiceController;
 use App\Http\Controllers\Api\InvoiceController;
+use App\Http\Controllers\Api\TenantController;
 use App\Http\Controllers\Api\WebhookController;
 use Illuminate\Support\Facades\Route;
 
@@ -12,6 +13,12 @@ Route::post('/v1/auth/login',    [AuthController::class, 'login']);
 Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
     Route::post('/auth/logout', [AuthController::class, 'logout']);
     Route::get('/auth/me',      [AuthController::class, 'me']);
+
+    Route::middleware('role:super admin')->group(function () {
+        Route::post('/tenants', [TenantController::class, 'store']);
+    });
+    Route::get('/tenants', [TenantController::class, 'index']);
+    Route::get('/tenants/{tenant}', [TenantController::class, 'show']);
 
     // Invoices
     Route::get('/invoices',                 [InvoiceController::class, 'index']);

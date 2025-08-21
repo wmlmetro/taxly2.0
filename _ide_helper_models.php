@@ -247,8 +247,8 @@ namespace App\Models{
  * @property string $retention_policy
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Organization> $organization
- * @property-read int|null $organization_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Organization> $organizations
+ * @property-read int|null $organizations_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\UsageMeter> $usageMeters
  * @property-read int|null $usage_meters_count
  * @method static \Database\Factories\TenantFactory factory($count = null, $state = [])

@@ -2,11 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\Tenant;
 use App\Models\User;
-use Database\Factories\TenantFactory;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -15,12 +13,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-        TenantFactory::times(10)->create();
+        // Seed roles/permissions first
+        $this->call(RolesAndPermissionsSeeder::class);
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        // Create Super Admin user and assign role
+        $superAdmin = User::factory()->create([
+            'name' => 'Super Admin',
+            'email' => 'super@admin.com',
+            'password' => Hash::make('!12345678'),
         ]);
+
+        $superAdmin->assignRole('super admin');
     }
 }

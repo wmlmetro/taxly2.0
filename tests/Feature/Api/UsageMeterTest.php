@@ -1,34 +1,31 @@
 <?php
 
 use App\Models\Tenant;
-use App\Models\User;
-use App\Models\UsageMeter;
 use App\Models\Invoice;
 use App\Models\Organization;
+use App\Models\UsageMeter;
+use App\Models\User;
 use Laravel\Sanctum\Sanctum;
-use Spatie\Permission\Models\Permission;
 
 beforeEach(function () {
-  $this->tenant = Tenant::factory()->create();
+  $tenant = Tenant::factory()->create();
 
-  $this->user = User::factory()->create([
-    'organization_id' => Organization::factory()->create([
-      'tenant_id' => $this->tenant->id
-    ])->id,
+  $this->organization = Organization::factory()->create([
+    'tenant_id' => $this->tenant->id,
   ]);
 
-  Permission::firstOrCreate(['name' => 'create invoices', 'guard_name' => 'web']);
-  Permission::firstOrCreate(['name' => 'update invoices', 'guard_name' => 'web']);
-  $this->user->givePermissionTo(['create invoices', 'update invoices']);
+  $this->user = User::factory()->create([
+    'organization_id' => $this->organization->id,
+  ]);
 
-  // 🔑 Use Sanctum for API auth
-  Sanctum::actingAs($this->user, ['*']);
+  $this->tenant = $tenant;
+  Sanctum::actingAs($this->user);
 });
 
-it('increments invoice counter when new invoice is created', function () {
+it('increments invoice counter when invoice is created', function () {
   $this->postJson('/api/v1/invoices', [
     'buyer_organization_ref' => 'TIN888',
-    'total_amount'  => 3500,
+    'total_amount' => 3500,
     'tax_breakdown' => ['VAT' => 250],
     'vat_treatment' => 'standard',
   ])->assertCreated();

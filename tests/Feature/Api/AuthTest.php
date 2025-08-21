@@ -3,20 +3,28 @@
 use Illuminate\Support\Facades\Hash;
 
 it('registers a new user and org', function () {
-  $tenant = \App\Models\Tenant::factory()->create();
-
   $response = $this->postJson('/api/v1/auth/register', [
-    'tenant_id'   => $tenant->id,
-    'tin'         => 'TIN12345',
-    'legal_name'  => 'Acme Ltd',
-    'address'     => 'Lagos',
-    'name'        => 'Admin User',
-    'email'       => 'admin@example.com',
-    'password'    => 'secret123'
+    'tenant_name'  => 'Acme Corp',
+    'name'         => 'Admin User',
+    'email'        => 'admin@example.com',
+    'password'     => 'secret123',
+    'password_confirmation' => 'secret123',
+    'tin'          => 'TIN123',
+    'legal_name'   => 'Acme Corporation',
+    'address'      => '123 Main St',
   ]);
 
   $response->assertCreated()
-    ->assertJsonStructure(['message', 'token', 'user']);
+    ->assertJsonStructure([
+      'message',
+      'token',
+      'user' => [
+        'id',
+        'name',
+        'email',
+        'organization_id',
+      ]
+    ]);
 });
 
 it('logs in with valid credentials', function () {

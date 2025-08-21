@@ -4,30 +4,41 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\BaseController;
 use App\Http\Requests\Auth\RegisterRequest;
-use App\Models\Organization;
+use App\Models\Tenant;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
 
 class AuthController extends BaseController
 {
     public function register(RegisterRequest $request): JsonResponse
     {
-        $org = Organization::create([
-            'tenant_id'  => $request->tenant_id,
+        $tenant = Tenant::create([
+            'name'            => $request->tenant_name,
+            'brand'           => $request->brand ?? null,
+            'domain'          => $request->domain ?? null,
+            'feature_flags'   => [],
+            'retention_policy' => "default",
+        ]);
+
+        $org = $tenant->organizations()->create([
             'tin'        => $request->tin,
             'legal_name' => $request->legal_name,
             'address'    => $request->address,
         ]);
 
-        $user = User::create([
-            'organization_id'  => $org->id,
-            'name'    => $request->name,
-            'email'   => $request->email,
-            'password' => Hash::make($request->password),
+        $user = $org->users()->create([
+            'name'      => $request->name,
+            'email'     => $request->email,
+            'password'  => Hash::make($request->password),
         ]);
+
+        if (class_exists(Role::class)) {
+            $user->assignRole('tenant admin');
+        }
 
         $token = $user->createToken('api')->plainTextToken;
 
@@ -35,9 +46,11 @@ class AuthController extends BaseController
         unset($userData['password']);
 
         return $this->sendResponse([
+            'tenant' => $tenant,
+            'organization' => $org,
             'user' => $userData,
             'token' => $token,
-        ], 'User registered successfully', 201, true);
+        ], 'Tenant, organization, and user created successfully', 201, true);
     }
 
     public function login(Request $request): JsonResponse
@@ -69,6 +82,13 @@ class AuthController extends BaseController
 
     public function me(): JsonResponse
     {
-        return $this->sendResponse(Auth::user(), 'User retrieved successfully');
+        $user = User::with('organization.tenant')->find(Auth::id());
+
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+
+        $user->load('organization.tenant');
+        return $this->sendResponse($user, 'User retrieved successfully');
     }
 }

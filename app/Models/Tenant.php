@@ -21,8 +21,12 @@ class Tenant extends Model
         'feature_flags' => 'array',
     ];
 
+    protected $attributes = [
+        'retention_policy' => 'default',
+    ];
+
     // Relationships
-    public function organization()
+    public function organizations()
     {
         return $this->hasMany(Organization::class);
     }

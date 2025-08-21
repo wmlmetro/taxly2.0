@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\User;
+use App\Models\Tenant;
 use App\Models\Invoice;
 use App\Models\AuditEvent;
 use Spatie\Permission\Models\Permission;
@@ -9,16 +9,29 @@ use Spatie\Permission\PermissionRegistrar;
 beforeEach(function () {
   app(PermissionRegistrar::class)->forgetCachedPermissions();
 
-  $org = \App\Models\Organization::factory()->create();
+  // Create a tenant
+  $tenant = Tenant::factory()->create();
 
-  $this->user = User::factory()->create([
-    'organization_id' => $org->id,
+  // Create an organization inside this tenant
+  $org = $tenant->organizations()->create([
+    'tin' => 'TIN123',
+    'legal_name' => 'Test Org',
+    'address' => '123 Street',
   ]);
 
+  // Create a user inside that org
+  $this->user = $org->users()->create([
+    'name' => 'Test User',
+    'email' => 'user@example.com',
+    'password' => bcrypt('password'),
+  ]);
+
+  // Give user invoice permissions
   Permission::firstOrCreate(['name' => 'create invoices', 'guard_name' => 'web']);
   Permission::firstOrCreate(['name' => 'update invoices', 'guard_name' => 'web']);
-
   $this->user->syncPermissions(['create invoices', 'update invoices']);
+
+  // Authenticate
   $this->actingAs($this->user);
 });
 
@@ -37,7 +50,10 @@ it('logs audit event when invoice is created', function () {
 });
 
 it('logs audit event when invoice is submitted', function () {
-  $invoice = Invoice::factory()->create(['organization_id' => $this->user->organization_id, 'status' => 'validated']);
+  $invoice = Invoice::factory()->create([
+    'organization_id' => $this->user->organization_id,
+    'status' => 'validated'
+  ]);
 
   $this->postJson("/api/v1/invoices/{$invoice->id}/submit", ['channel' => 'api'])
     ->assertAccepted();

@@ -10,6 +10,14 @@ use Illuminate\Http\Request;
 
 class TenantController extends BaseController
 {
+    /**
+     * @OA\Get(
+     *     path="/api/v1/tenants",
+     *     summary="List tenants",
+     *     tags={"Tenants"},
+     *     @OA\Response(response=200, description="List of tenants")
+     * )
+     */
     public function index(Request $request)
     {
         if ($request->user()->hasRole('super admin')) {
@@ -23,6 +31,38 @@ class TenantController extends BaseController
         return $this->sendResponse($tenants, 'Tenants retrieved successfully');
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/v1/tenants",
+     *     summary="Create a tenant",
+     *     tags={"Tenants"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"name"},
+     *             @OA\Property(property="name", type="string", example="Acme Corp"),
+     *             @OA\Property(property="brand", type="string", example="Acme"),
+     *             @OA\Property(property="domain", type="string", example="acme.com")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="List of tenants",
+     *         @OA\JsonContent(example={
+     *             "message": "Tenants retrieved successfully",
+     *             "success": true,
+     *             "data": {
+     *                 {
+     *                     "id": 1,
+     *                     "name": "Acme Corp",
+     *                     "brand": "Acme",
+     *                     "domain": "acme.com"
+     *                 }
+     *             }
+     *         })
+     *     )
+     * )
+     */
     public function store(TenantRequest $request): JsonResponse
     {
         $tenant = Tenant::create($request->validated());
@@ -32,6 +72,28 @@ class TenantController extends BaseController
         ], 'Tenant created successfully', 201);
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/v1/tenants/{tenant}",
+     *     summary="Get tenant details",
+     *     tags={"Tenants"},
+     *     @OA\Parameter(name="tenant", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Tenant details",
+     *         @OA\JsonContent(example={
+     *             "message": "Tenant retrieved successfully",
+     *             "success": true,
+     *             "data": {
+     *                 "id": 1,
+     *                 "name": "Acme Corp",
+     *                 "brand": "Acme",
+     *                 "domain": "acme.com"
+     *             }
+     *         })
+     *     )
+     * )
+     */
     public function show(Tenant $tenant, Request $request)
     {
         if (

@@ -1,0 +1,766 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Vendra API",
+        "description": "API documentation for Vendra platform",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://e-invoice.test",
+            "description": "Local Server"
+        },
+        {
+            "url": "https://vendra.ng",
+            "description": "Production Server"
+        }
+    ],
+    "paths": {
+        "/api/v1/auth/register": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Register a new tenant, organization, and user",
+                "operationId": "fb835c97347e657e2a627790c4c5817a",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "tenant_name",
+                                    "organization_name",
+                                    "name",
+                                    "email",
+                                    "password",
+                                    "password_confirmation"
+                                ],
+                                "properties": {
+                                    "tenant_name": {
+                                        "type": "string",
+                                        "example": "Acme Corp"
+                                    },
+                                    "organization_name": {
+                                        "type": "string",
+                                        "example": "Head Office"
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "example": "John Doe"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "john@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "secret123"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "secret123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "User and tenant created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "User registered successfully",
+                                    "success": true,
+                                    "data": {
+                                        "user": {
+                                            "id": 1,
+                                            "name": "John Doe",
+                                            "email": "john@example.com",
+                                            "organization_id": 1
+                                        },
+                                        "token": "1|XyzExampleToken..."
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation errors"
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Login user",
+                "operationId": "fb66b153966d9fac2e999136ef0ade67",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "john@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "secret123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "User logged in successfully",
+                                    "success": true,
+                                    "data": {
+                                        "user": {
+                                            "id": 1,
+                                            "name": "John Doe",
+                                            "email": "john@example.com"
+                                        },
+                                        "token": "1|XyzExampleToken..."
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid credentials"
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/me": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Get current authenticated user",
+                "operationId": "5389aaa95512ef0b6ec88f262ecee7f0",
+                "responses": {
+                    "200": {
+                        "description": "User details",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "User retrieved successfully",
+                                    "success": true,
+                                    "data": {
+                                        "id": 1,
+                                        "name": "John Doe",
+                                        "email": "john@example.com",
+                                        "organization": {
+                                            "id": 1,
+                                            "legal_name": "Head Office",
+                                            "tenant": {
+                                                "id": 1,
+                                                "name": "Acme Corp"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/auth/logout": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Logout user",
+                "operationId": "307ed0512855922b2280792376bb2095",
+                "responses": {
+                    "200": {
+                        "description": "Logged out successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/buyer/invoices/{invoice}/accept": {
+            "post": {
+                "tags": [
+                    "Buyer"
+                ],
+                "summary": "Accept an invoice",
+                "operationId": "cf3235c0dc12d6c71ae6f9f2800b5378",
+                "parameters": [
+                    {
+                        "name": "invoice",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Invoice accepted",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Invoice accepted",
+                                    "success": true,
+                                    "data": {
+                                        "id": 1,
+                                        "status": "accepted"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/buyer/invoices/{invoice}/reject": {
+            "post": {
+                "tags": [
+                    "Buyer"
+                ],
+                "summary": "Reject an invoice",
+                "operationId": "f1e1f9a3c96988c5f3d1664a83c87ded",
+                "parameters": [
+                    {
+                        "name": "invoice",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Invoice rejected",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Invoice rejected",
+                                    "success": true,
+                                    "data": {
+                                        "id": 1,
+                                        "status": "rejected"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/invoices": {
+            "get": {
+                "tags": [
+                    "Invoices"
+                ],
+                "summary": "List invoices",
+                "operationId": "89f5460c37edf14349cb1b223d09f2f6",
+                "responses": {
+                    "200": {
+                        "description": "List of invoices"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Invoices"
+                ],
+                "summary": "Create a new invoice",
+                "operationId": "3b8daf1fa0802958ea4fbe416868830a",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "buyer_organization_ref",
+                                    "total_amount"
+                                ],
+                                "properties": {
+                                    "buyer_organization_ref": {
+                                        "type": "string",
+                                        "example": "TIN123"
+                                    },
+                                    "total_amount": {
+                                        "type": "number",
+                                        "example": 1500
+                                    },
+                                    "tax_breakdown": {
+                                        "type": "object",
+                                        "example": {
+                                            "VAT": 250
+                                        }
+                                    },
+                                    "vat_treatment": {
+                                        "type": "string",
+                                        "example": "standard"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Invoice created",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Invoice created successfully",
+                                    "success": true,
+                                    "data": {
+                                        "id": 1,
+                                        "buyer_organization_ref": "TIN123",
+                                        "total_amount": 1500,
+                                        "tax_breakdown": {
+                                            "VAT": 250
+                                        },
+                                        "status": "draft"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/invoices/{invoice}/validate": {
+            "post": {
+                "tags": [
+                    "Invoices"
+                ],
+                "summary": "Validate an invoice",
+                "operationId": "9dcba91de867056d31cbe910af1c932d",
+                "parameters": [
+                    {
+                        "name": "invoice",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Invoice validated"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/invoices/{invoice}/submit": {
+            "post": {
+                "tags": [
+                    "Invoices"
+                ],
+                "summary": "Submit an invoice",
+                "operationId": "a1bcee13601320ae3d3541ae832ef0d1",
+                "parameters": [
+                    {
+                        "name": "invoice",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "channel": {
+                                        "type": "string",
+                                        "example": "api"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "202": {
+                        "description": "Invoice submitted",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Invoice submission initiated successfully",
+                                    "success": true,
+                                    "data": {
+                                        "invoice": {
+                                            "id": 1,
+                                            "status": "submitted"
+                                        },
+                                        "result": "Submission queued"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/invoices/{invoice}": {
+            "get": {
+                "tags": [
+                    "Invoices"
+                ],
+                "summary": "Get invoice details",
+                "operationId": "7cdea52f8c6e0ee93db40bfd81beafef",
+                "parameters": [
+                    {
+                        "name": "invoice",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Invoice details"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/tenants": {
+            "get": {
+                "tags": [
+                    "Tenants"
+                ],
+                "summary": "List tenants",
+                "operationId": "ecdcbead50d125c4b12481610d57743f",
+                "responses": {
+                    "200": {
+                        "description": "List of tenants"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Tenants"
+                ],
+                "summary": "Create a tenant",
+                "operationId": "2793b124cd408d94ae8125f0b9fba2ab",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Acme Corp"
+                                    },
+                                    "brand": {
+                                        "type": "string",
+                                        "example": "Acme"
+                                    },
+                                    "domain": {
+                                        "type": "string",
+                                        "example": "acme.com"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "List of tenants",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Tenants retrieved successfully",
+                                    "success": true,
+                                    "data": [
+                                        {
+                                            "id": 1,
+                                            "name": "Acme Corp",
+                                            "brand": "Acme",
+                                            "domain": "acme.com"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/tenants/{tenant}": {
+            "get": {
+                "tags": [
+                    "Tenants"
+                ],
+                "summary": "Get tenant details",
+                "operationId": "af71e62208eeae134a2159402cd1b2d3",
+                "parameters": [
+                    {
+                        "name": "tenant",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Tenant details",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Tenant retrieved successfully",
+                                    "success": true,
+                                    "data": {
+                                        "id": 1,
+                                        "name": "Acme Corp",
+                                        "brand": "Acme",
+                                        "domain": "acme.com"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/webhooks": {
+            "get": {
+                "tags": [
+                    "Webhooks"
+                ],
+                "summary": "List webhook endpoints",
+                "operationId": "d698ce8fbab0c36f6fbc573f8da8a135",
+                "responses": {
+                    "200": {
+                        "description": "Webhook list",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Webhooks retrieved successfully",
+                                    "success": true,
+                                    "data": [
+                                        {
+                                            "id": 1,
+                                            "url": "https://example.com/webhook"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Webhooks"
+                ],
+                "summary": "Create a webhook endpoint",
+                "operationId": "9d4ac98bf90296b2aa9623d26d66a3fb",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "url"
+                                ],
+                                "properties": {
+                                    "url": {
+                                        "type": "string",
+                                        "example": "https://example.com/webhook"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Webhook created",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Webhook created successfully",
+                                    "success": true,
+                                    "data": {
+                                        "id": 1,
+                                        "url": "https://example.com/webhook"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/webhooks/{webhookEndpoint}": {
+            "delete": {
+                "tags": [
+                    "Webhooks"
+                ],
+                "summary": "Delete a webhook endpoint",
+                "operationId": "53a2cdc64e01f1564373f5de023a5581",
+                "parameters": [
+                    {
+                        "name": "webhookEndpoint",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Webhook deleted"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "sanctum": {
+                "type": "http",
+                "description": "Use the token from login",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Auth",
+            "description": "Auth"
+        },
+        {
+            "name": "Buyer",
+            "description": "Buyer"
+        },
+        {
+            "name": "Invoices",
+            "description": "Invoices"
+        },
+        {
+            "name": "Tenants",
+            "description": "Tenants"
+        },
+        {
+            "name": "Webhooks",
+            "description": "Webhooks"
+        }
+    ]
+}

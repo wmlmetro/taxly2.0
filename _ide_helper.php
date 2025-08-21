@@ -22916,6 +22916,27 @@ namespace Illuminate\Support\Facades {
             }
     }
 
+namespace L5Swagger {
+    /**
+     */
+    class L5SwaggerFacade {
+        /**
+         * Generate necessary documentation files by scanning and processing the required data.
+         *
+         * @return void
+         * @throws L5SwaggerException
+         * @throws Exception
+         * @static
+         */
+        public static function generateDocs()
+        {
+            /** @var \L5Swagger\Generator $instance */
+            $instance->generateDocs();
+        }
+
+            }
+    }
+
 namespace Flux {
     /**
      * @see \Flux\FluxManager
@@ -28671,16 +28692,12 @@ namespace  {
     class Validator extends \Illuminate\Support\Facades\Validator {}
     class View extends \Illuminate\Support\Facades\View {}
     class Vite extends \Illuminate\Support\Facades\Vite {}
+    class L5Swagger extends \L5Swagger\L5SwaggerFacade {}
     class Flux extends \Flux\Flux {}
     class Livewire extends \Livewire\Livewire {}
 }
 
 
-namespace Facades\Livewire\Features\SupportFileUploads {
-    /**
-     * @mixin \Livewire\Features\SupportFileUploads\GenerateSignedUploadUrl     */
-    class GenerateSignedUploadUrl extends \Livewire\Features\SupportFileUploads\GenerateSignedUploadUrl {}
-}
 
 
 

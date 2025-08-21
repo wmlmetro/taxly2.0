@@ -18,6 +18,15 @@ class InvoiceController extends BaseController
 {
   use AuthorizesRequests;
 
+  /**
+   * @OA\Get(
+   *     path="/api/v1/invoices",
+   *     summary="List invoices",
+   *     security={{"sanctum":{}}},
+   *     tags={"Invoices"},
+   *     @OA\Response(response=200, description="List of invoices")
+   * )
+   */
   public function index(): JsonResponse
   {
     $orgId = Auth::user()->organization_id;
@@ -34,6 +43,39 @@ class InvoiceController extends BaseController
     ], 'Invoices retrieved successfully');
   }
 
+  /**
+   * @OA\Post(
+   *     path="/api/v1/invoices",
+   *     summary="Create a new invoice",
+   *     security={{"sanctum":{}}},
+   *     tags={"Invoices"},
+   *     @OA\RequestBody(
+   *         required=true,
+   *         @OA\JsonContent(
+   *             required={"buyer_organization_ref","total_amount"},
+   *             @OA\Property(property="buyer_organization_ref", type="string", example="TIN123"),
+   *             @OA\Property(property="total_amount", type="number", example=1500),
+   *             @OA\Property(property="tax_breakdown", type="object", example={"VAT":250}),
+   *             @OA\Property(property="vat_treatment", type="string", example="standard")
+   *         )
+   *     ),
+   *     @OA\Response(
+   *         response=201,
+   *         description="Invoice created",
+   *         @OA\JsonContent(example={
+   *             "message": "Invoice created successfully",
+   *             "success": true,
+   *             "data": {
+   *                 "id": 1,
+   *                 "buyer_organization_ref": "TIN123",
+   *                 "total_amount": 1500,
+   *                 "tax_breakdown": {"VAT": 250},
+   *                 "status": "draft"
+   *             }
+   *         })
+   *     )
+   * )
+   */
   public function store(StoreInvoiceRequest $req): JsonResponse
   {
     $this->authorize('create', Invoice::class);
@@ -55,6 +97,16 @@ class InvoiceController extends BaseController
     ], 'Invoice created successfully', 201);
   }
 
+  /**
+   * @OA\Post(
+   *     path="/api/v1/invoices/{invoice}/validate",
+   *     summary="Validate an invoice",
+   *     security={{"sanctum":{}}},
+   *     tags={"Invoices"},
+   *     @OA\Parameter(name="invoice", in="path", required=true, @OA\Schema(type="integer")),
+   *     @OA\Response(response=200, description="Invoice validated")
+   * )
+   */
   public function validateInvoice(ValidateInvoiceRequest $req, Invoice $invoice): JsonResponse
   {
     $this->authorize('update', $invoice);
@@ -67,6 +119,36 @@ class InvoiceController extends BaseController
     ], 'Invoice validated successfully');
   }
 
+  /**
+   * @OA\Post(
+   *     path="/api/v1/invoices/{invoice}/submit",
+   *     summary="Submit an invoice",
+   *     security={{"sanctum":{}}},
+   *     tags={"Invoices"},
+   *     @OA\Parameter(name="invoice", in="path", required=true, @OA\Schema(type="integer")),
+   *     @OA\RequestBody(
+   *         required=true,
+   *         @OA\JsonContent(
+   *             @OA\Property(property="channel", type="string", example="api")
+   *         )
+   *     ),
+   *     @OA\Response(
+   *         response=202,
+   *         description="Invoice submitted",
+   *         @OA\JsonContent(example={
+   *             "message": "Invoice submission initiated successfully",
+   *             "success": true,
+   *             "data": {
+   *                 "invoice": {
+   *                     "id": 1,
+   *                     "status": "submitted"
+   *                 },
+   *                 "result": "Submission queued"
+   *             }
+   *         })
+   *     )
+   * )
+   */
   public function submit(SubmitInvoiceRequest $req, Invoice $invoice): JsonResponse
   {
     $this->authorize('update', $invoice);
@@ -81,6 +163,16 @@ class InvoiceController extends BaseController
     ], 'Invoice submission initiated successfully', 202);
   }
 
+  /**
+   * @OA\Get(
+   *     path="/api/v1/invoices/{invoice}",
+   *     summary="Get invoice details",
+   *     security={{"sanctum":{}}},
+   *     tags={"Invoices"},
+   *     @OA\Parameter(name="invoice", in="path", required=true, @OA\Schema(type="integer")),
+   *     @OA\Response(response=200, description="Invoice details")
+   * )
+   */
   public function show(Invoice $invoice): JsonResponse
   {
     $this->authorize('view', $invoice);

@@ -2,8 +2,30 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use OpenApi\Attributes as OA;
 
+#[
+    OA\Info(
+        title: 'Vendra API',
+        version: '1.0.0',
+        description: 'API documentation for Vendra platform'
+    ),
+    OA\Server(
+        url: 'http://e-invoice.test',
+        description: 'Local Server'
+    ),
+    OA\Server(
+        url: 'https://vendra.ng',
+        description: 'Production Server'
+    ),
+    OA\SecurityScheme(
+        securityScheme: 'sanctum',
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        description: 'Use the token from login'
+    )
+]
 class BaseController extends Controller
 {
     public function sendResponse($result, $message, $code = 200, $flatten = false)

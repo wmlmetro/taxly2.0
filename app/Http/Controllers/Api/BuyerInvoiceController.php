@@ -13,6 +13,27 @@ class BuyerInvoiceController extends BaseController
 {
   use AuthorizesRequests;
 
+  /**
+   * @OA\Post(
+   *     path="/api/v1/buyer/invoices/{invoice}/accept",
+   *     summary="Accept an invoice",
+   *     security={{"sanctum":{}}},
+   *     tags={"Buyer"},
+   *     @OA\Parameter(name="invoice", in="path", required=true, @OA\Schema(type="integer")),
+   *     @OA\Response(
+   *         response=200,
+   *         description="Invoice accepted",
+   *         @OA\JsonContent(example={
+   *             "message": "Invoice accepted",
+   *             "success": true,
+   *             "data": {
+   *                 "id": 1,
+   *                 "status": "accepted"
+   *             }
+   *         })
+   *     )
+   * )
+   */
   public function accept(Request $request, Invoice $invoice): JsonResponse
   {
     $this->authorize('update', $invoice);
@@ -30,6 +51,27 @@ class BuyerInvoiceController extends BaseController
     ], 'Invoice accepted successfully', 201);
   }
 
+  /**
+   * @OA\Post(
+   *     path="/api/v1/buyer/invoices/{invoice}/reject",
+   *     summary="Reject an invoice",
+   *     security={{"sanctum":{}}},
+   *     tags={"Buyer"},
+   *     @OA\Parameter(name="invoice", in="path", required=true, @OA\Schema(type="integer")),
+   *     @OA\Response(
+   *         response=200,
+   *         description="Invoice rejected",
+   *         @OA\JsonContent(example={
+   *             "message": "Invoice rejected",
+   *             "success": true,
+   *             "data": {
+   *                 "id": 1,
+   *                 "status": "rejected"
+   *             }
+   *         })
+   *     )
+   * )
+   */
   public function reject(Request $request, Invoice $invoice): JsonResponse
   {
     $this->authorize('update', $invoice);

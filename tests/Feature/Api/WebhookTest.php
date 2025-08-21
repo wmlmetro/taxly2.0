@@ -22,11 +22,11 @@ it('registers a webhook endpoint', function () {
   ]);
 
   $response->assertCreated()
-    ->assertJsonPath('endpoint.url', 'https://example.com/hook');
+    ->assertJsonPath('data.endpoint.url', 'https://example.com/hook');
 });
 
 it('lists webhook endpoints', function () {
   $this->getJson('/api/v1/webhooks')
     ->assertOk()
-    ->assertJsonIsArray();
+    ->assertJsonStructure(['data']);
 });

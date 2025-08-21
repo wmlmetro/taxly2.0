@@ -4,18 +4,25 @@ use App\Models\Tenant;
 use App\Models\User;
 use App\Models\UsageMeter;
 use App\Models\Invoice;
+use App\Models\Organization;
+use Laravel\Sanctum\Sanctum;
 use Spatie\Permission\Models\Permission;
 
 beforeEach(function () {
   $this->tenant = Tenant::factory()->create();
+
   $this->user = User::factory()->create([
-    'organization_id' => \App\Models\Organization::factory()->create([
+    'organization_id' => Organization::factory()->create([
       'tenant_id' => $this->tenant->id
-    ])->id
+    ])->id,
   ]);
+
+  Permission::firstOrCreate(['name' => 'create invoices', 'guard_name' => 'web']);
   Permission::firstOrCreate(['name' => 'update invoices', 'guard_name' => 'web']);
-  $this->user->givePermissionTo('update invoices');
-  $this->actingAs($this->user);
+  $this->user->givePermissionTo(['create invoices', 'update invoices']);
+
+  // 🔑 Use Sanctum for API auth
+  Sanctum::actingAs($this->user, ['*']);
 });
 
 it('increments invoice counter when new invoice is created', function () {

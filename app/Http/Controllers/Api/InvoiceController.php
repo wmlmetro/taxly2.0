@@ -36,6 +36,8 @@ class InvoiceController extends BaseController
 
   public function store(StoreInvoiceRequest $req): JsonResponse
   {
+    $this->authorize('create', Invoice::class);
+
     $invoice = Invoice::create([
       'organization_id'         => Auth::user()->organization_id,
       'buyer_organization_ref'  => $req->buyer_organization_ref,

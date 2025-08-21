@@ -4,12 +4,21 @@ use App\Models\User;
 use App\Models\Invoice;
 use App\Models\AuditEvent;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\PermissionRegistrar;
 
 beforeEach(function () {
-  $this->user = User::factory()->create();
+  app(PermissionRegistrar::class)->forgetCachedPermissions();
+
+  $org = \App\Models\Organization::factory()->create();
+
+  $this->user = User::factory()->create([
+    'organization_id' => $org->id,
+  ]);
+
   Permission::firstOrCreate(['name' => 'create invoices', 'guard_name' => 'web']);
   Permission::firstOrCreate(['name' => 'update invoices', 'guard_name' => 'web']);
-  $this->user->givePermissionTo(['create invoices', 'update invoices']);
+
+  $this->user->syncPermissions(['create invoices', 'update invoices']);
   $this->actingAs($this->user);
 });
 

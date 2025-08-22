@@ -1,0 +1,79 @@
+@import "../../../../vendor/filament/filament/resources/css/theme.css";
+
+@source '../../../../app/Filament/**/*';
+@source '../../../../resources/views/filament/**/*';
+
+.fi-sidebar-nav::-webkit-scrollbar {
+    display: none;
+}
+
+/* Admin theme */
+body.fi-body {
+    @apply bg-slate-50 dark:bg-gray-950;
+}
+
+main.fi-main {
+    @apply px-2;
+}
+
+aside.fi-sidebar {
+    @apply bg-gradient-to-b from-slate-700 to-slate-800 dark:bg-gradient-to-b dark:from-gray-800 dark:to-gray-900;
+
+    & .fi-sidebar-nav-groups {
+        @apply gap-y-3;
+    }
+
+    & .fi-sidebar-group-label {
+        @apply py-2 text-xs text-indigo-400 font-semibold uppercase tracking-wide;
+    }
+
+    & .fi-sidebar-item {
+        .fi-sidebar-item-btn {
+            @apply flex items-center gap-2 rounded-lg px-3 py-2 transition-colors;
+        }
+
+        .fi-sidebar-item-label,
+        .fi-sidebar-item-icon {
+            @apply text-gray-100;
+        }
+
+        &.fi-active .fi-sidebar-item-label,
+        &.fi-active .fi-sidebar-item-icon,
+        &:hover .fi-sidebar-item-label,
+        &:hover .fi-sidebar-item-icon {
+            @apply text-indigo-500;
+        }
+    }
+}
+
+/* Topbar */
+div.fi-topbar nav {
+    @apply bg-indigo-800 dark:bg-gray-900 h-12;
+}
+
+/* Table */
+table.fi-ta-table {
+    & thead tr {
+        @apply bg-gradient-to-br from-slate-700 to-slate-800 dark:bg-none;
+
+        & th.fi-ta-cell div.px-3.py-4 {
+            @apply py-3;
+        }
+
+        & th.fi-ta-header-cell {
+            @apply py-3 text-white;
+        }
+    }
+
+    & tbody tr {
+        & td.fi-ta-cell {
+            & div.px-3.py-4 {
+                @apply py-[0.3rem];
+            }
+
+            & button {
+                @apply py-[0.3rem];
+            }
+        }
+    }
+}

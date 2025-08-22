@@ -22,7 +22,7 @@ class InvoicePolicy
     public function view(User $user, Invoice $invoice): bool
     {
         return $user->organization_id === $invoice->organization_id
-            && $user->can('view invoices');
+            && $user->can('view invoices') || $user->hasAllRoles(['super-admin']);
     }
 
     /**
@@ -39,7 +39,7 @@ class InvoicePolicy
     public function update(User $user, Invoice $invoice): bool
     {
         return $user->organization_id === $invoice->organization_id
-            && $user->can('update invoices');
+            && $user->can('update invoices') || $user->hasAllRoles(['super-admin']);
     }
 
     /**
@@ -47,7 +47,7 @@ class InvoicePolicy
      */
     public function delete(User $user, Invoice $invoice): bool
     {
-        return $user->can('delete invoices');
+        return $user->can('delete invoices') || $user->hasAllRoles(['super-admin']);
     }
 
     /**

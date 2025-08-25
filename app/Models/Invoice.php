@@ -49,6 +49,11 @@ class Invoice extends Model
         return $this->hasMany(Artifact::class);
     }
 
+    public function items()
+    {
+        return $this->hasMany(InvoiceItem::class);
+    }
+
     public function auditEvents()
     {
         return $this->morphMany(AuditEvent::class, 'entity_ref');

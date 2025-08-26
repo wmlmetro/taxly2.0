@@ -51,6 +51,10 @@ $delete = function ($id) {
                         <td class="p-3 text-right">₦{{ number_format($invoice->total_amount, 2) }}</td>
                         <td class="p-3">{{ ucfirst($invoice->status) }}</td>
                         <td class="p-3 text-right space-x-2">
+                            <a href="{{ route('invoices.show', $invoice->id) }}"
+                                class="px-3 py-1 bg-gray-500 text-white rounded hover:bg-gray-600 dark:bg-gray-600 dark:hover:bg-gray-700 cursor-pointer">
+                                👁️ View
+                            </a>
                             <a href="{{ route('invoices.edit', $invoice->id) }}"
                                 class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 cursor-pointer">
                                 ✏️ Edit

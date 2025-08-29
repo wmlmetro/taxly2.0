@@ -30,7 +30,6 @@
                             "schema": {
                                 "required": [
                                     "tenant_name",
-                                    "organization_name",
                                     "name",
                                     "email",
                                     "password",
@@ -41,18 +40,54 @@
                                         "type": "string",
                                         "example": "Acme Corp"
                                     },
-                                    "organization_name": {
+                                    "brand": {
                                         "type": "string",
-                                        "example": "Head Office"
+                                        "example": "Acme Brand"
                                     },
-                                    "name": {
+                                    "domain": {
                                         "type": "string",
-                                        "example": "John Doe"
+                                        "example": "acme.com"
+                                    },
+                                    "entity_id": {
+                                        "type": "string",
+                                        "example": "123456"
+                                    },
+                                    "service_id": {
+                                        "type": "string",
+                                        "example": "svc-001"
+                                    },
+                                    "registration_number": {
+                                        "type": "string",
+                                        "example": "REG-123456"
                                     },
                                     "email": {
                                         "type": "string",
                                         "format": "email",
                                         "example": "john@example.com"
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "example": "+1234567890"
+                                    },
+                                    "street_name": {
+                                        "type": "string",
+                                        "example": "123 Main St"
+                                    },
+                                    "city_name": {
+                                        "type": "string",
+                                        "example": "Metropolis"
+                                    },
+                                    "postal_zone": {
+                                        "type": "string",
+                                        "example": "12345"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Main office"
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "example": "John Doe"
                                     },
                                     "password": {
                                         "type": "string",
@@ -72,19 +107,37 @@
                 },
                 "responses": {
                     "201": {
-                        "description": "User and tenant created successfully",
+                        "description": "Tenant, organization, and user created successfully",
                         "content": {
                             "application/json": {
                                 "schema": {},
                                 "example": {
-                                    "message": "User registered successfully",
+                                    "message": "Tenant, organization, and user created successfully",
                                     "success": true,
                                     "data": {
+                                        "tenant": {
+                                            "id": 1,
+                                            "name": "Acme Corp",
+                                            "email": "john@example.com",
+                                            "brand": "Acme Brand",
+                                            "domain": "acme.com",
+                                            "entity_id": "123456"
+                                        },
+                                        "organization": {
+                                            "id": 1,
+                                            "service_id": "svc-001",
+                                            "registration_number": "REG-123456",
+                                            "email": "john@example.com",
+                                            "phone": "+1234567890",
+                                            "street_name": "123 Main St",
+                                            "city_name": "Metropolis",
+                                            "postal_zone": "12345",
+                                            "description": "Main office"
+                                        },
                                         "user": {
                                             "id": 1,
                                             "name": "John Doe",
-                                            "email": "john@example.com",
-                                            "organization_id": 1
+                                            "email": "john@example.com"
                                         },
                                         "token": "1|XyzExampleToken..."
                                     }

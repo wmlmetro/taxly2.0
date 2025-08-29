@@ -46,7 +46,10 @@ class BuyerInvoiceController extends BaseController
       'actor'         => $request->user()->email ?? 'system',
     ]);
 
+    $invoice->markAsValidated();
+
     return $this->sendResponse([
+      'invoice'    => $invoice->load('items'),
       'acceptance' => $acc,
     ], 'Invoice accepted successfully', 201);
   }
@@ -85,6 +88,7 @@ class BuyerInvoiceController extends BaseController
     ]);
 
     return $this->sendResponse([
+      'invoice'    => $invoice->load('items'),
       'acceptance' => $acc,
     ], 'Invoice rejected successfully', 201);
   }

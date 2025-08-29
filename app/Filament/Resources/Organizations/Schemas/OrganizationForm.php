@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Organizations\Schemas;
 
+use Dom\Text;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
@@ -21,14 +22,31 @@ class OrganizationForm
                         ->searchable()
                         ->preload()
                         ->required(),
+                    TextInput::make('trade_name')
+                        ->required(),
+                    TextInput::make('business_id')
+                        ->required(),
+                    TextInput::make('service_id')
+                        ->required(),
+                    TextInput::make('email')
+                        ->email()
+                        ->required(),
+                    TextInput::make('phone')
+                        ->tel()
+                        ->required(),
+                    TextInput::make('street_name')
+                        ->required(),
+                    TextInput::make('city_name')
+                        ->required(),
+                    TextInput::make('postal_zone')
+                        ->required(),
+                    TextInput::make('country')
+                        ->readOnly()
+                        ->dehydrated(),
                     TextInput::make('tin')
                         ->required(),
-                    TextInput::make('legal_name')
-                        ->required(),
                     TextInput::make('bank_details'),
-                    Textarea::make('address')
-                        ->columnSpanFull(),
-                ])->columnSpanFull()->columns(2),
+                ])->columnSpanFull()->columns(3),
             ]);
     }
 }

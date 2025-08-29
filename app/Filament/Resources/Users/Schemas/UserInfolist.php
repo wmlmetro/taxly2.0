@@ -11,8 +11,7 @@ class UserInfolist
     {
         return $schema
             ->components([
-                TextEntry::make('organization_id')
-                    ->numeric(),
+                TextEntry::make('organization.trade_name'),
                 TextEntry::make('mfa'),
                 TextEntry::make('name'),
                 TextEntry::make('email')

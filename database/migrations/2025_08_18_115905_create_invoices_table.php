@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('invoices', function (Blueprint $table) {
             $table->id();
             $table->foreignId('organization_id')->constrained()->onDelete('cascade');
+            $table->foreignId('customer_id')->constrained('customers')->cascadeOnDelete();
             $table->string('buyer_organization_ref')->nullable();
             $table->decimal('total_amount', 15, 2);
             $table->json('tax_breakdown')->nullable();

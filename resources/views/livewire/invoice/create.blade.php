@@ -1,71 +1,150 @@
 <?php
 
-use function Livewire\Volt\{state, rules};
+use function Livewire\Volt\{state, rules, computed};
 use App\Models\Invoice;
 use App\Models\InvoiceItem;
 use Illuminate\Support\Facades\Auth;
+use App\Services\WestMetroApiService;
 
 state([
-    'buyer_organization_ref' => '',
-    'vat_treatment' => 'standard',
-    'items' => [['description' => '', 'quantity' => 1, 'price' => 0]],
+    // Invoice Header
+    'issue_date' => now()->toDateString(),
+    'due_date' => now()->addDays(7)->toDateString(),
+    'invoice_type_code' => '396',
+    'document_currency_code' => 'NGN',
+
+    // Parties
+    'supplier' => [
+        'party_name' => '',
+        'tin' => '',
+        'email' => '',
+        'postal_address' => ['street_name' => '', 'city_name' => '', 'postal_zone' => '', 'country' => 'NG'],
+    ],
+    'customer' => [
+        'party_name' => '',
+        'tin' => '',
+        'email' => '',
+        'postal_address' => ['street_name' => '', 'city_name' => '', 'postal_zone' => '', 'country' => 'NG'],
+    ],
+
+    // Items
+    'items' => [
+        [
+            'description' => '',
+            'hsn_code' => '',
+            'product_category' => '',
+            'quantity' => 1,
+            'price_amount' => 0,
+            'base_quantity' => 1,
+            'price_unit' => 'NGN per 1',
+            'discount_rate' => 0,
+            'fee_rate' => 0,
+        ],
+    ],
+
+    // Totals
     'tax' => 0,
 ]);
 
+$invoiceTypes = computed(fn() => app(WestMetroApiService::class)->getInvoiceTypes());
+
+$subtotal = computed(fn() => collect($this->items)->sum(fn($i) => $i['quantity'] * $i['price_amount']));
+$total = computed(fn() => $this->subtotal() + $this->tax);
+
 rules([
-    'buyer_organization_ref' => 'required|string',
-    'vat_treatment' => 'required|string|in:standard,zero-rated,exempt',
+    'issue_date' => 'required|date',
+    'document_currency_code' => 'required|string|size:3',
+    'supplier.party_name' => 'required|string',
+    'supplier.tin' => 'required|string',
+    'supplier.email' => 'required|email',
+    'customer.party_name' => 'required|string',
+    'customer.tin' => 'required|string',
+    'customer.email' => 'required|email',
     'items.*.description' => 'required|string',
+    'items.*.hsn_code' => 'required|string',
+    'items.*.product_category' => 'required|string',
     'items.*.quantity' => 'required|numeric|min:1',
-    'items.*.price' => 'required|numeric|min:0',
-    'tax' => 'nullable|numeric|min:0',
+    'items.*.price_amount' => 'required|numeric|min:0',
 ]);
 
-$addItem = function () {
-    $this->items[] = ['description' => '', 'quantity' => 1, 'price' => 0];
-};
+$addItem = fn() => ($this->items[] = [
+    'description' => '',
+    'hsn_code' => '',
+    'product_category' => '',
+    'quantity' => 1,
+    'price_amount' => 0,
+    'base_quantity' => 1,
+    'price_unit' => 'NGN per 1',
+    'discount_rate' => 0,
+    'fee_rate' => 0,
+]);
 
-$removeItem = function ($index) {
-    unset($this->items[$index]);
-    $this->items = array_values($this->items);
-};
-
-$subtotal = fn() => collect($this->items)->sum(fn($i) => $i['quantity'] * $i['price']);
-$total = fn() => $this->subtotal() + $this->tax;
+$removeItem = fn($i) => ($this->items = array_values(array_filter($this->items, fn($k) => $k !== $i, ARRAY_FILTER_USE_KEY)));
 
 $save = function () {
     $this->validate();
 
-    // Save Invoice header
     $invoice = Invoice::create([
         'organization_id' => Auth::user()->organization_id,
-        'buyer_organization_ref' => $this->buyer_organization_ref,
-        'vat_treatment' => $this->vat_treatment,
+        'buyer_organization_ref' => $this->customer['tin'], // mapped
         'total_amount' => $this->total(),
-        'tax_breakdown' => json_encode(['tax' => $this->tax]),
+        'tax_breakdown' => ['VAT' => $this->tax],
+        'vat_treatment' => 'standard',
         'status' => 'draft',
+        'issue_date' => $this->issue_date,
+        'due_date' => $this->due_date,
+        'invoice_type_code' => $this->invoice_type_code,
+        'document_currency_code' => $this->document_currency_code,
+        'legal_monetary_total' => [
+            'line_extension_amount' => $this->subtotal(),
+            'tax_exclusive_amount' => $this->subtotal(),
+            'tax_inclusive_amount' => $this->total(),
+            'payable_amount' => $this->total(),
+        ],
     ]);
 
-    // Save line items
     foreach ($this->items as $item) {
         InvoiceItem::create([
             'invoice_id' => $invoice->id,
             'description' => $item['description'],
+            'hsn_code' => $item['hsn_code'],
+            'product_category' => $item['product_category'],
             'quantity' => $item['quantity'],
-            'price' => $item['price'],
-            'line_total' => $item['quantity'] * $item['price'],
+            'price' => $item['price_amount'],
+            'line_total' => $item['quantity'] * $item['price_amount'],
+            'price_details' => [
+                'price_amount' => $item['price_amount'],
+                'base_quantity' => $item['base_quantity'],
+                'price_unit' => $item['price_unit'],
+            ],
+            'item' => [
+                'name' => $item['description'],
+                'description' => $item['description'],
+            ],
         ]);
     }
 
     session()->flash('success', 'Invoice created!');
-    $this->reset(['buyer_organization_ref', 'vat_treatment', 'items', 'tax']);
-    $this->items = [['description' => '', 'quantity' => 1, 'price' => 0]];
+    $this->items = [
+        [
+            'description' => '',
+            'hsn_code' => '',
+            'product_category' => '',
+            'quantity' => 1,
+            'price_amount' => 0,
+            'base_quantity' => 1,
+            'price_unit' => 'NGN per 1',
+            'discount_rate' => 0,
+            'fee_rate' => 0,
+        ],
+    ];
+
     $this->redirect(route('invoices.index', absolute: false));
 };
 ?>
 
 <section class="w-full">
-    <div class="max-w-4xl mx-auto bg-white dark:bg-zinc-900 shadow-lg rounded-xl p-8 space-y-6">
+    <div class="max-w-7xl mx-auto bg-white dark:bg-zinc-900 shadow-lg rounded-xl p-8 space-y-6">
         <h2 class="text-2xl font-bold text-zinc-800 dark:text-zinc-100">🧾 Create Invoice</h2>
 
         @include('livewire.invoice.partials.form')

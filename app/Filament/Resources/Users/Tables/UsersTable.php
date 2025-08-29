@@ -15,7 +15,7 @@ class UsersTable
     {
         return $table
             ->columns([
-                TextColumn::make('organization.legal_name')
+                TextColumn::make('organization.trade_name')
                     ->sortable(),
                 TextColumn::make('mfa')
                     ->searchable(),

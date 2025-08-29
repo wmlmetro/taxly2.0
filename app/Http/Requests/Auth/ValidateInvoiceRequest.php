@@ -22,7 +22,7 @@ class ValidateInvoiceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'comments' => ['nullable', 'string', 'max:500'],
         ];
     }
 }

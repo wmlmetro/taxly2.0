@@ -22,7 +22,7 @@ class SubmitInvoiceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'channel' => ['nullable', 'string', 'in:api,portal'],
+            'channel' => ['required', 'string', 'in:api,portal,batch'],
         ];
     }
 }

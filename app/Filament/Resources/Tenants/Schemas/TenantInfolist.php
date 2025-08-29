@@ -12,6 +12,8 @@ class TenantInfolist
         return $schema
             ->components([
                 TextEntry::make('name'),
+                TextEntry::make('email'),
+                TextEntry::make('entity_id'),
                 TextEntry::make('brand'),
                 TextEntry::make('domain'),
                 TextEntry::make('retention_policy'),

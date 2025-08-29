@@ -16,6 +16,20 @@ class TenantForm
                 Section::make()->schema([
                     TextInput::make('name')
                         ->required(),
+                    Grid::make(2)->schema([
+                        TextInput::make('email')
+                            ->email()
+                            ->required(),
+                        TextInput::make('password')
+                            ->password()
+                            ->required()
+                            ->dehydrated(false)
+                            ->hiddenOn('edit'),
+                    ]),
+                    TextInput::make('entity_id')
+                        ->label('Entity ID')
+                        ->required()
+                        ->unique(),
                     TextInput::make('brand'),
                     Grid::make(3)->schema([
                         TextInput::make('domain')

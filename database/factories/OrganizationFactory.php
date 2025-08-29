@@ -12,8 +12,8 @@ class OrganizationFactory extends Factory
     return [
       'tenant_id' => Tenant::factory(),
       'tin' => $this->faker->unique()->numerify('TIN####'),
-      'legal_name' => $this->faker->company,
-      'address' => $this->faker->address,
+      'trade_name' => $this->faker->company,
+      'street_name' => $this->faker->streetAddress,
     ];
   }
 }

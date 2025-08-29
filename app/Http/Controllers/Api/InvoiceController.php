@@ -80,20 +80,16 @@ class InvoiceController extends BaseController
   {
     $this->authorize('create', Invoice::class);
 
-    $invoice = Invoice::create([
-      'organization_id'         => Auth::user()->organization_id,
-      'buyer_organization_ref'  => $req->buyer_organization_ref,
-      'total_amount'   => $req->total_amount,
-      'tax_breakdown'  => $req->tax_breakdown,
-      'vat_treatment'  => $req->vat_treatment,
-      'wht_amount'     => $req->wht_amount ?? 0,
-      'status'         => 'draft',
-    ]);
+    $data = $req->validated();
+    $data['organization_id'] = Auth::user()->organization_id;
+    $data['status'] = 'draft';
+
+    $invoice = Invoice::create($data);
 
     UsageMeter::incrementCounter($req->user()->organization->tenant_id, 'invoice_count');
 
     return $this->sendResponse([
-      'invoice' => $invoice,
+      'invoice' => $invoice->load('items'),
     ], 'Invoice created successfully', 201);
   }
 
@@ -153,12 +149,17 @@ class InvoiceController extends BaseController
   {
     $this->authorize('update', $invoice);
 
-    $result = app(InvoiceSubmissionService::class)->submit($invoice, $req->validated());
+    // Build full FIRS payload
+    $payload = $invoice->toFirsPayload();
 
+    // Submit to FIRS service
+    $result = app(InvoiceSubmissionService::class)->submit($invoice, $payload);
+
+    $invoice->markAsSubmitted();
     UsageMeter::incrementCounter($invoice->organization->tenant_id, 'submission_count');
 
     return $this->sendResponse([
-      'invoice' => $invoice,
+      'invoice' => $invoice->load('items'),
       'result'  => $result,
     ], 'Invoice submission initiated successfully', 202);
   }
@@ -178,7 +179,7 @@ class InvoiceController extends BaseController
     $this->authorize('view', $invoice);
 
     return $this->sendResponse(
-      $invoice->load(['irn', 'submissions', 'acceptances', 'artifacts']),
+      $invoice->load(['items', 'irn', 'submissions', 'acceptances', 'artifacts']),
       'Invoice retrieved successfully'
     );
   }

@@ -17,6 +17,11 @@ class TenantsTable
             ->columns([
                 TextColumn::make('name')
                     ->searchable(),
+                TextColumn::make('email')
+                    ->searchable(),
+                TextColumn::make('entity_id')
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('brand')
                     ->searchable(),
                 TextColumn::make('domain')

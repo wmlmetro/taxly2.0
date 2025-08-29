@@ -17,7 +17,7 @@ class UserForm
                 Section::make()->schema([
                     Select::make('organization_id')
                         ->label('Organization')
-                        ->relationship('organization', 'legal_name')
+                        ->relationship('organization', 'trade_name')
                         ->searchable()
                         ->preload()
                         ->required(),

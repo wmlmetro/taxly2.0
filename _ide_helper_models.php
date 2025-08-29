@@ -89,11 +89,76 @@ namespace App\Models{
 namespace App\Models{
 /**
  * @property int $id
+ * @property string $name
+ * @property string|null $tin
+ * @property string|null $email
+ * @property string|null $phone
+ * @property string|null $business_description
+ * @property string|null $street_name
+ * @property string|null $city_name
+ * @property string|null $postal_zone
+ * @property string|null $state
+ * @property string $country
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Invoice> $invoices
+ * @property-read int|null $invoices_count
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereBusinessDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereCityName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereCountry($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer wherePhone($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer wherePostalZone($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereState($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereStreetName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereTin($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereUpdatedAt($value)
+ */
+	class Customer extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * @property int $id
+ * @property string|null $invoice_number
  * @property int $organization_id
+ * @property string|null $business_id
+ * @property \App\Models\Irns|null $irn
+ * @property \Illuminate\Support\Carbon|null $issue_date
+ * @property \Illuminate\Support\Carbon|null $due_date
+ * @property string|null $issue_time
+ * @property int $customer_id
  * @property string|null $buyer_organization_ref
  * @property string $total_amount
  * @property array<array-key, mixed>|null $tax_breakdown
  * @property string $vat_treatment
+ * @property string $invoice_type_code
+ * @property string $payment_status
+ * @property string|null $note
+ * @property \Illuminate\Support\Carbon|null $tax_point_date
+ * @property string $document_currency_code
+ * @property string $tax_currency_code
+ * @property string|null $accounting_cost
+ * @property string|null $buyer_reference
+ * @property array<array-key, mixed>|null $invoice_delivery_period
+ * @property array<array-key, mixed>|null $billing_reference
+ * @property array<array-key, mixed>|null $dispatch_document_reference
+ * @property array<array-key, mixed>|null $receipt_document_reference
+ * @property array<array-key, mixed>|null $originator_document_reference
+ * @property array<array-key, mixed>|null $contract_document_reference
+ * @property array<array-key, mixed>|null $additional_document_reference
+ * @property \Illuminate\Support\Carbon|null $actual_delivery_date
+ * @property array<array-key, mixed>|null $payment_means
+ * @property string|null $payment_terms_note
+ * @property array<array-key, mixed>|null $allowance_charge
+ * @property array<array-key, mixed>|null $tax_total
+ * @property array<array-key, mixed>|null $legal_monetary_total
  * @property string $wht_amount
  * @property string $status
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -104,7 +169,7 @@ namespace App\Models{
  * @property-read int|null $artifacts_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\AuditEvent> $auditEvents
  * @property-read int|null $audit_events_count
- * @property-read \App\Models\Irns|null $irn
+ * @property-read \App\Models\Customer $customer
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\InvoiceItem> $items
  * @property-read int|null $items_count
  * @property-read \App\Models\Organization $organization
@@ -114,12 +179,40 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereAccountingCost($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereActualDeliveryDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereAdditionalDocumentReference($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereAllowanceCharge($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereBillingReference($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereBusinessId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereBuyerOrganizationRef($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereBuyerReference($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereContractDocumentReference($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereCustomerId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereDispatchDocumentReference($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereDocumentCurrencyCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereDueDate($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereInvoiceDeliveryPeriod($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereInvoiceNumber($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereInvoiceTypeCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereIrn($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereIssueDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereIssueTime($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereLegalMonetaryTotal($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereNote($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereOrganizationId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereOriginatorDocumentReference($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice wherePaymentMeans($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice wherePaymentStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice wherePaymentTermsNote($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereReceiptDocumentReference($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereTaxBreakdown($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereTaxCurrencyCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereTaxPointDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereTaxTotal($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereTotalAmount($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereVatTreatment($value)
@@ -135,20 +228,49 @@ namespace App\Models{
  * @property string $description
  * @property int $quantity
  * @property string $price
+ * @property string|null $hsn_code
+ * @property string|null $product_category
+ * @property string|null $discount_rate
+ * @property string|null $discount_amount
+ * @property string|null $fee_rate
+ * @property string|null $fee_amount
+ * @property int $invoiced_quantity
+ * @property string|null $line_extension_amount
+ * @property string|null $item_name
+ * @property string|null $item_description
+ * @property string|null $sellers_item_identification
+ * @property string|null $price_amount
+ * @property int $base_quantity
+ * @property string $price_unit
  * @property string $line_total
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Invoice $invoice
+ * @method static \Database\Factories\InvoiceItemFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereBaseQuantity($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereDiscountAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereDiscountRate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereFeeAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereFeeRate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereHsnCode($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereInvoiceId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereInvoicedQuantity($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereItemDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereItemName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereLineExtensionAmount($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereLineTotal($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem wherePrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem wherePriceAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem wherePriceUnit($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereProductCategory($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereQuantity($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereSellersItemIdentification($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereUpdatedAt($value)
  */
 	class InvoiceItem extends \Eloquent {}
@@ -207,8 +329,17 @@ namespace App\Models{
  * @property int $id
  * @property int $tenant_id
  * @property string $tin
- * @property string $legal_name
- * @property string|null $address
+ * @property string|null $business_id
+ * @property string|null $service_id
+ * @property string|null $trade_name
+ * @property string|null $registration_number
+ * @property string|null $email
+ * @property string|null $phone
+ * @property string|null $street_name
+ * @property string|null $city_name
+ * @property string|null $postal_zone
+ * @property string $country
+ * @property string|null $description
  * @property array<array-key, mixed>|null $bank_details
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
@@ -225,13 +356,22 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Organization newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Organization newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Organization query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Organization whereAddress($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Organization whereBankDetails($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Organization whereBusinessId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Organization whereCityName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Organization whereCountry($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Organization whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Organization whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Organization whereEmail($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Organization whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Organization whereLegalName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Organization wherePhone($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Organization wherePostalZone($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Organization whereRegistrationNumber($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Organization whereServiceId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Organization whereStreetName($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Organization whereTenantId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Organization whereTin($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Organization whereTradeName($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Organization whereUpdatedAt($value)
  */
 	class Organization extends \Eloquent {}
@@ -269,6 +409,9 @@ namespace App\Models{
 /**
  * @property int $id
  * @property string $name
+ * @property string|null $email
+ * @property string|null $password
+ * @property string|null $entity_id
  * @property string|null $brand
  * @property string|null $domain
  * @property array<array-key, mixed>|null $feature_flags
@@ -286,9 +429,12 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Tenant whereBrand($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Tenant whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Tenant whereDomain($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Tenant whereEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Tenant whereEntityId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Tenant whereFeatureFlags($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Tenant whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Tenant whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Tenant wherePassword($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Tenant whereRetentionPolicy($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Tenant whereUpdatedAt($value)
  */

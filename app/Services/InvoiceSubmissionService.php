@@ -7,48 +7,77 @@ use App\Models\Invoice;
 use App\Models\Irns;
 use App\Models\Submission;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Http;
 
 class InvoiceSubmissionService
 {
+  /**
+   * Submit invoice to FIRS.
+   */
   public function submit(Invoice $invoice, array $options = []): array
   {
-    // enqueue submission to external ATRS, here we simulate immediate success
+    // Track submission
     $sub = Submission::create([
-      'invoice_id'  => $invoice->id,
-      'channel'     => $options['channel'] ?? 'api',
-      'status'      => 'pending',
-      'attempts'    => 0,
+      'invoice_id' => $invoice->id,
+      'channel'    => $options['channel'] ?? 'api',
+      'status'     => 'pending',
+      'attempts'   => 0,
     ]);
 
-    // Simulate an IRN generation & success (replace with actual integration)
-    $txnId = Str::uuid()->toString();
-    $sub->markSuccess($txnId);
+    // Build payload from invoice model
+    // $payload = $invoice->toFirsPayload();
+    $payload = FirsPayloadBuilder::fromInvoice($invoice);
 
-    $irn = Irns::updateOrCreate(
-      ['invoice_id' => $invoice->id],
-      [
-        'irn_hash'      => hash('sha256', $invoice->id . $txnId),
-        'qr_text'       => "IRN:{$txnId}",
-        'qr_image_path' => null
-      ]
-    );
+    try {
+      // Example: send to FIRS API
+      $response = Http::withToken(config('services.firs.token'))
+        ->post(config('services.firs.endpoint') . '/einvoice', $payload);
 
-    $invoice->markAsSubmitted();
+      if ($response->failed()) {
+        $sub->markFailed($response->body());
+        return ['error' => 'FIRS submission failed', 'details' => $response->json()];
+      }
 
-    // Fire org webhooks
-    $payload = [
-      'invoice_id' => $invoice->id,
-      'status'     => $invoice->status,
-      'irn'        => $irn->irn_hash,
-      'txn_id'     => $txnId,
-    ];
+      $respData = $response->json();
 
-    // Dispatch to every endpoint in this org
-    $endpoints = $invoice->organization->webhookEndpoints;
-    foreach ($endpoints as $endpoint) {
-      DispatchWebhook::dispatch($endpoint, 'invoice.submitted', $payload)->onQueue('webhooks');
+      // Example FIRS response includes txn_id + irn
+      $txnId = $respData['txn_id'] ?? Str::uuid()->toString();
+      $irnHash = $respData['irn'] ?? hash('sha256', $invoice->id . $txnId);
+
+      $sub->markSuccess($txnId);
+
+      $irn = Irns::updateOrCreate(
+        ['invoice_id' => $invoice->id],
+        [
+          'irn_hash'      => $irnHash,
+          'qr_text'       => $respData['qr_text'] ?? "IRN:{$txnId}",
+          'qr_image_path' => $respData['qr_image_path'] ?? null,
+        ]
+      );
+
+      $invoice->markAsSubmitted();
+
+      // Fire org webhooks
+      $webhookPayload = [
+        'invoice_id' => $invoice->id,
+        'status'     => $invoice->status,
+        'irn'        => $irn->irn_hash,
+        'txn_id'     => $txnId,
+      ];
+
+      foreach ($invoice->organization->webhookEndpoints as $endpoint) {
+        DispatchWebhook::dispatch($endpoint, 'invoice.submitted', $webhookPayload)
+          ->onQueue('webhooks');
+      }
+
+      return [
+        'submission_id' => $sub->id,
+        'txn_id'        => $txnId,
+        'firs_response' => $respData,
+      ];
+    } catch (\Throwable $e) {
+      $sub->markFailed($e->getMessage());
+      return ['error' => 'Exception during submission', 'details' => $e->getMessage()];
     }
-
-    return ['submission_id' => $sub->id, 'txn_id' => $txnId];
   }
 }

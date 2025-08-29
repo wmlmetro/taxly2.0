@@ -76,7 +76,7 @@ new class extends Component {
 }; ?>
 
 <section class="w-full">
-    <div class="max-w-4xl mx-auto bg-white dark:bg-zinc-900 shadow-lg rounded-xl p-8 space-y-6">
+    <div class="max-w-7xl mx-auto bg-white dark:bg-zinc-900 shadow-lg rounded-xl p-8 space-y-6">
         <h2 class="text-2xl font-bold text-zinc-800 dark:text-zinc-100">✏️ Edit Invoice #{{ $invoiceId }}</h2>
 
         @include('livewire.invoice.partials.form')

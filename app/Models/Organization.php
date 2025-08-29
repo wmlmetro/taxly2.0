@@ -12,8 +12,17 @@ class Organization extends Model
     protected $fillable = [
         'tenant_id',
         'tin',
-        'legal_name',
-        'address',
+        'business_id',
+        'service_id',
+        'trade_name',
+        'registration_number',
+        'email',
+        'phone',
+        'street_name',
+        'city_name',
+        'postal_zone',
+        'country',
+        'description',
         'bank_details',
     ];
 

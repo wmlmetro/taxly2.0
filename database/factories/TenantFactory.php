@@ -10,6 +10,9 @@ class TenantFactory extends Factory
   {
     return [
       'name' => $this->faker->company,
+      'email' => $this->faker->unique()->safeEmail,
+      'password' => bcrypt('password'), // Default password for testing
+      'entity_id' => $this->faker->unique()->uuid,
       'brand' => $this->faker->word,
       'domain' => $this->faker->domainName,
     ];

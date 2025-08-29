@@ -35,4 +35,8 @@ return [
         ],
     ],
 
+    'firs' => [
+        'base_url' => env('WESTMETRO_FIRS_API_BASE', ''),
+    ],
+
 ];

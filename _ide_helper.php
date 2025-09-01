@@ -26978,22 +26978,22 @@ namespace Livewire\Features\SupportTesting {
             }
     }
 
-namespace App\Filament\Resources\Invoices\Pages {
+namespace App\Filament\Resources\Customers\Pages {
     /**
      */
-    class CreateInvoice extends \Filament\Resources\Pages\CreateRecord {
+    class CreateCustomer extends \Filament\Resources\Pages\CreateRecord {
             }
     /**
      */
-    class EditInvoice extends \Filament\Resources\Pages\EditRecord {
+    class EditCustomer extends \Filament\Resources\Pages\EditRecord {
             }
     /**
      */
-    class ListInvoices extends \Filament\Resources\Pages\ListRecords {
+    class ListCustomers extends \Filament\Resources\Pages\ListRecords {
             }
     /**
      */
-    class ViewInvoice extends \Filament\Resources\Pages\ViewRecord {
+    class ViewCustomer extends \Filament\Resources\Pages\ViewRecord {
             }
     }
 
@@ -27039,6 +27039,25 @@ namespace Filament\Pages {
     /**
      */
     class SimplePage extends \Filament\Pages\BasePage {
+            }
+    }
+
+namespace App\Filament\Resources\Invoices\Pages {
+    /**
+     */
+    class CreateInvoice extends \Filament\Resources\Pages\CreateRecord {
+            }
+    /**
+     */
+    class EditInvoice extends \Filament\Resources\Pages\EditRecord {
+            }
+    /**
+     */
+    class ListInvoices extends \Filament\Resources\Pages\ListRecords {
+            }
+    /**
+     */
+    class ViewInvoice extends \Filament\Resources\Pages\ViewRecord {
             }
     }
 

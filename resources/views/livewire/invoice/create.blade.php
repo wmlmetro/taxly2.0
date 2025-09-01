@@ -1,10 +1,13 @@
 <?php
 
 use function Livewire\Volt\{state, rules, computed};
+use App\Models\Customer;
 use App\Models\Invoice;
 use App\Models\InvoiceItem;
 use Illuminate\Support\Facades\Auth;
 use App\Services\WestMetroApiService;
+
+$organization = Auth::user()->organization;
 
 state([
     // Invoice Header
@@ -15,10 +18,15 @@ state([
 
     // Parties
     'supplier' => [
-        'party_name' => '',
-        'tin' => '',
-        'email' => '',
-        'postal_address' => ['street_name' => '', 'city_name' => '', 'postal_zone' => '', 'country' => 'NG'],
+        'party_name' => $organization->trade_name ?? '',
+        'tin' => $organization->tin ?? '',
+        'email' => $organization->email ?? '',
+        'postal_address' => [
+            'street_name' => $organization->street_name ?? '',
+            'city_name' => $organization->city_name ?? '',
+            'postal_zone' => $organization->postal_zone ?? '',
+            'country' => $organization->country ?? 'NG',
+        ],
     ],
     'customer' => [
         'party_name' => '',
@@ -84,9 +92,24 @@ $removeItem = fn($i) => ($this->items = array_values(array_filter($this->items, 
 $save = function () {
     $this->validate();
 
+    $organization = Auth::user()->organization;
+
+    $customer = Customer::firstOrCreate(
+        ['tin' => $this->customer['tin']],
+        [
+            'name' => $this->customer['party_name'],
+            'email' => $this->customer['email'],
+            'street_name' => $this->customer['postal_address']['street_name'] ?? null,
+            'city_name' => $this->customer['postal_address']['city_name'] ?? null,
+            'postal_zone' => $this->customer['postal_address']['postal_zone'] ?? null,
+            'country' => $this->customer['postal_address']['country'] ?? 'NG',
+        ],
+    );
+
     $invoice = Invoice::create([
-        'organization_id' => Auth::user()->organization_id,
-        'buyer_organization_ref' => $this->customer['tin'], // mapped
+        'organization_id' => $organization->id,
+        'customer_id' => $customer->id,
+        'buyer_organization_ref' => $this->customer['tin'],
         'total_amount' => $this->total(),
         'tax_breakdown' => ['VAT' => $this->tax],
         'vat_treatment' => 'standard',

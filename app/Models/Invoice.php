@@ -189,8 +189,8 @@ class Invoice extends Model
             "legal_monetary_total" => $this->legal_monetary_total,
 
             // Parties (for now assume you map from Organization & Buyer)
-            "accounting_supplier_party" => $this->organization->toPartyObject(),
-            "accounting_customer_party" => $this->buyerParty(),
+            "accounting_supplier_party" => $this->organization?->toPartyObject(),
+            "accounting_customer_party" => $this->customer?->toPartyObject(),
 
             // Lines
             "invoice_line" => $this->items->map->toFirsPayload()->toArray(),
@@ -202,15 +202,15 @@ class Invoice extends Model
     {
         return [
             "party_name" => $this->buyer_organization_ref,
-            "tin" => "TIN-000001", // TODO: store in buyers table
-            "email" => "business@email.com", // TODO: store properly
-            "telephone" => "+2348000000000",
-            "business_description" => null,
+            "tin" => $this->organization?->tin,
+            "email" => $this->customer?->name,
+            "telephone" => $this->customer?->phone,
+            "business_description" => $this->customer?->business_description ?? null,
             "postal_address" => [
-                "street_name" => "Unknown",
-                "city_name" => "Unknown",
-                "postal_zone" => "000000",
-                "country" => "NG",
+                "street_name" => $this->customer?->street_name ?? null,
+                "city_name" => $this->customer?->city_name ?? null,
+                "postal_zone" => $this->customer?->postal_zone ?? null,
+                "country" => $this->customer?->country ?? "NG",
             ]
         ];
     }

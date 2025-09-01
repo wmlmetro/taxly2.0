@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Invoices\Schemas;
 
 use Filament\Infolists\Components\TextEntry;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
 class InvoiceInfolist
@@ -11,19 +12,20 @@ class InvoiceInfolist
     {
         return $schema
             ->components([
-                TextEntry::make('organization_id')
-                    ->numeric(),
-                TextEntry::make('buyer_organization_ref'),
-                TextEntry::make('total_amount')
-                    ->numeric(),
-                TextEntry::make('vat_treatment'),
-                TextEntry::make('wht_amount')
-                    ->numeric(),
-                TextEntry::make('status'),
-                TextEntry::make('created_at')
-                    ->dateTime(),
-                TextEntry::make('updated_at')
-                    ->dateTime(),
+                Section::make()->schema([
+                    TextEntry::make('organization.trade_name'),
+                    TextEntry::make('buyer_organization_ref'),
+                    TextEntry::make('total_amount')
+                        ->numeric(),
+                    TextEntry::make('vat_treatment'),
+                    TextEntry::make('wht_amount')
+                        ->numeric(),
+                    TextEntry::make('status'),
+                    TextEntry::make('created_at')
+                        ->dateTime(),
+                    TextEntry::make('updated_at')
+                        ->dateTime(),
+                ])->columnSpanFull()->columns(2),
             ]);
     }
 }

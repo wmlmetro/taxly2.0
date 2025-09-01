@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Tenants\Schemas;
 
 use Filament\Infolists\Components\TextEntry;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
 class TenantInfolist
@@ -11,16 +12,18 @@ class TenantInfolist
     {
         return $schema
             ->components([
-                TextEntry::make('name'),
-                TextEntry::make('email'),
-                TextEntry::make('entity_id'),
-                TextEntry::make('brand'),
-                TextEntry::make('domain'),
-                TextEntry::make('retention_policy'),
-                TextEntry::make('created_at')
-                    ->dateTime(),
-                TextEntry::make('updated_at')
-                    ->dateTime(),
+                Section::make()->schema([
+                    TextEntry::make('name'),
+                    TextEntry::make('email'),
+                    TextEntry::make('entity_id'),
+                    TextEntry::make('brand'),
+                    TextEntry::make('domain'),
+                    TextEntry::make('retention_policy'),
+                    TextEntry::make('created_at')
+                        ->dateTime(),
+                    TextEntry::make('updated_at')
+                        ->dateTime(),
+                ])->columnSpanFull()->columns(2),
             ]);
     }
 }

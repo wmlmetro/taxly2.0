@@ -55,4 +55,21 @@ class Organization extends Model
     {
         return $this->hasMany(Notification::class);
     }
+
+    public function toPartyObject(): array
+    {
+        return [
+            "party_name"  => $this->trade_name ?? $this->registration_number,
+            "tin"         => $this->tin,
+            "email"       => $this->email,
+            "telephone"   => $this->phone,
+            "business_description" => $this->description,
+            "postal_address" => [
+                "street_name" => $this->street_name,
+                "city_name"   => $this->city_name,
+                "postal_zone" => $this->postal_zone,
+                "country"     => $this->country ?? 'NG',
+            ],
+        ];
+    }
 }

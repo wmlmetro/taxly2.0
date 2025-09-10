@@ -2,13 +2,21 @@
 
 use Livewire\Volt\Component;
 use App\Models\Invoice;
+use App\Services\FirsQrService;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 new class extends Component {
     public Invoice $invoice;
+    public $encrypted;
+    public $qrDataUri;
 
-    public function mount(Invoice $invoice)
+    public function mount(Invoice $invoice, FirsQrService $qrService)
     {
         $this->invoice = $invoice->load('items');
+        $this->encrypted = $qrService->generateEncryptedQrPayload($invoice->irn);
+
+        $png = QrCode::format('png')->size(200)->generate($this->encrypted);
+        $this->qrDataUri = 'data:image/png;base64,' . base64_encode($png);
     }
 }; ?>
 
@@ -94,7 +102,12 @@ new class extends Component {
         </div>
 
         {{-- Totals --}}
-        <div class="flex justify-end">
+        <div class="flex justify-between">
+            <div>
+                <h4 class="font-semibold text-sm">FIRS QR Code</h4>
+                <img src="{{ $qrDataUri }}" alt="FIRS QR" class="border rounded p-2">
+            </div>
+
             <div class="w-64 space-y-2 text-sm">
                 <div class="flex justify-between">
                     <span class="font-semibold">Line Extension:</span>

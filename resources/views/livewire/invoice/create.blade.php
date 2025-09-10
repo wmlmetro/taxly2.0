@@ -15,6 +15,7 @@ state([
     'due_date' => now()->addDays(7)->toDateString(),
     'invoice_type_code' => '396',
     'document_currency_code' => 'NGN',
+    'validCustomer' => false,
 
     // Parties
     'supplier' => [
@@ -90,6 +91,11 @@ $addItem = fn() => ($this->items[] = [
 $removeItem = fn($i) => ($this->items = array_values(array_filter($this->items, fn($k) => $k !== $i, ARRAY_FILTER_USE_KEY)));
 
 $save = function () {
+    if (!$this->validCustomer) {
+        session()->flash('error', 'Cannot create invoice without a valid customer TIN.');
+        return;
+    }
+
     $this->validate();
 
     $organization = Auth::user()->organization;
@@ -130,10 +136,13 @@ $save = function () {
         InvoiceItem::create([
             'invoice_id' => $invoice->id,
             'description' => $item['description'],
+            'item_name' => $item['description'],
+            'item_description' => $item['description'],
             'hsn_code' => $item['hsn_code'],
             'product_category' => $item['product_category'],
             'quantity' => $item['quantity'],
             'price' => $item['price_amount'],
+            'price_amount' => $item['price_amount'],
             'line_total' => $item['quantity'] * $item['price_amount'],
             'price_details' => [
                 'price_amount' => $item['price_amount'],
@@ -164,6 +173,64 @@ $save = function () {
 
     $this->redirect(route('invoices.index', absolute: false));
 };
+
+$lookupCustomer = function () {
+    $this->validate(
+        [
+            'customer.tin' => 'required|string',
+        ],
+        [
+            'customer.tin.required' => 'Please enter a TIN to lookup.',
+        ],
+    );
+
+    // Step 1: Check in local database first
+    $localCustomer = \App\Models\Customer::where('tin', $this->customer['tin'])->first();
+
+    if ($localCustomer) {
+        $this->customer['party_name'] = $localCustomer->name ?? '';
+        $this->customer['email'] = $localCustomer->email ?? '';
+        $this->customer['postal_address'] = [
+            'street_name' => $localCustomer->street_name ?? '',
+            'city_name' => $localCustomer->city_name ?? '',
+            'postal_zone' => $localCustomer->postal_zone ?? '',
+            'country' => $localCustomer->country ?? 'NG',
+        ];
+
+        $this->validCustomer = true;
+        session()->flash('success', 'Customer found locally and details populated!');
+        return;
+    }
+
+    // Step 2: If not found, check API
+    try {
+        $api = app(\App\Services\WestMetroApiService::class);
+        $result = $api->getTin($this->customer['tin']);
+
+        if (!empty($result['data'])) {
+            $data = $result['data'];
+
+            $this->customer['party_name'] = $data['entityName'] ?? '';
+            $this->customer['email'] = $data['email'] ?? '';
+            $this->customer['postal_address'] = [
+                'street_name' => $data['street'] ?? '',
+                'city_name' => $data['city'] ?? '',
+                'postal_zone' => $data['postalCode'] ?? '',
+                'country' => $data['country'] ?? 'NG',
+            ];
+
+            $this->validCustomer = true;
+            session()->flash('success', 'Customer found via FIRS API and details populated!');
+        } else {
+            $this->validCustomer = false;
+            session()->flash('error', 'TIN not found in FIRS database. Cannot create invoice.');
+        }
+    } catch (\Exception $e) {
+        $this->validCustomer = false;
+        session()->flash('error', 'Failed to fetch customer from API: ' . $e->getMessage());
+    }
+};
+
 ?>
 
 <section class="w-full">
@@ -174,8 +241,8 @@ $save = function () {
 
         {{-- Submit --}}
         <div class="flex justify-end">
-            <button wire:click="save"
-                class="px-6 py-2 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-800 cursor-pointer">
+            <button wire:click="save" @disabled(!$validCustomer)
+                class="px-6 py-2 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-800 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
                 💾 Save Invoice
             </button>
         </div>

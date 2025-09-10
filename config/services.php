@@ -36,7 +36,11 @@ return [
     ],
 
     'firs' => [
-        'base_url' => env('WESTMETRO_FIRS_API_BASE', ''),
+        'base_url' => env('FIRS_API_BASE'),
+        'api_key' => env('FIRS_API_KEY'),
+        'secret' => env('FIRS_SECRET_KEY'),
+        'public_key' => env('FIRS_PUBLIC_KEY'),
+        'certificate' => env('FIRS_CERTIFICATE'),
     ],
 
 ];

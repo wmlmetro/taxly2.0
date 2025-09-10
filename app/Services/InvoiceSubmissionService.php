@@ -25,14 +25,14 @@ class InvoiceSubmissionService
     ]);
 
     // Build payload from invoice model
-    // $payload = $invoice->toFirsPayload();
-    $payload = FirsPayloadBuilder::fromInvoice($invoice);
+    $payload = $invoice->toFirsPayload();
+    // $payload = FirsPayloadBuilder::fromInvoice($invoice);
 
     try {
       // Example: send to FIRS API
       $response = Http::withToken(config('services.firs.token'))
-        ->post(config('services.firs.endpoint') . '/einvoice', $payload);
-
+        ->post(config('services.firs.base_url') . '/api/v1/invoice/sign', $payload);
+      print_r($response->body()); // For debugging purposes
       if ($response->failed()) {
         $sub->markFailed($response->body());
         return ['error' => 'FIRS submission failed', 'details' => $response->json()];

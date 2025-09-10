@@ -64,7 +64,16 @@
             </div>
             <div>
                 <label class="block text-sm font-medium">TIN</label>
-                <input type="text" wire:model="customer.tin" class="w-full border rounded-lg p-2">
+                <div class="flex space-x-2">
+                    <input type="text" wire:model="customer.tin" class="w-full border rounded-lg p-2">
+                    <button type="button" wire:click="lookupCustomer"
+                        class="px-3 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 cursor-pointer text-nowrap">
+                        🔍 Lookup
+                    </button>
+                </div>
+                @error('customer.tin')
+                    <span class="text-red-500 text-sm">{{ $message }}</span>
+                @enderror
             </div>
             <div>
                 <label class="block text-sm font-medium">Email</label>

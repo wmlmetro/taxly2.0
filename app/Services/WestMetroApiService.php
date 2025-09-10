@@ -7,10 +7,14 @@ use Illuminate\Support\Facades\Http;
 class WestMetroApiService
 {
   protected string $baseUrl;
+  protected string $apiKey;
+  protected string $secret;
 
   public function __construct()
   {
     $this->baseUrl = config('services.firs.base_url');
+    $this->apiKey = config('services.firs.api_key');
+    $this->secret = config('services.firs.secret');
   }
 
   /**
@@ -18,12 +22,12 @@ class WestMetroApiService
    */
   public function get(string $endpoint, array $params = [])
   {
-    $url = rtrim($this->baseUrl, '/') . '/' . ltrim($endpoint, '/');
+    $url = rtrim($this->baseUrl, '/') . '/api/v1/' . ltrim($endpoint, '/');
 
     $response = Http::get($url, $params);
 
     if ($response->failed()) {
-      throw new \Exception("WESTMETRO API call failed: " . $response->body());
+      throw new \Exception("FIRS API call failed: " . $response->body());
     }
 
     return $response->json();
@@ -34,12 +38,12 @@ class WestMetroApiService
    */
   public function post(string $endpoint, array $payload = [])
   {
-    $url = rtrim($this->baseUrl, '/') . '/' . ltrim($endpoint, '/');
+    $url = rtrim($this->baseUrl, '/') . '/api/v1/' . ltrim($endpoint, '/');
 
     $response = Http::post($url, $payload);
 
     if ($response->failed()) {
-      throw new \Exception("WESTMETRO API POST call failed: " . $response->body());
+      throw new \Exception("FIRS API POST call failed: " . $response->body());
     }
 
     return $response->json();
@@ -50,7 +54,7 @@ class WestMetroApiService
    */
   public function getInvoiceTypes()
   {
-    return $this->get('GetInvoiceTypes');
+    return $this->get('invoice/resources/invoice-types');
   }
 
   /**
@@ -58,12 +62,12 @@ class WestMetroApiService
    */
   public function getPaymentMeans()
   {
-    return $this->get('GetPaymentMeans');
+    return $this->get('invoice/resources/payment_means');
   }
 
   public function getTaxCategories()
   {
-    return $this->get('GetTaxCategories');
+    return $this->get('invoice/resources/tax-categories');
   }
 
   public function getTin($tin_number)

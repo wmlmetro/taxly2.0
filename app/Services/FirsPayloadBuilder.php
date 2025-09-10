@@ -9,7 +9,7 @@ class FirsPayloadBuilder
   public static function fromInvoice(Invoice $invoice): array
   {
     return [
-      "business_id" => $invoice->organization->tenant_id ?? "TEST_BUSINESS_ID",
+      "business_id" => $invoice->organization?->business_id ?? "TEST_BUSINESS_ID",
       "irn" => $invoice->irn?->irn_hash ?? null,
       "issue_date" => $invoice->issue_date?->format('Y-m-d') ?? now()->format('Y-m-d'),
       "due_date" => $invoice->due_date?->format('Y-m-d'),

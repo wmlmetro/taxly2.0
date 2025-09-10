@@ -151,7 +151,6 @@ class InvoiceController extends BaseController
 
     // Build full FIRS payload
     $payload = $invoice->toFirsPayload();
-
     // Submit to FIRS service
     $result = app(InvoiceSubmissionService::class)->submit($invoice, $payload);
 

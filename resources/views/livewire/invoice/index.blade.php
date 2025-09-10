@@ -19,6 +19,22 @@ $delete = function ($id) {
     $invoice->delete();
     session()->flash('success', 'Invoice deleted successfully.');
 };
+
+$submitToFirs = function ($id) {
+    $invoice = Invoice::where('organization_id', $this->organizationId)->findOrFail($id);
+
+    try {
+        $payload = $invoice->toFirsPayload();
+        var_dump($payload); // For debugging purposes
+        app(\App\Services\WestMetroApiService::class)->post('SubmitInvoice', $payload);
+
+        $invoice->update(['status' => 'submitted']);
+        session()->flash('success', "Invoice #{$invoice->id} submitted to FIRS successfully.");
+    } catch (\Exception $e) {
+        session()->flash('error', "Failed to submit invoice #{$invoice->id} to FIRS: " . $e->getMessage());
+    }
+};
+
 ?>
 
 <section class="w-full">
@@ -30,7 +46,7 @@ $delete = function ($id) {
         </a>
     </div>
 
-    <div class="bg-white dark:bg-zinc-900 shadow rounded-lg overflow-hidden">
+    <div class="bg-white dark:bg-zinc-900 shadow rounded-lg">
         <table class="w-full text-sm">
             <thead class="bg-zinc-100 dark:bg-zinc-800">
                 <tr class="text-left text-zinc-700 dark:text-zinc-300">
@@ -50,20 +66,35 @@ $delete = function ($id) {
                         <td class="p-3 capitalize">{{ $invoice->vat_treatment }}</td>
                         <td class="p-3 text-right">₦{{ number_format($invoice->total_amount, 2) }}</td>
                         <td class="p-3">{{ ucfirst($invoice->status) }}</td>
-                        <td class="p-3 text-right space-x-2">
-                            <a href="{{ route('invoices.show', $invoice->id) }}"
-                                class="px-3 py-1 bg-gray-500 text-white rounded hover:bg-gray-600 dark:bg-gray-600 dark:hover:bg-gray-700 cursor-pointer">
-                                👁️ View
-                            </a>
-                            <a href="{{ route('invoices.edit', $invoice->id) }}"
-                                class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 cursor-pointer">
-                                ✏️ Edit
-                            </a>
-                            <button wire:click="delete({{ $invoice->id }})"
-                                onclick="return confirm('Are you sure you want to delete this invoice?')"
-                                class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700 cursor-pointer">
-                                🗑️ Delete
-                            </button>
+                        <td class="p-3 text-right">
+                            <div x-data="{ open: false }" class="relative inline-block text-left">
+                                <button @click="open = !open"
+                                    class="px-3 py-1 bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-white rounded hover:bg-gray-300 dark:hover:bg-gray-600">
+                                    ⋮
+                                </button>
+
+                                <div x-show="open" @click.away="open = false" x-cloak
+                                    class="absolute right-0 mt-2 w-44 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded shadow-lg z-50">
+                                    <a href="{{ route('invoices.show', $invoice->id) }}"
+                                        class="block px-4 py-2 text-sm hover:bg-zinc-100 dark:hover:bg-zinc-700">👁️
+                                        View</a>
+
+                                    <a href="{{ route('invoices.edit', $invoice->id) }}"
+                                        class="block px-4 py-2 text-sm hover:bg-zinc-100 dark:hover:bg-zinc-700">✏️
+                                        Edit</a>
+
+                                    <button wire:click="submitToFirs({{ $invoice->id }})"
+                                        class="w-full text-left px-4 py-2 text-sm hover:bg-zinc-100 dark:hover:bg-zinc-700 cursor-pointer">
+                                        📤 Submit to FIRS
+                                    </button>
+
+                                    <button wire:click="delete({{ $invoice->id }})"
+                                        onclick="return confirm('Are you sure you want to delete this invoice?')"
+                                        class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-zinc-100 dark:hover:bg-zinc-700">
+                                        🗑️ Delete
+                                    </button>
+                                </div>
+                            </div>
                         </td>
                     </tr>
                 @endforeach

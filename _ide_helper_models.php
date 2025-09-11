@@ -302,6 +302,15 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Landlord newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Landlord newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Landlord query()
+ */
+	class Landlord extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * @property int $id
  * @property int $organization_id
  * @property string $type

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Landlord;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -24,5 +25,14 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $superAdmin->assignRole('super admin');
+
+        $landlord = Landlord::factory()->create([
+            'name' => 'Default Landlord',
+            'email' => 'damolaabolarin@gmail.com',
+            'password' => Hash::make('@4WESTmetro'),
+            'is_active' => true,
+        ]);
+
+        $landlord->assignRole('landlord');
     }
 }

@@ -6,10 +6,11 @@ use App\Http\Controllers\BaseController;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Models\Tenant;
 use App\Models\User;
-use App\Services\WestMetroApiService;
+use App\Services\FirsApiService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
 
@@ -25,22 +26,11 @@ class AuthController extends BaseController
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
-     *             required={"tenant_name","name","email","password","password_confirmation"},
+     *             required={"email","password"},
      *             @OA\Property(property="tenant_name", type="string", example="Acme Corp"),
-     *             @OA\Property(property="brand", type="string", example="Acme Brand"),
-     *             @OA\Property(property="domain", type="string", example="acme.com"),
-     *             @OA\Property(property="entity_id", type="string", example="123456"),
-     *             @OA\Property(property="service_id", type="string", example="svc-001"),
-     *             @OA\Property(property="registration_number", type="string", example="REG-123456"),
-     *             @OA\Property(property="email", type="string", format="email", example="john@example.com"),
-     *             @OA\Property(property="phone", type="string", example="+1234567890"),
-     *             @OA\Property(property="street_name", type="string", example="123 Main St"),
-     *             @OA\Property(property="city_name", type="string", example="Metropolis"),
-     *             @OA\Property(property="postal_zone", type="string", example="12345"),
-     *             @OA\Property(property="description", type="string", example="Main office"),
-     *             @OA\Property(property="name", type="string", example="John Doe"),
-     *             @OA\Property(property="password", type="string", format="password", example="secret123"),
-     *             @OA\Property(property="password_confirmation", type="string", format="password", example="secret123")
+     *             @OA\Property(property="email", type="string", format="email", example="your firs e-invoice login email"),
+     *             @OA\Property(property="password", type="string", format="password", example="your firs e-invoice login password"),
+     *             @OA\Property(property="password_confirmation", type="string", format="password", example="your firs e-invoice login password")
      *         )
      *     ),
      *     @OA\Response(
@@ -83,72 +73,80 @@ class AuthController extends BaseController
      */
     public function register(RegisterRequest $request): JsonResponse
     {
-        if (!empty($request->tenant_password)) {
-            $doLogin = app(WestMetroApiService::class)->login($request->email, $request->tenant_password);
-            if (!$doLogin || !isset($doLogin['code']) || $doLogin['code'] != 200) {
-                return response()->json(['message' => 'WestMetro authentication failed'], 422);
-            }
-            $request['entity_id'] = $doLogin['data']['entity_id'] ?? null;
+        try {
+            return DB::transaction(function () use ($request) {
+                if (!empty($request->email) && !empty($request->password)) {
+                    $doLogin = app(FirsApiService::class)->login($request->email, $request->password);
+
+                    if (!$doLogin || ($doLogin['code'] ?? 500) != 200) {
+                        throw new \Exception('FIRS authentication failed');
+                    }
+
+                    $request['entity_id'] = $doLogin['data']['entity_id'] ?? null;
+                }
+
+                $tenant = Tenant::create([
+                    'name'              => $request->tenant_name ?? 'Tenant ' . rand(000000, 999999),
+                    'email'             => $request->email,
+                    'password'          => !empty($request->password) ? Hash::make($request->password) : null,
+                    'entity_id'         => $request->entity_id ?? null,
+                    'brand'             => $request->brand ?? null,
+                    'domain'            => $request->domain ?? null,
+                    'feature_flags'     => [],
+                    'retention_policy'  => "default",
+                ]);
+
+                if (!empty($request->entity_id)) {
+                    $getEntity = app(FirsApiService::class)->getEntity($request->entity_id);
+
+                    if (!$getEntity || !isset($getEntity['code']) || $getEntity['code'] != 200) {
+                        throw new \Exception('Failed to fetch entity details from FIRS');
+                    }
+
+                    $request['tin']         = $getEntity['data']['businesses'][0]['tin'] ?? null;
+                    $request['trade_name']  = $getEntity['data']['businesses'][0]['name'] ?? null;
+                    $request['business_id'] = $getEntity['data']['businesses'][0]['id'] ?? null;
+                }
+
+                $org = $tenant->organizations()->create([
+                    'tin'                   => $request->tin ?? null,
+                    'trade_name'            => $request->trade_name ?? null,
+                    'business_id'           => $request->business_id ?? null,
+                    'service_id'            => $request->service_id ?? null,
+                    'registration_number'   => $request->registration_number ?? null,
+                    'email'                 => $request->email ?? null,
+                    'phone'                 => $request->phone ?? null,
+                    'street_name'           => $request->street_name ?? null,
+                    'city_name'             => $request->city_name ?? null,
+                    'postal_zone'           => $request->postal_zone ?? null,
+                    'description'           => $request->description ?? null,
+                ]);
+
+                $user = $org->users()->create([
+                    'name'      => $request->trade_name,
+                    'email'     => $request->email,
+                    'password'  => Hash::make($request->password),
+                ]);
+
+                if (class_exists(Role::class)) {
+                    $user->assignRole('tenant admin');
+                }
+
+                $token = $user->createToken('api')->plainTextToken;
+
+                $userData = $user->toArray();
+                unset($userData['password']);
+
+                return $this->sendResponse([
+                    'tenant'       => $tenant,
+                    'organization' => $org,
+                    'user'         => $userData,
+                    'token'        => $token,
+                ], 'Tenant, organization, and user created successfully', 201, true);
+            });
+        } catch (\Throwable $e) {
+            return $this->sendError($e->getMessage(), [], 422);
         }
-
-        $tenant = Tenant::create([
-            'name'              => $request->tenant_name,
-            'email'             => $request->email,
-            'password'          => !empty($request->tenant_password) ? Hash::make($request->tenant_password) : null,
-            'entity_id'         => $request->entity_id ?? null,
-            'brand'             => $request->brand ?? null,
-            'domain'            => $request->domain ?? null,
-            'feature_flags'     => [],
-            'retention_policy'  => "default",
-        ]);
-
-        if (!empty($request->entity_id)) {
-            $getEntity = app(WestMetroApiService::class)->getEntity($request->entity_id);
-            if (!$getEntity || !isset($getEntity['code']) || $getEntity['code'] != 200) {
-                return response()->json(['message' => 'Failed to fetch entity details from WestMetro'], 422);
-            }
-            // var_dump($getEntity['data']);
-            $request['tin'] = $getEntity['data']['businesses'][0]['tin'] ?? null;
-            $request['trade_name'] = $getEntity['data']['businesses'][0]['name'] ?? null;
-            $request['business_id'] = $getEntity['data']['businesses'][0]['id'] ?? null;
-        }
-        // var_dump($request->all());
-
-        $org = $tenant->organizations()->create([
-            'tin'                   => $request->tin ?? null,
-            'trade_name'           => $request->trade_name ?? null,
-            'business_id'          => $request->business_id ?? null,
-            'service_id'            => $request->service_id ?? null,
-            'registration_number'   => $request->registration_number ?? null,
-            'email'                 => $request->email ?? null,
-            'phone'                 => $request->phone ?? null,
-            'street_name'           => $request->street_name ?? null,
-            'city_name'             => $request->city_name ?? null,
-            'postal_zone'           => $request->postal_zone ?? null,
-            'description'           => $request->description ?? null,
-        ]);
-
-        $user = $org->users()->create([
-            'name'      => $request->trade_name,
-            'email'     => $request->email,
-            'password'  => Hash::make($request->password),
-        ]);
-
-        if (class_exists(Role::class)) {
-            $user->assignRole('tenant admin');
-        }
-
-        $token = $user->createToken('api')->plainTextToken;
-
-        $userData = $user->toArray();
-        unset($userData['password']);
-
-        return $this->sendResponse([
-            'tenant'       => $tenant,
-            'organization' => $org,
-            'user'         => $userData,
-            'token'        => $token,
-        ], 'Tenant, organization, and user created successfully', 201, true);
     }
 
     /**
@@ -160,8 +158,8 @@ class AuthController extends BaseController
      *         required=true,
      *         @OA\JsonContent(
      *             required={"email","password"},
-     *             @OA\Property(property="email", type="string", format="email", example="john@example.com"),
-     *             @OA\Property(property="password", type="string", format="password", example="secret123")
+     *             @OA\Property(property="email", type="string", format="email", example="your firs e-invoice login email"),
+     *             @OA\Property(property="password", type="string", format="password", example="your firs e-invoice login password")
      *         )
      *     ),
      *     @OA\Response(

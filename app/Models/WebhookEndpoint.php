@@ -12,8 +12,8 @@ class WebhookEndpoint extends Model
     protected $fillable = [
         'organization_id',
         'url',
-        'secret',
-        'subscribed_events'
+        'irn',
+        'message',
     ];
 
     protected $casts = [

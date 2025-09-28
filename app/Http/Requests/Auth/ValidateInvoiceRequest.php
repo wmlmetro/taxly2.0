@@ -22,7 +22,9 @@ class ValidateInvoiceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'comments' => ['nullable', 'string', 'max:500'],
+            'business_id' => ['required', 'string'],
+            'invoice_reference' => ['required', 'string'],
+            'irn' => ['required', 'string'],
         ];
     }
 }

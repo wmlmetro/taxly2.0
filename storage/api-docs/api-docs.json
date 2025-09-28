@@ -1,17 +1,17 @@
 {
     "openapi": "3.0.0",
     "info": {
-        "title": "Vendra API",
-        "description": "API documentation for Vendra platform",
+        "title": "Taxly API",
+        "description": "API documentation for Taxly platform",
         "version": "1.0.0"
     },
     "servers": [
         {
-            "url": "http://e-invoice.test",
+            "url": "http://taxly.test",
             "description": "Local Server"
         },
         {
-            "url": "https://vendra.ng",
+            "url": "https://taxly.ng",
             "description": "Production Server"
         }
     ],
@@ -29,75 +29,28 @@
                         "application/json": {
                             "schema": {
                                 "required": [
-                                    "tenant_name",
-                                    "name",
                                     "email",
-                                    "password",
-                                    "password_confirmation"
+                                    "password"
                                 ],
                                 "properties": {
                                     "tenant_name": {
                                         "type": "string",
                                         "example": "Acme Corp"
                                     },
-                                    "brand": {
-                                        "type": "string",
-                                        "example": "Acme Brand"
-                                    },
-                                    "domain": {
-                                        "type": "string",
-                                        "example": "acme.com"
-                                    },
-                                    "entity_id": {
-                                        "type": "string",
-                                        "example": "123456"
-                                    },
-                                    "service_id": {
-                                        "type": "string",
-                                        "example": "svc-001"
-                                    },
-                                    "registration_number": {
-                                        "type": "string",
-                                        "example": "REG-123456"
-                                    },
                                     "email": {
                                         "type": "string",
                                         "format": "email",
-                                        "example": "john@example.com"
-                                    },
-                                    "phone": {
-                                        "type": "string",
-                                        "example": "+1234567890"
-                                    },
-                                    "street_name": {
-                                        "type": "string",
-                                        "example": "123 Main St"
-                                    },
-                                    "city_name": {
-                                        "type": "string",
-                                        "example": "Metropolis"
-                                    },
-                                    "postal_zone": {
-                                        "type": "string",
-                                        "example": "12345"
-                                    },
-                                    "description": {
-                                        "type": "string",
-                                        "example": "Main office"
-                                    },
-                                    "name": {
-                                        "type": "string",
-                                        "example": "John Doe"
+                                        "example": "your firs e-invoice login email"
                                     },
                                     "password": {
                                         "type": "string",
                                         "format": "password",
-                                        "example": "secret123"
+                                        "example": "your firs e-invoice login password"
                                     },
                                     "password_confirmation": {
                                         "type": "string",
                                         "format": "password",
-                                        "example": "secret123"
+                                        "example": "your firs e-invoice login password"
                                     }
                                 },
                                 "type": "object"
@@ -171,12 +124,12 @@
                                     "email": {
                                         "type": "string",
                                         "format": "email",
-                                        "example": "john@example.com"
+                                        "example": "your firs e-invoice login email"
                                     },
                                     "password": {
                                         "type": "string",
                                         "format": "password",
-                                        "example": "secret123"
+                                        "example": "your firs e-invoice login password"
                                     }
                                 },
                                 "type": "object"
@@ -355,64 +308,23 @@
                 ]
             }
         },
-        "/api/v1/invoices": {
+        "/api/v1/invoices/search/{business_id}": {
             "get": {
                 "tags": [
                     "Invoices"
                 ],
-                "summary": "List invoices",
-                "operationId": "89f5460c37edf14349cb1b223d09f2f6",
-                "responses": {
-                    "200": {
-                        "description": "List of invoices"
-                    }
-                },
-                "security": [
+                "summary": "Search for invoices from FIRS",
+                "operationId": "b6a28e80d73ecc2322b3a06c2eed65d1",
+                "parameters": [
                     {
-                        "sanctum": []
-                    }
-                ]
-            },
-            "post": {
-                "tags": [
-                    "Invoices"
-                ],
-                "summary": "Create a new invoice",
-                "operationId": "3b8daf1fa0802958ea4fbe416868830a",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "buyer_organization_ref",
-                                    "total_amount"
-                                ],
-                                "properties": {
-                                    "buyer_organization_ref": {
-                                        "type": "string",
-                                        "example": "TIN123"
-                                    },
-                                    "total_amount": {
-                                        "type": "number",
-                                        "example": 1500
-                                    },
-                                    "tax_breakdown": {
-                                        "type": "object",
-                                        "example": {
-                                            "VAT": 250
-                                        }
-                                    },
-                                    "vat_treatment": {
-                                        "type": "string",
-                                        "example": "standard"
-                                    }
-                                },
-                                "type": "object"
-                            }
+                        "name": "business_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
                         }
                     }
-                },
+                ],
                 "responses": {
                     "201": {
                         "description": "Invoice created",
@@ -420,17 +332,32 @@
                             "application/json": {
                                 "schema": {},
                                 "example": {
-                                    "message": "Invoice created successfully",
-                                    "success": true,
+                                    "code": 200,
                                     "data": {
-                                        "id": 1,
-                                        "buyer_organization_ref": "TIN123",
-                                        "total_amount": 1500,
-                                        "tax_breakdown": {
-                                            "VAT": 250
+                                        "items": [
+                                            {
+                                                "irn": "INV000002-94019CE5-20250911",
+                                                "payment_status": "PAID",
+                                                "entry_status": "TRANSMITTING",
+                                                "invoice_type_code": "396",
+                                                "issue_date": "2025-09-10T00:00:00Z",
+                                                "issue_time": "17:59:04",
+                                                "due_date": "2025-09-17T00:00:00Z",
+                                                "sync_date": "2025-09-11",
+                                                "document_currency_code": "NGN",
+                                                "tax_currency_code": "NGN"
+                                            }
+                                        ],
+                                        "page": {
+                                            "page": 1,
+                                            "size": 10,
+                                            "hasNextPage": false,
+                                            "hasPreviousPage": false,
+                                            "totalCount": 6
                                         },
-                                        "status": "draft"
-                                    }
+                                        "attributes": null
+                                    },
+                                    "message": "Invoices loaded successfully"
                                 }
                             }
                         }
@@ -443,61 +370,38 @@
                 ]
             }
         },
-        "/api/v1/invoices/{invoice}/validate": {
+        "/api/v1/invoices/irn/validate": {
             "post": {
                 "tags": [
                     "Invoices"
                 ],
-                "summary": "Validate an invoice",
-                "operationId": "9dcba91de867056d31cbe910af1c932d",
-                "parameters": [
-                    {
-                        "name": "invoice",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Invoice validated"
-                    }
-                },
-                "security": [
-                    {
-                        "sanctum": []
-                    }
-                ]
-            }
-        },
-        "/api/v1/invoices/{invoice}/submit": {
-            "post": {
-                "tags": [
-                    "Invoices"
-                ],
-                "summary": "Submit an invoice",
-                "operationId": "a1bcee13601320ae3d3541ae832ef0d1",
-                "parameters": [
-                    {
-                        "name": "invoice",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
+                "summary": "Validate an invoice IRN on FIRS",
+                "operationId": "129a56fc79be847924a862007dd5e306",
                 "requestBody": {
                     "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
+                                "required": [
+                                    "business_id",
+                                    "invoice_reference",
+                                    "irn"
+                                ],
                                 "properties": {
-                                    "channel": {
+                                    "business_id": {
+                                        "description": "Business ID",
                                         "type": "string",
-                                        "example": "api"
+                                        "example": "414a50c3-9ce5-49ec-9ccb-37c28f7cf6be"
+                                    },
+                                    "invoice_reference": {
+                                        "description": "Invoice reference",
+                                        "type": "string",
+                                        "example": "INV000002"
+                                    },
+                                    "irn": {
+                                        "description": "Invoice Registration Number",
+                                        "type": "string",
+                                        "example": "INV000002-94019CE5-20250911"
                                     }
                                 },
                                 "type": "object"
@@ -506,21 +410,17 @@
                     }
                 },
                 "responses": {
-                    "202": {
-                        "description": "Invoice submitted",
+                    "200": {
+                        "description": "IRN validated successfully",
                         "content": {
                             "application/json": {
                                 "schema": {},
                                 "example": {
-                                    "message": "Invoice submission initiated successfully",
-                                    "success": true,
+                                    "code": 200,
                                     "data": {
-                                        "invoice": {
-                                            "id": 1,
-                                            "status": "submitted"
-                                        },
-                                        "result": "Submission queued"
-                                    }
+                                        "ok": true
+                                    },
+                                    "message": "IRN validated successfully"
                                 }
                             }
                         }
@@ -533,26 +433,1292 @@
                 ]
             }
         },
-        "/api/v1/invoices/{invoice}": {
-            "get": {
+        "/api/v1/invoices/validate": {
+            "post": {
                 "tags": [
                     "Invoices"
                 ],
-                "summary": "Get invoice details",
-                "operationId": "7cdea52f8c6e0ee93db40bfd81beafef",
+                "summary": "Validate an invoice on FIRS",
+                "operationId": "5471d2dda935a5a5c96edd4d66c123ad",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "channel",
+                                    "business_id",
+                                    "invoice_reference",
+                                    "irn",
+                                    "issue_date",
+                                    "invoice_type_code",
+                                    "document_currency_code",
+                                    "accounting_supplier_party",
+                                    "accounting_customer_party",
+                                    "legal_monetary_total",
+                                    "invoice_line"
+                                ],
+                                "properties": {
+                                    "channel": {
+                                        "description": "Submission channel",
+                                        "type": "string",
+                                        "example": "api"
+                                    },
+                                    "business_id": {
+                                        "description": "Business ID",
+                                        "type": "string",
+                                        "example": "414a50c3-9ce5-49ec-9ccb-37c28f7cf6be"
+                                    },
+                                    "invoice_reference": {
+                                        "description": "Invoice reference",
+                                        "type": "string",
+                                        "example": "INV000002"
+                                    },
+                                    "irn": {
+                                        "description": "Invoice Registration Number",
+                                        "type": "string",
+                                        "example": "INV000002-94019CE5-20250911"
+                                    },
+                                    "issue_date": {
+                                        "description": "Issue date",
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2025-09-10"
+                                    },
+                                    "due_date": {
+                                        "description": "Due date (optional)",
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2025-09-17"
+                                    },
+                                    "issue_time": {
+                                        "description": "Issue time (optional)",
+                                        "type": "string",
+                                        "format": "time",
+                                        "example": "17:59:04"
+                                    },
+                                    "invoice_type_code": {
+                                        "description": "Invoice type code",
+                                        "type": "string",
+                                        "example": "396"
+                                    },
+                                    "payment_status": {
+                                        "description": "Payment status (optional, defaults to pending)",
+                                        "type": "string",
+                                        "example": "PENDING"
+                                    },
+                                    "note": {
+                                        "description": "Note (optional, will be encrypted)",
+                                        "type": "string",
+                                        "example": "dummy_note (will be encryted in storage)"
+                                    },
+                                    "tax_point_date": {
+                                        "description": "Tax point date (optional)",
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2025-09-10"
+                                    },
+                                    "document_currency_code": {
+                                        "description": "Document currency code",
+                                        "type": "string",
+                                        "example": "NGN"
+                                    },
+                                    "tax_currency_code": {
+                                        "description": "Tax currency code (optional)",
+                                        "type": "string",
+                                        "example": "NGN"
+                                    },
+                                    "accounting_cost": {
+                                        "description": "Accounting cost (optional)",
+                                        "type": "string",
+                                        "example": "2000"
+                                    },
+                                    "buyer_reference": {
+                                        "description": "Buyer reference (optional)",
+                                        "type": "string",
+                                        "example": "buyer REF IRN?"
+                                    },
+                                    "invoice_delivery_period": {
+                                        "description": "Invoice delivery period (optional)",
+                                        "properties": {
+                                            "start_date": {
+                                                "type": "string",
+                                                "format": "date",
+                                                "example": "2025-09-17"
+                                            },
+                                            "end_date": {
+                                                "type": "string",
+                                                "format": "date",
+                                                "example": "2025-09-21"
+                                            }
+                                        },
+                                        "type": "object"
+                                    },
+                                    "order_reference": {
+                                        "description": "Order reference (optional)",
+                                        "type": "string",
+                                        "example": "order REF IRN?"
+                                    },
+                                    "billing_reference": {
+                                        "description": "Billing reference (optional)",
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "irn": {
+                                                    "type": "string",
+                                                    "example": "INV000002-94019CE5-20250911"
+                                                },
+                                                "issue_date": {
+                                                    "type": "string",
+                                                    "format": "date",
+                                                    "example": "2025-09-10"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "dispatch_document_reference": {
+                                        "description": "Dispatch document reference (optional)",
+                                        "properties": {
+                                            "irn": {
+                                                "type": "string",
+                                                "example": "INV000002-94019CE5-20250911"
+                                            },
+                                            "issue_date": {
+                                                "type": "string",
+                                                "format": "date",
+                                                "example": "2025-09-10"
+                                            }
+                                        },
+                                        "type": "object"
+                                    },
+                                    "receipt_document_reference": {
+                                        "description": "Receipt document reference (optional)",
+                                        "properties": {
+                                            "irn": {
+                                                "type": "string",
+                                                "example": "INV000002-94019CE5-20250911"
+                                            },
+                                            "issue_date": {
+                                                "type": "string",
+                                                "format": "date",
+                                                "example": "2025-09-10"
+                                            }
+                                        },
+                                        "type": "object"
+                                    },
+                                    "originator_document_reference": {
+                                        "description": "Originator document reference (optional)",
+                                        "properties": {
+                                            "irn": {
+                                                "type": "string",
+                                                "example": "INV000002-94019CE5-20250911"
+                                            },
+                                            "issue_date": {
+                                                "type": "string",
+                                                "format": "date",
+                                                "example": "2025-09-10"
+                                            }
+                                        },
+                                        "type": "object"
+                                    },
+                                    "contract_document_reference": {
+                                        "description": "Contract document reference (optional)",
+                                        "properties": {
+                                            "irn": {
+                                                "type": "string",
+                                                "example": "INV000002-94019CE5-20250911"
+                                            },
+                                            "issue_date": {
+                                                "type": "string",
+                                                "format": "date",
+                                                "example": "2025-09-10"
+                                            }
+                                        },
+                                        "type": "object"
+                                    },
+                                    "_document_reference": {
+                                        "description": "Document reference (optional)",
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "irn": {
+                                                    "type": "string",
+                                                    "example": "INV000002-94019CE5-20250911"
+                                                },
+                                                "issue_date": {
+                                                    "type": "string",
+                                                    "format": "date",
+                                                    "example": "2025-09-10"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "accounting_supplier_party": {
+                                        "description": "Accounting supplier party",
+                                        "properties": {
+                                            "party_name": {
+                                                "type": "string",
+                                                "example": "Aliquam aspernatur"
+                                            },
+                                            "tin": {
+                                                "type": "string",
+                                                "example": "01122228-7187"
+                                            },
+                                            "email": {
+                                                "type": "string",
+                                                "example": "damolaabolarin1@gmail.com"
+                                            },
+                                            "telephone": {
+                                                "description": "Must start with + (country code)",
+                                                "type": "string",
+                                                "example": "+2348187136111"
+                                            },
+                                            "business_description": {
+                                                "type": "string",
+                                                "example": "this entity is into sales of Inverter gadgets and installation."
+                                            },
+                                            "postal_address": {
+                                                "properties": {
+                                                    "street_name": {
+                                                        "type": "string",
+                                                        "example": "123 Main St"
+                                                    },
+                                                    "city_name": {
+                                                        "type": "string",
+                                                        "example": "Metropolis"
+                                                    },
+                                                    "postal_zone": {
+                                                        "type": "string",
+                                                        "example": "12345"
+                                                    },
+                                                    "country": {
+                                                        "type": "string",
+                                                        "example": "NG"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "type": "object"
+                                    },
+                                    "accounting_customer_party": {
+                                        "description": "Accounting customer party",
+                                        "properties": {
+                                            "party_name": {
+                                                "type": "string",
+                                                "example": "Westmetro"
+                                            },
+                                            "tin": {
+                                                "type": "string",
+                                                "example": "17883307-0001"
+                                            },
+                                            "email": {
+                                                "type": "string",
+                                                "example": "business@email.com"
+                                            },
+                                            "telephone": {
+                                                "description": "Must start with + (country code)",
+                                                "type": "string",
+                                                "example": "+23480254000000"
+                                            },
+                                            "business_description": {
+                                                "type": "string",
+                                                "example": "this entity is into sales of Cement and building materials"
+                                            },
+                                            "postal_address": {
+                                                "properties": {
+                                                    "street_name": {
+                                                        "type": "string",
+                                                        "example": "32, owonikoko street"
+                                                    },
+                                                    "city_name": {
+                                                        "type": "string",
+                                                        "example": "Gwarikpa"
+                                                    },
+                                                    "postal_zone": {
+                                                        "type": "string",
+                                                        "example": "023401"
+                                                    },
+                                                    "country": {
+                                                        "type": "string",
+                                                        "example": "NG"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "type": "object"
+                                    },
+                                    "actual_delivery_date": {
+                                        "description": "Actual delivery date (optional)",
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2025-09-10"
+                                    },
+                                    "payment_means": {
+                                        "description": "Payment means (optional)",
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "payment_means_code": {
+                                                    "type": "string",
+                                                    "example": "10"
+                                                },
+                                                "payment_due_date": {
+                                                    "type": "string",
+                                                    "format": "date",
+                                                    "example": "2025-09-10"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "payment_terms_note": {
+                                        "description": "Payment terms note (optional, will be encrypted)",
+                                        "type": "string",
+                                        "example": "dummy payment terms note (will be encryted in storage)"
+                                    },
+                                    "allowance_charge": {
+                                        "description": "Allowance/charge (optional)",
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "charge_indicator": {
+                                                    "description": "true=charge, false=allowance",
+                                                    "type": "boolean",
+                                                    "example": true
+                                                },
+                                                "amount": {
+                                                    "type": "number",
+                                                    "format": "float",
+                                                    "example": 1465230
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "tax_total": {
+                                        "description": "Tax total (optional)",
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "tax_amount": {
+                                                    "type": "number",
+                                                    "format": "float",
+                                                    "example": 56.07
+                                                },
+                                                "tax_subtotal": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "taxable_amount": {
+                                                                "type": "number",
+                                                                "format": "float",
+                                                                "example": 1200000
+                                                            },
+                                                            "tax_amount": {
+                                                                "type": "number",
+                                                                "format": "float",
+                                                                "example": 8
+                                                            },
+                                                            "tax_category": {
+                                                                "properties": {
+                                                                    "id": {
+                                                                        "type": "string",
+                                                                        "example": "LOCAL_SALES_TAX"
+                                                                    },
+                                                                    "percent": {
+                                                                        "type": "number",
+                                                                        "format": "float",
+                                                                        "example": 7.5
+                                                                    }
+                                                                },
+                                                                "type": "object"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "legal_monetary_total": {
+                                        "description": "Legal monetary total (required)",
+                                        "properties": {
+                                            "tax_exclusive_amount": {
+                                                "type": "number",
+                                                "format": "float",
+                                                "example": 1460000
+                                            },
+                                            "tax_inclusive_amount": {
+                                                "type": "number",
+                                                "format": "float",
+                                                "example": 1465230
+                                            },
+                                            "line_extension_amount": {
+                                                "type": "number",
+                                                "format": "float",
+                                                "example": 1460000
+                                            },
+                                            "payable_amount": {
+                                                "type": "number",
+                                                "format": "float",
+                                                "example": 1465230
+                                            }
+                                        },
+                                        "type": "object"
+                                    },
+                                    "invoice_line": {
+                                        "description": "Invoice lines (required)",
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "hsn_code": {
+                                                    "type": "string",
+                                                    "example": "WM-001"
+                                                },
+                                                "product_category": {
+                                                    "type": "string",
+                                                    "example": "Inverter"
+                                                },
+                                                "discount_rate": {
+                                                    "type": "number",
+                                                    "format": "float",
+                                                    "example": 0
+                                                },
+                                                "discount_amount": {
+                                                    "type": "number",
+                                                    "format": "float",
+                                                    "example": 0
+                                                },
+                                                "fee_rate": {
+                                                    "type": "number",
+                                                    "format": "float",
+                                                    "example": 1.01
+                                                },
+                                                "fee_amount": {
+                                                    "type": "number",
+                                                    "format": "float",
+                                                    "example": 50
+                                                },
+                                                "invoiced_quantity": {
+                                                    "type": "integer",
+                                                    "example": 5
+                                                },
+                                                "line_extension_amount": {
+                                                    "type": "number",
+                                                    "format": "float",
+                                                    "example": 1465230
+                                                },
+                                                "item": {
+                                                    "properties": {
+                                                        "name": {
+                                                            "type": "string",
+                                                            "example": "Solar invert "
+                                                        },
+                                                        "description": {
+                                                            "type": "string",
+                                                            "example": "item description"
+                                                        },
+                                                        "sellers_item_identification": {
+                                                            "type": "string",
+                                                            "example": "identified as spoon by the seller"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                "price": {
+                                                    "properties": {
+                                                        "price_amount": {
+                                                            "type": "number",
+                                                            "format": "float",
+                                                            "example": 1465230
+                                                        },
+                                                        "base_quantity": {
+                                                            "type": "integer",
+                                                            "example": 1
+                                                        },
+                                                        "price_unit": {
+                                                            "type": "string",
+                                                            "example": "NGN per 1"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Invoice submitted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "code": 200,
+                                    "data": {
+                                        "ok": true
+                                    },
+                                    "message": "Invoice signed successfully"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/invoices/submit": {
+            "post": {
+                "tags": [
+                    "Invoices"
+                ],
+                "summary": "Submit an invoice to FIRS",
+                "description": "Calling the submit invoice endpoint, it will first of all validate the IRN, then validate the Invoice and finally submit the invoice",
+                "operationId": "611dc1512454af4fa0d546cac944e239",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "channel",
+                                    "business_id",
+                                    "invoice_reference",
+                                    "irn",
+                                    "issue_date",
+                                    "invoice_type_code",
+                                    "document_currency_code",
+                                    "accounting_supplier_party",
+                                    "accounting_customer_party",
+                                    "legal_monetary_total",
+                                    "invoice_line"
+                                ],
+                                "properties": {
+                                    "channel": {
+                                        "description": "Submission channel",
+                                        "type": "string",
+                                        "example": "api"
+                                    },
+                                    "business_id": {
+                                        "description": "Business ID",
+                                        "type": "string",
+                                        "example": "414a50c3-9ce5-49ec-9ccb-37c28f7cf6be"
+                                    },
+                                    "invoice_reference": {
+                                        "description": "Invoice reference",
+                                        "type": "string",
+                                        "example": "INV000002"
+                                    },
+                                    "irn": {
+                                        "description": "Invoice Registration Number",
+                                        "type": "string",
+                                        "example": "INV000002-94019CE5-20250911"
+                                    },
+                                    "issue_date": {
+                                        "description": "Issue date",
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2025-09-10"
+                                    },
+                                    "due_date": {
+                                        "description": "Due date (optional)",
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2025-09-17"
+                                    },
+                                    "issue_time": {
+                                        "description": "Issue time (optional)",
+                                        "type": "string",
+                                        "format": "time",
+                                        "example": "17:59:04"
+                                    },
+                                    "invoice_type_code": {
+                                        "description": "Invoice type code",
+                                        "type": "string",
+                                        "example": "396"
+                                    },
+                                    "payment_status": {
+                                        "description": "Payment status (optional, defaults to pending)",
+                                        "type": "string",
+                                        "example": "PENDING"
+                                    },
+                                    "note": {
+                                        "description": "Note (optional, will be encrypted)",
+                                        "type": "string",
+                                        "example": "dummy_note (will be encryted in storage)"
+                                    },
+                                    "tax_point_date": {
+                                        "description": "Tax point date (optional)",
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2025-09-10"
+                                    },
+                                    "document_currency_code": {
+                                        "description": "Document currency code",
+                                        "type": "string",
+                                        "example": "NGN"
+                                    },
+                                    "tax_currency_code": {
+                                        "description": "Tax currency code (optional)",
+                                        "type": "string",
+                                        "example": "NGN"
+                                    },
+                                    "accounting_cost": {
+                                        "description": "Accounting cost (optional)",
+                                        "type": "string",
+                                        "example": "2000"
+                                    },
+                                    "buyer_reference": {
+                                        "description": "Buyer reference (optional)",
+                                        "type": "string",
+                                        "example": "buyer REF IRN?"
+                                    },
+                                    "invoice_delivery_period": {
+                                        "description": "Invoice delivery period (optional)",
+                                        "properties": {
+                                            "start_date": {
+                                                "type": "string",
+                                                "format": "date",
+                                                "example": "2025-09-17"
+                                            },
+                                            "end_date": {
+                                                "type": "string",
+                                                "format": "date",
+                                                "example": "2025-09-21"
+                                            }
+                                        },
+                                        "type": "object"
+                                    },
+                                    "order_reference": {
+                                        "description": "Order reference (optional)",
+                                        "type": "string",
+                                        "example": "order REF IRN?"
+                                    },
+                                    "billing_reference": {
+                                        "description": "Billing reference (optional)",
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "irn": {
+                                                    "type": "string",
+                                                    "example": "INV000002-94019CE5-20250911"
+                                                },
+                                                "issue_date": {
+                                                    "type": "string",
+                                                    "format": "date",
+                                                    "example": "2025-09-10"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "dispatch_document_reference": {
+                                        "description": "Dispatch document reference (optional)",
+                                        "properties": {
+                                            "irn": {
+                                                "type": "string",
+                                                "example": "INV000002-94019CE5-20250911"
+                                            },
+                                            "issue_date": {
+                                                "type": "string",
+                                                "format": "date",
+                                                "example": "2025-09-10"
+                                            }
+                                        },
+                                        "type": "object"
+                                    },
+                                    "receipt_document_reference": {
+                                        "description": "Receipt document reference (optional)",
+                                        "properties": {
+                                            "irn": {
+                                                "type": "string",
+                                                "example": "INV000002-94019CE5-20250911"
+                                            },
+                                            "issue_date": {
+                                                "type": "string",
+                                                "format": "date",
+                                                "example": "2025-09-10"
+                                            }
+                                        },
+                                        "type": "object"
+                                    },
+                                    "originator_document_reference": {
+                                        "description": "Originator document reference (optional)",
+                                        "properties": {
+                                            "irn": {
+                                                "type": "string",
+                                                "example": "INV000002-94019CE5-20250911"
+                                            },
+                                            "issue_date": {
+                                                "type": "string",
+                                                "format": "date",
+                                                "example": "2025-09-10"
+                                            }
+                                        },
+                                        "type": "object"
+                                    },
+                                    "contract_document_reference": {
+                                        "description": "Contract document reference (optional)",
+                                        "properties": {
+                                            "irn": {
+                                                "type": "string",
+                                                "example": "INV000002-94019CE5-20250911"
+                                            },
+                                            "issue_date": {
+                                                "type": "string",
+                                                "format": "date",
+                                                "example": "2025-09-10"
+                                            }
+                                        },
+                                        "type": "object"
+                                    },
+                                    "_document_reference": {
+                                        "description": "Document reference (optional)",
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "irn": {
+                                                    "type": "string",
+                                                    "example": "INV000002-94019CE5-20250911"
+                                                },
+                                                "issue_date": {
+                                                    "type": "string",
+                                                    "format": "date",
+                                                    "example": "2025-09-10"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "accounting_supplier_party": {
+                                        "description": "Accounting supplier party",
+                                        "properties": {
+                                            "party_name": {
+                                                "type": "string",
+                                                "example": "Aliquam aspernatur"
+                                            },
+                                            "tin": {
+                                                "type": "string",
+                                                "example": "01122228-7187"
+                                            },
+                                            "email": {
+                                                "type": "string",
+                                                "example": "damolaabolarin1@gmail.com"
+                                            },
+                                            "telephone": {
+                                                "description": "Must start with + (country code)",
+                                                "type": "string",
+                                                "example": "+2348187136111"
+                                            },
+                                            "business_description": {
+                                                "type": "string",
+                                                "example": "this entity is into sales of Inverter gadgets and installation."
+                                            },
+                                            "postal_address": {
+                                                "properties": {
+                                                    "street_name": {
+                                                        "type": "string",
+                                                        "example": "123 Main St"
+                                                    },
+                                                    "city_name": {
+                                                        "type": "string",
+                                                        "example": "Metropolis"
+                                                    },
+                                                    "postal_zone": {
+                                                        "type": "string",
+                                                        "example": "12345"
+                                                    },
+                                                    "country": {
+                                                        "type": "string",
+                                                        "example": "NG"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "type": "object"
+                                    },
+                                    "accounting_customer_party": {
+                                        "description": "Accounting customer party",
+                                        "properties": {
+                                            "party_name": {
+                                                "type": "string",
+                                                "example": "Westmetro"
+                                            },
+                                            "tin": {
+                                                "type": "string",
+                                                "example": "17883307-0001"
+                                            },
+                                            "email": {
+                                                "type": "string",
+                                                "example": "business@email.com"
+                                            },
+                                            "telephone": {
+                                                "description": "Must start with + (country code)",
+                                                "type": "string",
+                                                "example": "+23480254000000"
+                                            },
+                                            "business_description": {
+                                                "type": "string",
+                                                "example": "this entity is into sales of Cement and building materials"
+                                            },
+                                            "postal_address": {
+                                                "properties": {
+                                                    "street_name": {
+                                                        "type": "string",
+                                                        "example": "32, owonikoko street"
+                                                    },
+                                                    "city_name": {
+                                                        "type": "string",
+                                                        "example": "Gwarikpa"
+                                                    },
+                                                    "postal_zone": {
+                                                        "type": "string",
+                                                        "example": "023401"
+                                                    },
+                                                    "country": {
+                                                        "type": "string",
+                                                        "example": "NG"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "type": "object"
+                                    },
+                                    "actual_delivery_date": {
+                                        "description": "Actual delivery date (optional)",
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2025-09-10"
+                                    },
+                                    "payment_means": {
+                                        "description": "Payment means (optional)",
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "payment_means_code": {
+                                                    "type": "string",
+                                                    "example": "10"
+                                                },
+                                                "payment_due_date": {
+                                                    "type": "string",
+                                                    "format": "date",
+                                                    "example": "2025-09-10"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "payment_terms_note": {
+                                        "description": "Payment terms note (optional, will be encrypted)",
+                                        "type": "string",
+                                        "example": "dummy payment terms note (will be encryted in storage)"
+                                    },
+                                    "allowance_charge": {
+                                        "description": "Allowance/charge (optional)",
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "charge_indicator": {
+                                                    "description": "true=charge, false=allowance",
+                                                    "type": "boolean",
+                                                    "example": true
+                                                },
+                                                "amount": {
+                                                    "type": "number",
+                                                    "format": "float",
+                                                    "example": 1465230
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "tax_total": {
+                                        "description": "Tax total (optional)",
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "tax_amount": {
+                                                    "type": "number",
+                                                    "format": "float",
+                                                    "example": 56.07
+                                                },
+                                                "tax_subtotal": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "taxable_amount": {
+                                                                "type": "number",
+                                                                "format": "float",
+                                                                "example": 1200000
+                                                            },
+                                                            "tax_amount": {
+                                                                "type": "number",
+                                                                "format": "float",
+                                                                "example": 8
+                                                            },
+                                                            "tax_category": {
+                                                                "properties": {
+                                                                    "id": {
+                                                                        "type": "string",
+                                                                        "example": "LOCAL_SALES_TAX"
+                                                                    },
+                                                                    "percent": {
+                                                                        "type": "number",
+                                                                        "format": "float",
+                                                                        "example": 7.5
+                                                                    }
+                                                                },
+                                                                "type": "object"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "legal_monetary_total": {
+                                        "description": "Legal monetary total (required)",
+                                        "properties": {
+                                            "tax_exclusive_amount": {
+                                                "type": "number",
+                                                "format": "float",
+                                                "example": 1460000
+                                            },
+                                            "tax_inclusive_amount": {
+                                                "type": "number",
+                                                "format": "float",
+                                                "example": 1465230
+                                            },
+                                            "line_extension_amount": {
+                                                "type": "number",
+                                                "format": "float",
+                                                "example": 1460000
+                                            },
+                                            "payable_amount": {
+                                                "type": "number",
+                                                "format": "float",
+                                                "example": 1465230
+                                            }
+                                        },
+                                        "type": "object"
+                                    },
+                                    "invoice_line": {
+                                        "description": "Invoice lines (required)",
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "hsn_code": {
+                                                    "type": "string",
+                                                    "example": "WM-001"
+                                                },
+                                                "product_category": {
+                                                    "type": "string",
+                                                    "example": "Inverter"
+                                                },
+                                                "discount_rate": {
+                                                    "type": "number",
+                                                    "format": "float",
+                                                    "example": 0
+                                                },
+                                                "discount_amount": {
+                                                    "type": "number",
+                                                    "format": "float",
+                                                    "example": 0
+                                                },
+                                                "fee_rate": {
+                                                    "type": "number",
+                                                    "format": "float",
+                                                    "example": 1.01
+                                                },
+                                                "fee_amount": {
+                                                    "type": "number",
+                                                    "format": "float",
+                                                    "example": 50
+                                                },
+                                                "invoiced_quantity": {
+                                                    "type": "integer",
+                                                    "example": 5
+                                                },
+                                                "line_extension_amount": {
+                                                    "type": "number",
+                                                    "format": "float",
+                                                    "example": 1465230
+                                                },
+                                                "item": {
+                                                    "properties": {
+                                                        "name": {
+                                                            "type": "string",
+                                                            "example": "Solar invert "
+                                                        },
+                                                        "description": {
+                                                            "type": "string",
+                                                            "example": "item description"
+                                                        },
+                                                        "sellers_item_identification": {
+                                                            "type": "string",
+                                                            "example": "identified as spoon by the seller"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                "price": {
+                                                    "properties": {
+                                                        "price_amount": {
+                                                            "type": "number",
+                                                            "format": "float",
+                                                            "example": 1465230
+                                                        },
+                                                        "base_quantity": {
+                                                            "type": "integer",
+                                                            "example": 1
+                                                        },
+                                                        "price_unit": {
+                                                            "type": "string",
+                                                            "example": "NGN per 1"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Invoice submitted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "code": 201,
+                                    "data": {
+                                        "ok": true
+                                    },
+                                    "message": "Invoice signed successfully"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/invoices/{irn}/transmit": {
+            "post": {
+                "tags": [
+                    "Invoices"
+                ],
+                "summary": "Transmit an invoice using IRN on FIRS",
+                "operationId": "97069858bdd729acd8e47161076e676a",
                 "parameters": [
                     {
-                        "name": "invoice",
+                        "name": "irn",
                         "in": "path",
                         "required": true,
                         "schema": {
-                            "type": "integer"
+                            "type": "string"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Invoice details"
+                        "description": "Invoice transmission",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "code": 200,
+                                    "data": {
+                                        "ok": true
+                                    },
+                                    "message": "Invoice transmission started."
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/invoices/{irn}/update": {
+            "patch": {
+                "tags": [
+                    "Invoices"
+                ],
+                "summary": "Update an invoice using IRN on FIRS",
+                "operationId": "137f065fbc1899e793ff8e6d603fda55",
+                "parameters": [
+                    {
+                        "name": "irn",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "payment_status"
+                                ],
+                                "properties": {
+                                    "payment_status": {
+                                        "description": "PENDING, PAID, REJECTED",
+                                        "type": "string",
+                                        "example": "REJECTED"
+                                    },
+                                    "reference": {
+                                        "description": "Payment reference or note",
+                                        "type": "string",
+                                        "example": "payment_reference_or_note"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Invoice updated successfully in FIRS",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "code": 200,
+                                    "data": {
+                                        "ok": true
+                                    },
+                                    "message": "Invoice updated successfully in FIRS"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/invoices/{irn}/confirm": {
+            "get": {
+                "tags": [
+                    "Invoices"
+                ],
+                "summary": "Confirm an invoice using IRN on FIRS",
+                "operationId": "a563866e5f59cc361350ed15dc69ded4",
+                "parameters": [
+                    {
+                        "name": "irn",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Invoice confirmed successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "code": 200,
+                                    "data": {
+                                        "issue_date": "2025-09-10",
+                                        "due_date": "2025-09-17",
+                                        "sync_date": "2025-09-11",
+                                        "payment_status": "PAID",
+                                        "transmitted": false,
+                                        "delivered": false
+                                    },
+                                    "message": "Invoice confirmation state from FIRS"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/invoices/{irn}/download": {
+            "get": {
+                "tags": [
+                    "Invoices"
+                ],
+                "summary": "Download an invoice using IRN on FIRS",
+                "operationId": "763862c191b544b26cc2630f9ebeb46c",
+                "parameters": [
+                    {
+                        "name": "irn",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Invoice confirmed successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "code": 200,
+                                    "data": {
+                                        "iv_Hex": "6c56347537795245***************",
+                                        "pub": "4hkj93SAoO6aj**********",
+                                        "data": "sLhk-38XbtyBicR9u04GXqWwOkpFHHZn5BR4sGLEc0niGZ3CT5jHgeQ7KA2wwlA8FIoARdyXp9NU7697CPZAvNqaJJopDL9glX4xHd1eLKtzTgxQVq_a782P_lK5B1iBrSW7FfxEWxTbcpi-9GY38dq1AGahbpzo0rOAabJi0y-LK2c71oZJcW4eGmo0AG2X9WIwBz_RcYMcfgUy3wpuAgIiVnBWnOlXbFocrcRKUk6ujOWIUE74wTmrdfPAVOpqyLeSdc2IMje1jPvd1SirW5WN-L4mhiU2Cj90DHLllIGhSMreoLzYdfTyaMvGlCwHstM0rJZ8S6iwfYW9IzjaOvoyZhq7FFwUaWcvihbkeOQp-Y-8oTPrXBYNMaL8rm7RnlQanHvW8AAuYjXkaet2uFOe4pEuQKI8gb6ThtNCGQU8fn1y0uomgjvjbPjtvxL72BkI01IjJMPu5uVi2bHa-ndqq2KD5tjro-gQTJ2zktXXaH10-LrQJ6***************************************************************************************"
+                                    },
+                                    "message": "Invoice download from FIRS is successful"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -670,118 +1836,6 @@
                     }
                 }
             }
-        },
-        "/api/v1/webhooks": {
-            "get": {
-                "tags": [
-                    "Webhooks"
-                ],
-                "summary": "List webhook endpoints",
-                "operationId": "d698ce8fbab0c36f6fbc573f8da8a135",
-                "responses": {
-                    "200": {
-                        "description": "Webhook list",
-                        "content": {
-                            "application/json": {
-                                "schema": {},
-                                "example": {
-                                    "message": "Webhooks retrieved successfully",
-                                    "success": true,
-                                    "data": [
-                                        {
-                                            "id": 1,
-                                            "url": "https://example.com/webhook"
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "sanctum": []
-                    }
-                ]
-            },
-            "post": {
-                "tags": [
-                    "Webhooks"
-                ],
-                "summary": "Create a webhook endpoint",
-                "operationId": "9d4ac98bf90296b2aa9623d26d66a3fb",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "url"
-                                ],
-                                "properties": {
-                                    "url": {
-                                        "type": "string",
-                                        "example": "https://example.com/webhook"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "201": {
-                        "description": "Webhook created",
-                        "content": {
-                            "application/json": {
-                                "schema": {},
-                                "example": {
-                                    "message": "Webhook created successfully",
-                                    "success": true,
-                                    "data": {
-                                        "id": 1,
-                                        "url": "https://example.com/webhook"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "sanctum": []
-                    }
-                ]
-            }
-        },
-        "/api/v1/webhooks/{webhookEndpoint}": {
-            "delete": {
-                "tags": [
-                    "Webhooks"
-                ],
-                "summary": "Delete a webhook endpoint",
-                "operationId": "53a2cdc64e01f1564373f5de023a5581",
-                "parameters": [
-                    {
-                        "name": "webhookEndpoint",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "204": {
-                        "description": "Webhook deleted"
-                    }
-                },
-                "security": [
-                    {
-                        "sanctum": []
-                    }
-                ]
-            }
         }
     },
     "components": {
@@ -810,10 +1864,6 @@
         {
             "name": "Tenants",
             "description": "Tenants"
-        },
-        {
-            "name": "Webhooks",
-            "description": "Webhooks"
         }
     ]
 }

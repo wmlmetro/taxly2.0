@@ -302,9 +302,32 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * @property int $id
+ * @property string $name
+ * @property string $email
+ * @property string|null $password
+ * @property bool $is_active
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \Spatie\Permission\Models\Permission> $permissions
+ * @property-read int|null $permissions_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \Spatie\Permission\Models\Role> $roles
+ * @property-read int|null $roles_count
+ * @method static \Database\Factories\LandlordFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Landlord newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Landlord newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Landlord permission($permissions, $without = false)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Landlord query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Landlord role($roles, $guard = null, $without = false)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Landlord whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Landlord whereEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Landlord whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Landlord whereIsActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Landlord whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Landlord wherePassword($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Landlord whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Landlord withoutPermission($permissions)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Landlord withoutRole($roles, $guard = null)
  */
 	class Landlord extends \Eloquent {}
 }
@@ -417,6 +440,7 @@ namespace App\Models{
 namespace App\Models{
 /**
  * @property int $id
+ * @property int $landlord_id
  * @property string $name
  * @property string|null $email
  * @property string|null $password
@@ -442,6 +466,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Tenant whereEntityId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Tenant whereFeatureFlags($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Tenant whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Tenant whereLandlordId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Tenant whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Tenant wherePassword($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Tenant whereRetentionPolicy($value)
@@ -520,24 +545,10 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * @property int $id
- * @property int $organization_id
- * @property string $url
- * @property string $secret
- * @property array<array-key, mixed>|null $subscribed_events
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Organization|null $org
  * @method static \Illuminate\Database\Eloquent\Builder<static>|WebhookEndpoint newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|WebhookEndpoint newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|WebhookEndpoint query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|WebhookEndpoint whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|WebhookEndpoint whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|WebhookEndpoint whereOrganizationId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|WebhookEndpoint whereSecret($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|WebhookEndpoint whereSubscribedEvents($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|WebhookEndpoint whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|WebhookEndpoint whereUrl($value)
  */
 	class WebhookEndpoint extends \Eloquent {}
 }

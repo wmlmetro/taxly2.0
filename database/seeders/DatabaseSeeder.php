@@ -28,8 +28,8 @@ class DatabaseSeeder extends Seeder
 
         $landlord = Landlord::factory()->create([
             'name' => 'Default Landlord',
-            'email' => 'damolaabolarin@gmail.com',
-            'password' => Hash::make('@4WESTmetro'),
+            'email' => 'default@landlord.com',
+            'password' => Hash::make('!12345678'),
             'is_active' => true,
         ]);
 

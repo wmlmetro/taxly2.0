@@ -5,7 +5,7 @@ use App\Models\Customer;
 use App\Models\Invoice;
 use App\Models\InvoiceItem;
 use Illuminate\Support\Facades\Auth;
-use App\Services\WestMetroApiService;
+use App\Services\FirsApiService;
 
 $organization = Auth::user()->organization;
 
@@ -55,7 +55,7 @@ state([
     'tax' => 0,
 ]);
 
-$invoiceTypes = computed(fn() => app(WestMetroApiService::class)->getInvoiceTypes());
+$invoiceTypes = computed(fn() => app(FirsApiService::class)->getInvoiceTypes());
 
 $subtotal = computed(fn() => collect($this->items)->sum(fn($i) => $i['quantity'] * $i['price_amount']));
 $total = computed(fn() => $this->subtotal() + $this->tax);
@@ -204,7 +204,7 @@ $lookupCustomer = function () {
 
     // Step 2: If not found, check API
     try {
-        $api = app(\App\Services\WestMetroApiService::class);
+        $api = app(\App\Services\FirsApiService::class);
         $result = $api->getTin($this->customer['tin']);
 
         if (!empty($result['data'])) {

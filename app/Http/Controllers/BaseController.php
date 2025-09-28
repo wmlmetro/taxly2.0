@@ -6,16 +6,16 @@ use OpenApi\Attributes as OA;
 
 #[
     OA\Info(
-        title: 'Vendra API',
+        title: 'Taxly API',
         version: '1.0.0',
-        description: 'API documentation for Vendra platform'
+        description: 'API documentation for Taxly platform'
     ),
     OA\Server(
-        url: 'http://e-invoice.test',
+        url: 'http://taxly.test',
         description: 'Local Server'
     ),
     OA\Server(
-        url: 'https://vendra.ng',
+        url: 'https://taxly.ng',
         description: 'Production Server'
     ),
     OA\SecurityScheme(

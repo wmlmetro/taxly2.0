@@ -23,6 +23,9 @@ class SubmitInvoiceRequest extends FormRequest
     {
         return [
             'channel' => ['required', 'string', 'in:api,portal,batch'],
+            'business_id' => ['required', 'string'],
+            'invoice_reference' => ['required', 'string'],
+            'irn' => ['required', 'string'],
         ];
     }
 }

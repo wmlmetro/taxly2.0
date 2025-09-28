@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Spatie\Permission\Traits\HasRoles;
 
-class Landlord extends Model
+class Landlord extends Authenticatable
 {
-    use HasFactory;
+    use HasFactory, HasRoles;
+
+    protected string $guard_name = 'web';
 
     protected $fillable = [
         'name',

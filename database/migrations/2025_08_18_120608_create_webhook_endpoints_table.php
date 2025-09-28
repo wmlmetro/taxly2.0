@@ -13,11 +13,12 @@ return new class extends Migration
     {
         Schema::create('webhook_endpoints', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('organization_id')->constrained()->onDelete('cascade');
             $table->string('url');
-            $table->string('secret');
-            $table->json('subscribed_events')->nullable();
+            $table->string('irn');
+            $table->string('message');
             $table->timestamps();
+
+            $table->unique(['irn', 'message']);
         });
     }
 

@@ -2,106 +2,34 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\BaseController;
-use App\Http\Requests\Webhook\StoreWebhookEndpointRequest;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
 use App\Models\WebhookEndpoint;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
-class WebhookController extends BaseController
+class WebhookController extends Controller
 {
-  use AuthorizesRequests;
-
-  /**
-   * @OA\Get(
-   *     path="/api/v1/webhooks",
-   *     summary="List webhook endpoints",
-   *     security={{"sanctum":{}}},
-   *     tags={"Webhooks"},
-   *     @OA\Response(
-   *         response=200,
-   *         description="Webhook list",
-   *         @OA\JsonContent(example={
-   *             "message": "Webhooks retrieved successfully",
-   *             "success": true,
-   *             "data": {
-   *                 {
-   *                     "id": 1,
-   *                     "url": "https://example.com/webhook"
-   *                 }
-   *             }
-   *         })
-   *     )
-   * )
-   */
-  public function index(): JsonResponse
+  public function handle(Request $request)
   {
-    $orgId = Auth::user()->organization_id;
-    return $this->sendResponse(
-      WebhookEndpoint::where('organization_id', $orgId)->get(),
-      'Webhook endpoints retrieved successfully'
-    );
-  }
-
-  /**
-   * @OA\Post(
-   *     path="/api/v1/webhooks",
-   *     summary="Create a webhook endpoint",
-   *     security={{"sanctum":{}}},
-   *     tags={"Webhooks"},
-   *     @OA\RequestBody(
-   *         required=true,
-   *         @OA\JsonContent(
-   *             required={"url"},
-   *             @OA\Property(property="url", type="string", example="https://example.com/webhook")
-   *         )
-   *     ),
-   *     @OA\Response(
-   *         response=201,
-   *         description="Webhook created",
-   *         @OA\JsonContent(example={
-   *             "message": "Webhook created successfully",
-   *             "success": true,
-   *             "data": {
-   *                 "id": 1,
-   *                 "url": "https://example.com/webhook"
-   *             }
-   *         })
-   *     )
-   * )
-   */
-  public function store(StoreWebhookEndpointRequest $req): JsonResponse
-  {
-    $this->authorize('create', WebhookEndpoint::class);
-
-    $endpoint = WebhookEndpoint::create([
-      'organization_id'   => Auth::user()->organization_id,
-      'url'               => $req->url,
-      'secret'            => $req->secret,
-      'subscribed_events' => $req->subscribed_events,
+    // Validate payload
+    $data = $request->validate([
+      'irn'     => 'required|string',
+      'message' => 'required|string',
     ]);
 
-    return $this->sendResponse([
-      'endpoint' => $endpoint,
-    ], 'Webhook endpoint created successfully', 201);
-  }
+    // Log webhook
+    Log::info('FIRS Webhook Received', $data);
 
-  /**
-   * @OA\Delete(
-   *     path="/api/v1/webhooks/{webhookEndpoint}",
-   *     summary="Delete a webhook endpoint",
-   *     security={{"sanctum":{}}},
-   *     tags={"Webhooks"},
-   *     @OA\Parameter(name="webhookEndpoint", in="path", required=true, @OA\Schema(type="integer")),
-   *     @OA\Response(response=204, description="Webhook deleted")
-   * )
-   */
-  public function destroy(WebhookEndpoint $webhookEndpoint): JsonResponse
-  {
-    $this->authorize('delete', $webhookEndpoint);
-    $webhookEndpoint->delete();
+    // TODO: You can store webhook events in DB for tracking
+    // Example:
+    WebhookEndpoint::firstOrCreate([
+      'url'     => env('APP_URL') . '/api/webhooks/firs',
+      'irn'     => $data['irn'],
+      'message' => $data['message'],
+    ]);
 
-    return $this->sendResponse([], 'Webhook endpoint deleted successfully');
+    // Always return 200 OK
+    return response()->json(['status' => 'received'], 200);
   }
 }

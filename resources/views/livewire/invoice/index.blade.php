@@ -26,7 +26,7 @@ $submitToFirs = function ($id) {
     try {
         $payload = $invoice->toFirsPayload();
         var_dump($payload); // For debugging purposes
-        app(\App\Services\WestMetroApiService::class)->post('SubmitInvoice', $payload);
+        app(\App\Services\FirsApiService::class)->post('SubmitInvoice', $payload);
 
         $invoice->update(['status' => 'submitted']);
         session()->flash('success', "Invoice #{$invoice->id} submitted to FIRS successfully.");

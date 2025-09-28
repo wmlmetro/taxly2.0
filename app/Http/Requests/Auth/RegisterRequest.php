@@ -22,13 +22,13 @@ class RegisterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'tenant_name'   => 'required|string|max:255',
+            'tenant_name'   => 'nullable|string|max:255',
             'brand'         => 'nullable|string|max:255',
             'domain'        => 'nullable|string|max:255',
             'tin'           => ['sometimes', 'string', 'max:50', 'unique:organizations,tin'],
             'trade_name'    => 'sometimes|string|max:255',
-            'street_name'   => 'required|string|max:255',
-            'name'          => 'required|string|max:255',
+            'street_name'   => 'nullable|string|max:255',
+            'name'          => 'nullable|string|max:255',
             'email'         => 'required|email|unique:users,email',
             'password'      => 'required|string|min:8|confirmed',
         ];

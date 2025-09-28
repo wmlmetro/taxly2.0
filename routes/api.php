@@ -21,18 +21,19 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
     Route::get('/tenants/{tenant}', [TenantController::class, 'show']);
 
     // Invoices
-    Route::get('/invoices',                 [InvoiceController::class, 'index']);
-    Route::post('/invoices',                [InvoiceController::class, 'store']);
-    Route::get('/invoices/{invoice}',       [InvoiceController::class, 'show']);
-    Route::post('/invoices/{invoice}/validate', [InvoiceController::class, 'validateInvoice']);
-    Route::post('/invoices/{invoice}/submit',   [InvoiceController::class, 'submit']);
+    Route::get('/invoices/search/{business_id}',    [InvoiceController::class, 'search']);
+    Route::get('/invoices/{irn}/download',   [InvoiceController::class, 'download']);
+    Route::get('/invoices/{irn}/confirm',   [InvoiceController::class, 'confirm']);
+    Route::patch('/invoices/{irn}/update',  [InvoiceController::class, 'update']);
+    Route::post('/invoices/irn/validate',   [InvoiceController::class, 'validateInvoiceIRN']);
+    Route::post('/invoices/validate',       [InvoiceController::class, 'validateInvoice']);
+    Route::post('/invoices/submit',         [InvoiceController::class, 'submit']);
+    Route::post('/invoices/{irn}/transmit', [InvoiceController::class, 'transmit']);
 
     // Buyer actions
     Route::post('/buyer/invoices/{invoice}/accept', [BuyerInvoiceController::class, 'accept']);
     Route::post('/buyer/invoices/{invoice}/reject', [BuyerInvoiceController::class, 'reject']);
-
-    // Webhooks
-    Route::get('/webhooks',    [WebhookController::class, 'index']);
-    Route::post('/webhooks',   [WebhookController::class, 'store']);
-    Route::delete('/webhooks/{webhookEndpoint}', [WebhookController::class, 'destroy']);
 });
+
+// Webhooks
+Route::post('/webhooks/firs', [WebhookController::class, 'handle']);

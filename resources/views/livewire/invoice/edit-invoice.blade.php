@@ -4,7 +4,7 @@ use Livewire\Volt\Component;
 use App\Models\Invoice;
 use App\Models\InvoiceItem;
 use App\Models\Customer;
-use App\Services\WestMetroApiService;
+use App\Services\FirsApiService;
 
 new class extends Component {
     public int $invoiceId;
@@ -46,7 +46,7 @@ new class extends Component {
         ],
     ];
 
-    public function mount(Invoice $invoice, WestMetroApiService $api)
+    public function mount(Invoice $invoice, FirsApiService $api)
     {
         $this->invoiceTypes = $api->getInvoiceTypes();
 

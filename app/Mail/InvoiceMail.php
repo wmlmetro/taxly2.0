@@ -42,7 +42,8 @@ class InvoiceMail extends Mailable
      */
     public function attachments(): array
     {
-        return [];
+        $pdf = Pdf::loadView('pdf.invoice', ['invoice' => $this->invoice]);
+        return [$pdf];
     }
 }
     // Remove attachments() method for compatibility with older Laravel versions.

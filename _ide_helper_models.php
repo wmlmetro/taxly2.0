@@ -126,6 +126,57 @@ namespace App\Models{
 namespace App\Models{
 /**
  * @property int $id
+ * @property string|null $irn
+ * @property string $supplier_name
+ * @property string $supplier_email
+ * @property string $customer_name
+ * @property string $customer_email
+ * @property string|null $agent_tin
+ * @property string|null $base_amount
+ * @property string|null $beneficiary_tin
+ * @property string $currency
+ * @property string|null $item_description
+ * @property string|null $other_taxes
+ * @property string|null $total_amount
+ * @property string|null $transaction_date
+ * @property string|null $integrator_service_id
+ * @property string|null $vat_calculated
+ * @property string|null $vat_rate
+ * @property string|null $vat_status
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string|null $acknowledged_at
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerTransmission newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerTransmission newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerTransmission query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerTransmission whereAcknowledgedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerTransmission whereAgentTin($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerTransmission whereBaseAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerTransmission whereBeneficiaryTin($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerTransmission whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerTransmission whereCurrency($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerTransmission whereCustomerEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerTransmission whereCustomerName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerTransmission whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerTransmission whereIntegratorServiceId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerTransmission whereIrn($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerTransmission whereItemDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerTransmission whereOtherTaxes($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerTransmission whereSupplierEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerTransmission whereSupplierName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerTransmission whereTotalAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerTransmission whereTransactionDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerTransmission whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerTransmission whereVatCalculated($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerTransmission whereVatRate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerTransmission whereVatStatus($value)
+ */
+	class CustomerTransmission extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * @property int $id
  * @property string|null $invoice_number
  * @property int $organization_id
  * @property string|null $business_id
@@ -545,10 +596,22 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * @property int $id
+ * @property string $url
+ * @property string $irn
+ * @property string $message
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Organization|null $org
  * @method static \Illuminate\Database\Eloquent\Builder<static>|WebhookEndpoint newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|WebhookEndpoint newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|WebhookEndpoint query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WebhookEndpoint whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WebhookEndpoint whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WebhookEndpoint whereIrn($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WebhookEndpoint whereMessage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WebhookEndpoint whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WebhookEndpoint whereUrl($value)
  */
 	class WebhookEndpoint extends \Eloquent {}
 }

@@ -201,4 +201,17 @@ class FirsApiService
   {
     return $this->post("invoice/transmit/{$irn}");
   }
+
+  public function getTransmittingInvoice(string $irn)
+  {
+    return $this->get("invoice/transmit/lookup/{$irn}");
+  }
+
+  /**
+   * Confirm Invoice Transmission via IRN
+   */
+  public function confirmInvoiceTransmission(string $irn, array $payload)
+  {
+    return $this->patch("invoice/transmit/{$irn}", $payload);
+  }
 }

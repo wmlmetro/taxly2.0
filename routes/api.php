@@ -37,3 +37,4 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
 
 // Webhooks
 Route::post('/webhooks/firs', [WebhookController::class, 'handle']);
+Route::patch('/v1/invoice/transmit/{irn}', [InvoiceController::class, 'acknowledge']);

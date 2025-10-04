@@ -6,6 +6,7 @@ use App\Http\Controllers\BaseController;
 use App\Http\Requests\Auth\SubmitInvoiceRequest;
 use App\Http\Requests\Auth\ValidateInvoiceRequest;
 use App\Http\Requests\Invoice\ValidateInvoiceUpdateRequest;
+use App\Models\CustomerTransmission;
 use App\Services\FirsApiService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -485,7 +486,16 @@ class InvoiceController extends BaseController
       );
     }
 
-    // Step 4. Success
+    // Step 4. Store Supplier and Customer info
+    CustomerTransmission::create([
+      'irn' => $req->irn,
+      'supplier_name' => $req->accounting_supplier_party['party_name'] ?? null,
+      'supplier_email' => $req->accounting_supplier_party['email'] ?? null,
+      'customer_name' => $req->accounting_customer_party['party_name'] ?? null,
+      'customer_email' => $req->accounting_customer_party['email'] ?? null,
+    ]);
+
+    // Step 5. Success
     $signedInvoice["message"] = "Invoice submission initiated successfully";
     return response()->json($signedInvoice);
   }
@@ -677,5 +687,49 @@ class InvoiceController extends BaseController
 
     $response["message"] = "Invoice download from FIRS is successful";
     return response()->json($response);
+  }
+
+  public function acknowledge($irn)
+  {
+    $firs = app(FirsApiService::class);
+
+    // {
+    //   "agent_tin": "01060087-0001",
+    //   "base_amount": "100000.00",
+    //   "beneficiary_tin": "01060087-0001",
+    //   "currency": "NGN",
+    //   "item_description": "Items",
+    //   "irn": "{{TEST_IRN}}",
+    //   "other_taxes": "5000.00",
+    //   "total_amount": "112500.00",
+    //   "transaction_date": "2024-11-18",
+    //   "integrator_service_id":"772392",
+    //   "vat_calculated": "7500.00",
+    //   "vat_rate": "7.5",
+    //   "vat_status": "STANDARD_VAT"
+    // }
+
+    $transmission = CustomerTransmission::where('irn', $irn)->firstOrFail();
+    $transmission->update(['acknowledged_at' => now()]);
+
+    $payload = [
+      'agent_id' => $transmission->accounting_supplier_party['tin'],
+      'base_amount' => $transmission->legal_monetary_total['tax_exclusive_amount'],
+      'beneficiary_tin' => $transmission->accounting_supplier_party['tin'],
+      'currency' => $transmission->document_currency_code,
+      'item_description' => $transmission->note,
+      'irn' => $transmission->irn,
+      'other_taxes' => 0,
+      'total_amount' => $transmission->legal_monetary_total['payable_amount'],
+      'transaction_date' => $transmission->issue_date,
+      'integrator_service_id' => config('services.firs.integrator_service_id'),
+      'vat_calculated' => $transmission->tax_total[0]['tax_amount'] ?? 0,
+      'vat_rate' => $transmission->tax_total[0]['tax_subtotal'][0]['tax_category']['percent'] ?? 0,
+      'vat_status' => 'STANDARD_VAT',
+    ];
+
+    $firs->confirmInvoiceTransmission($irn, $payload);
+
+    return response()->json(['status' => 'acknowledged']);
   }
 }

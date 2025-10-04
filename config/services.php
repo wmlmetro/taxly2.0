@@ -41,6 +41,7 @@ return [
         'secret' => env('FIRS_SECRET_KEY'),
         'public_key' => env('FIRS_PUBLIC_KEY'),
         'certificate' => env('FIRS_CERTIFICATE'),
+        'integrator_service_id' => env('FIRS_INTEGRATOR_SERVICE_ID'),
     ],
 
 ];

@@ -501,6 +501,84 @@ class InvoiceController extends BaseController
   }
 
   /**
+   * @OA\Get(
+   *     path="/api/v1/invoices/transmit/health-check",
+   *     summary="Check the health of the FIRS transmission service",
+   *     security={{"sanctum":{}}},
+   *     tags={"Invoices"},
+   *     @OA\Response(
+   *         response=200,
+   *         description="Health check succeeded",
+   *         @OA\JsonContent(
+   *             example={
+   *                 "code": 200,
+   *                 "data": {
+   *                     "ok": true,
+   *                     "item": {} 
+   *                 },
+   *                 "message": "Health check succeeded."
+   *             }
+   *         )
+   *     )
+   * )
+   */
+  public function healthCheck()
+  {
+    $firs = app(FirsApiService::class);
+
+    $response = $firs->selfHealthCheck();
+
+    if (($response['code'] ?? 500) != 200) {
+      return $this->sendError('Failed to check transmission health ', $response, $response['code'] ?? 422);
+    }
+
+    $response["message"] = "Health check succeeded.";
+    return response()->json($response);
+  }
+
+  /**
+   * @OA\Get(
+   *     path="/api/v1/invoices/transmit/{IRN}/lookup}",
+   *     summary="Retrieves details about the invoice and the involved parties.",
+   *     security={{"sanctum":{}}},
+   *     tags={"Invoices"},
+   *     @OA\Parameter(
+   *         name="IRN",
+   *         in="path",
+   *         required=true,
+   *         @OA\Schema(type="string")
+   *     ),
+   *     @OA\Response(
+   *         response=200,
+   *         description="Transmission parties loaded successfully",
+   *         @OA\JsonContent(
+   *             example={
+   *                 "code": 200,
+   *                 "data": {
+   *                     "accounting_supplier_party": {},
+   *                     "accounting_customer_party": {} 
+   *                 },
+   *                 "message": "Transmission parties loaded successfully."
+   *             }
+   *         )
+   *     )
+   * )
+   */
+  public function getInvoiceTransmitted(string $irn)
+  {
+    $firs = app(FirsApiService::class);
+
+    $response = $firs->getTransmittingInvoice($irn);
+
+    if (($response['code'] ?? 500) != 200) {
+      return $this->sendError('Failed to load transmitted parties', $response, $response['code'] ?? 422);
+    }
+
+    $response["message"] = "Transmission parties loaded successfully.";
+    return response()->json($response);
+  }
+
+  /**
    * @OA\Post(
    *     path="/api/v1/invoices/{irn}/transmit",
    *     summary="Transmit an invoice using IRN on FIRS",

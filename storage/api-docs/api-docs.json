@@ -1532,6 +1532,80 @@
                 ]
             }
         },
+        "/api/v1/invoices/transmit/health-check": {
+            "get": {
+                "tags": [
+                    "Invoices"
+                ],
+                "summary": "Check the health of the FIRS transmission service",
+                "operationId": "496ee692761df025626b8300683aecd9",
+                "responses": {
+                    "200": {
+                        "description": "Health check succeeded",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "code": 200,
+                                    "data": {
+                                        "ok": true,
+                                        "item": []
+                                    },
+                                    "message": "Health check succeeded."
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/invoices/transmit/{IRN}/lookup}": {
+            "get": {
+                "tags": [
+                    "Invoices"
+                ],
+                "summary": "Retrieves details about the invoice and the involved parties.",
+                "operationId": "9ad6b9a088fa76cd0955c4b977897cff",
+                "parameters": [
+                    {
+                        "name": "IRN",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Transmission parties loaded successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "code": 200,
+                                    "data": {
+                                        "accounting_supplier_party": [],
+                                        "accounting_customer_party": []
+                                    },
+                                    "message": "Transmission parties loaded successfully."
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
         "/api/v1/invoices/{irn}/transmit": {
             "post": {
                 "tags": [

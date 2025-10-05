@@ -29,6 +29,8 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
     Route::post('/invoices/validate',       [InvoiceController::class, 'validateInvoice']);
     Route::post('/invoices/submit',         [InvoiceController::class, 'submit']);
     Route::post('/invoices/{irn}/transmit', [InvoiceController::class, 'transmit']);
+    Route::get('/invoices/transmit/health-check', [InvoiceController::class, 'healthCheck']);
+    Route::get('/invoices/transmit/{irn}/lookup', [InvoiceController::class, 'getInvoiceTransmitted']);
 
     // Buyer actions
     Route::post('/buyer/invoices/{invoice}/accept', [BuyerInvoiceController::class, 'accept']);

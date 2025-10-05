@@ -197,6 +197,11 @@ class FirsApiService
     ]);
   }
 
+  public function selfHealthCheck()
+  {
+    return $this->get("invoice/transmit/self-health-check");
+  }
+
   public function transmitInvoice(string $irn)
   {
     return $this->post("invoice/transmit/{$irn}");

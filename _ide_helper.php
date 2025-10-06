@@ -27299,22 +27299,18 @@ namespace Livewire\Features\SupportTesting {
             }
     }
 
-namespace App\Filament\Resources\Customers\Pages {
+namespace App\Filament\Resources\ApiKeys\Pages {
     /**
      */
-    class CreateCustomer extends \Filament\Resources\Pages\CreateRecord {
+    class CreateApiKeys extends \Filament\Resources\Pages\CreateRecord {
             }
     /**
      */
-    class EditCustomer extends \Filament\Resources\Pages\EditRecord {
+    class EditApiKeys extends \Filament\Resources\Pages\EditRecord {
             }
     /**
      */
-    class ListCustomers extends \Filament\Resources\Pages\ListRecords {
-            }
-    /**
-     */
-    class ViewCustomer extends \Filament\Resources\Pages\ViewRecord {
+    class ListApiKeys extends \Filament\Resources\Pages\ListRecords {
             }
     }
 
@@ -27360,6 +27356,25 @@ namespace Filament\Pages {
     /**
      */
     class SimplePage extends \Filament\Pages\BasePage {
+            }
+    }
+
+namespace App\Filament\Resources\Customers\Pages {
+    /**
+     */
+    class CreateCustomer extends \Filament\Resources\Pages\CreateRecord {
+            }
+    /**
+     */
+    class EditCustomer extends \Filament\Resources\Pages\EditRecord {
+            }
+    /**
+     */
+    class ListCustomers extends \Filament\Resources\Pages\ListRecords {
+            }
+    /**
+     */
+    class ViewCustomer extends \Filament\Resources\Pages\ViewRecord {
             }
     }
 

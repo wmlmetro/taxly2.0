@@ -39,6 +39,15 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ApiKey newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ApiKey newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ApiKey query()
+ */
+	class ApiKey extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * @property int $id
  * @property int $invoice_id
  * @property string|null $pdf_path

@@ -13,6 +13,9 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        $middleware->alias([
+            'auth-or-apikey' => \App\Http\Middleware\ApiKeyOrTokenMiddleware::class,
+        ]);
         // $middleware->group('api', [
         //     ForceJsonResponse::class,
         // ]);

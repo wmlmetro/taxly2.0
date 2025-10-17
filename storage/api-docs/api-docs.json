@@ -7,7 +7,7 @@
     },
     "servers": [
         {
-            "url": "http://taxly.test",
+            "url": "https://taxly.test",
             "description": "Local Server"
         },
         {
@@ -1802,6 +1802,186 @@
                 ]
             }
         },
+        "/api/v1/resources/invoice-types": {
+            "get": {
+                "tags": [
+                    "Resources"
+                ],
+                "summary": "Get available invoice types",
+                "description": "Fetch a list of invoice types available from FIRS.",
+                "operationId": "080cc0992bc7df070bdfc95d663f46ff",
+                "responses": {
+                    "200": {
+                        "description": "List of invoice types successfully retrieved",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to fetch invoice types"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/resources/payment-means": {
+            "get": {
+                "tags": [
+                    "Resources"
+                ],
+                "summary": "Get available payment means",
+                "description": "Fetch a list of available payment means from FIRS.",
+                "operationId": "36f87295c1c4f052d8075369651842a1",
+                "responses": {
+                    "200": {
+                        "description": "List of payment means successfully retrieved",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to fetch payment means"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/resources/tax-categories": {
+            "get": {
+                "tags": [
+                    "Resources"
+                ],
+                "summary": "Get available tax categories",
+                "description": "Fetch all tax categories available in FIRS.",
+                "operationId": "20adcd80eb5f27e431261fb499e42b03",
+                "responses": {
+                    "200": {
+                        "description": "List of tax categories successfully retrieved",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to fetch tax categories"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/resources/tin/{tin_number}": {
+            "get": {
+                "tags": [
+                    "Resources"
+                ],
+                "summary": "Lookup taxpayer by TIN",
+                "description": "Retrieve taxpayer details by Tax Identification Number (TIN).",
+                "operationId": "8a93ac0556ea96d18255d5d75379b190",
+                "parameters": [
+                    {
+                        "name": "tin_number",
+                        "in": "path",
+                        "description": "Taxpayer Identification Number",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "12345678-0001"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Taxpayer details successfully retrieved",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "TIN not found"
+                    },
+                    "500": {
+                        "description": "Failed to fetch TIN details"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/resources/entity/{entity_id}": {
+            "get": {
+                "tags": [
+                    "Resources"
+                ],
+                "summary": "Retrieve entity details by ID",
+                "description": "Fetch entity details using its unique identifier.",
+                "operationId": "510509974fe361bc23e1aa467ea163b2",
+                "parameters": [
+                    {
+                        "name": "entity_id",
+                        "in": "path",
+                        "description": "The FIRS entity ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "abc123xyz"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Entity details successfully retrieved",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Entity not found"
+                    },
+                    "500": {
+                        "description": "Failed to fetch entity details"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
         "/api/v1/tenants": {
             "get": {
                 "tags": [
@@ -1934,6 +2114,10 @@
         {
             "name": "Invoices",
             "description": "Invoices"
+        },
+        {
+            "name": "Resources",
+            "description": "Resources"
         },
         {
             "name": "Tenants",

@@ -27,6 +27,9 @@ $invoiceRoutes = function () {
     Route::post('/invoices/{irn}/transmit', [InvoiceController::class, 'transmit']);
     Route::get('/invoices/transmit/health-check', [InvoiceController::class, 'healthCheck']);
     Route::get('/invoices/transmit/{irn}/lookup', [InvoiceController::class, 'getInvoiceTransmitted']);
+    Route::get('/invoices/transmit/tin/{tin}/lookup', [InvoiceController::class, 'getInvoiceTransmittedByTin']);
+    Route::get('/invoices/transmit/pull', [InvoiceController::class, 'pullTransmittedInvoices']);
+    Route::patch('/invoices/transmit/{irn}/confirmation', [InvoiceController::class, 'acknowledge']);
 
     // Buyer actions
     Route::post('/buyer/invoices/{invoice}/accept', [BuyerInvoiceController::class, 'accept']);

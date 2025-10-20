@@ -1564,16 +1564,58 @@
                 ]
             }
         },
-        "/api/v1/invoices/transmit/{IRN}/lookup}": {
+        "/api/v1/invoices/transmit/{IRN}/lookup": {
             "get": {
                 "tags": [
                     "Invoices"
                 ],
                 "summary": "Retrieves details about the invoice and the involved parties.",
-                "operationId": "9ad6b9a088fa76cd0955c4b977897cff",
+                "operationId": "ab1cfe2c53001a7c015fdf5a9e007722",
                 "parameters": [
                     {
                         "name": "IRN",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Transmission parties loaded successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "code": 200,
+                                    "data": {
+                                        "accounting_supplier_party": [],
+                                        "accounting_customer_party": []
+                                    },
+                                    "message": "Transmission parties loaded successfully."
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/invoices/transmit/tin/{tin}/lookup": {
+            "get": {
+                "tags": [
+                    "Invoices"
+                ],
+                "summary": "Retrieves details about the invoice and the involved parties.",
+                "operationId": "e5f56b53679a4d1fd475f0277ca5ed3f",
+                "parameters": [
+                    {
+                        "name": "tin",
                         "in": "path",
                         "required": true,
                         "schema": {
@@ -1623,6 +1665,22 @@
                         }
                     }
                 ],
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "webhook_url": {
+                                        "type": "string",
+                                        "example": "https://example.com/webhook"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
                         "description": "Invoice transmission",
@@ -1759,6 +1817,38 @@
                 ]
             }
         },
+        "/api/v1/invoices/transmit/pull": {
+            "get": {
+                "tags": [
+                    "Invoices"
+                ],
+                "summary": "List invoices transmitted to FIRS",
+                "operationId": "ee59dc5f08a93d7d375da39cb72efc1e",
+                "responses": {
+                    "200": {
+                        "description": "Transmitted Invoices pulled successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "code": 200,
+                                    "data": {
+                                        "ok": true,
+                                        "item": []
+                                    },
+                                    "message": "Transmitted Invoices pulled successfully."
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
         "/api/v1/invoices/{irn}/download": {
             "get": {
                 "tags": [
@@ -1790,6 +1880,140 @@
                                         "data": "sLhk-38XbtyBicR9u04GXqWwOkpFHHZn5BR4sGLEc0niGZ3CT5jHgeQ7KA2wwlA8FIoARdyXp9NU7697CPZAvNqaJJopDL9glX4xHd1eLKtzTgxQVq_a782P_lK5B1iBrSW7FfxEWxTbcpi-9GY38dq1AGahbpzo0rOAabJi0y-LK2c71oZJcW4eGmo0AG2X9WIwBz_RcYMcfgUy3wpuAgIiVnBWnOlXbFocrcRKUk6ujOWIUE74wTmrdfPAVOpqyLeSdc2IMje1jPvd1SirW5WN-L4mhiU2Cj90DHLllIGhSMreoLzYdfTyaMvGlCwHstM0rJZ8S6iwfYW9IzjaOvoyZhq7FFwUaWcvihbkeOQp-Y-8oTPrXBYNMaL8rm7RnlQanHvW8AAuYjXkaet2uFOe4pEuQKI8gb6ThtNCGQU8fn1y0uomgjvjbPjtvxL72BkI01IjJMPu5uVi2bHa-ndqq2KD5tjro-gQTJ2zktXXaH10-LrQJ6***************************************************************************************"
                                     },
                                     "message": "Invoice download from FIRS is successful"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/invoices/transmit/{irn}/confirmation": {
+            "patch": {
+                "tags": [
+                    "Invoices"
+                ],
+                "summary": "Acknowledge an invoice transmission with FIRS",
+                "operationId": "0a12a950bb6638ebe32a53ec01f1958a",
+                "parameters": [
+                    {
+                        "name": "irn",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "agent_id",
+                                    "base_amount",
+                                    "beneficiary_tin",
+                                    "currency",
+                                    "item_description",
+                                    "irn",
+                                    "total_amount",
+                                    "transaction_date",
+                                    "integrator_service_id",
+                                    "vat_calculated",
+                                    "vat_rate",
+                                    "vat_status"
+                                ],
+                                "properties": {
+                                    "agent_id": {
+                                        "type": "string",
+                                        "example": "01060087-0001"
+                                    },
+                                    "base_amount": {
+                                        "type": "string",
+                                        "example": "100000.00"
+                                    },
+                                    "beneficiary_tin": {
+                                        "type": "string",
+                                        "example": "01060087-0001"
+                                    },
+                                    "currency": {
+                                        "type": "string",
+                                        "example": "NGN"
+                                    },
+                                    "item_description": {
+                                        "type": "string",
+                                        "example": "Items"
+                                    },
+                                    "irn": {
+                                        "type": "string",
+                                        "example": "1234567890"
+                                    },
+                                    "other_taxes": {
+                                        "type": "string",
+                                        "example": "5000.00"
+                                    },
+                                    "total_amount": {
+                                        "type": "string",
+                                        "example": "112500.00"
+                                    },
+                                    "transaction_date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2024-11-18"
+                                    },
+                                    "integrator_service_id": {
+                                        "type": "string",
+                                        "example": "772392"
+                                    },
+                                    "vat_calculated": {
+                                        "type": "string",
+                                        "example": "7500.00"
+                                    },
+                                    "vat_rate": {
+                                        "type": "string",
+                                        "example": "7.5"
+                                    },
+                                    "vat_status": {
+                                        "type": "string",
+                                        "example": "STANDARD_VAT"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Invoice acknowledgment submitted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "code": 200,
+                                    "data": {
+                                        "status": "acknowledged",
+                                        "irn": "1234567890"
+                                    },
+                                    "message": "Invoice acknowledgment sent to FIRS successfully."
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error or FIRS acknowledgment failed",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "code": 422,
+                                    "message": "Failed to acknowledge invoice with FIRS",
+                                    "errors": []
                                 }
                             }
                         }

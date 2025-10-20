@@ -6,10 +6,13 @@ use App\Http\Controllers\BaseController;
 use App\Http\Requests\Auth\SubmitInvoiceRequest;
 use App\Http\Requests\Auth\ValidateInvoiceRequest;
 use App\Http\Requests\Invoice\ValidateInvoiceUpdateRequest;
+use App\Jobs\TransmitInvoiceJob;
 use App\Models\CustomerTransmission;
+use App\Models\InvoiceTransmission;
 use App\Services\FirsApiService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\Request;
 
 class InvoiceController extends BaseController
 {
@@ -538,7 +541,7 @@ class InvoiceController extends BaseController
 
   /**
    * @OA\Get(
-   *     path="/api/v1/invoices/transmit/{IRN}/lookup}",
+   *     path="/api/v1/invoices/transmit/{IRN}/lookup",
    *     summary="Retrieves details about the invoice and the involved parties.",
    *     security={{"sanctum":{}}},
    *     tags={"Invoices"},
@@ -579,6 +582,48 @@ class InvoiceController extends BaseController
   }
 
   /**
+   * @OA\Get(
+   *     path="/api/v1/invoices/transmit/tin/{tin}/lookup",
+   *     summary="Retrieves details about the invoice and the involved parties.",
+   *     security={{"sanctum":{}}},
+   *     tags={"Invoices"},
+   *     @OA\Parameter(
+   *         name="tin",
+   *         in="path",
+   *         required=true,
+   *         @OA\Schema(type="string")
+   *     ),
+   *     @OA\Response(
+   *         response=200,
+   *         description="Transmission parties loaded successfully",
+   *         @OA\JsonContent(
+   *             example={
+   *                 "code": 200,
+   *                 "data": {
+   *                     "accounting_supplier_party": {},
+   *                     "accounting_customer_party": {} 
+   *                 },
+   *                 "message": "Transmission parties loaded successfully."
+   *             }
+   *         )
+   *     )
+   * )
+   */
+  public function getInvoiceTransmittedByTin(string $tin)
+  {
+    $firs = app(FirsApiService::class);
+
+    $response = $firs->getTransmittedInvoiceByTin($tin);
+
+    if (($response['code'] ?? 500) != 200) {
+      return $this->sendError('Failed to load transmitted parties', $response, $response['code'] ?? 422);
+    }
+
+    $response["message"] = "Transmission parties loaded successfully.";
+    return response()->json($response);
+  }
+
+  /**
    * @OA\Post(
    *     path="/api/v1/invoices/{irn}/transmit",
    *     summary="Transmit an invoice using IRN on FIRS",
@@ -589,6 +634,16 @@ class InvoiceController extends BaseController
    *         in="path",
    *         required=true,
    *         @OA\Schema(type="string")
+   *     ),
+   *     @OA\RequestBody(
+   *         required=false,
+   *         @OA\JsonContent(
+   *             @OA\Property(
+   *                 property="webhook_url",
+   *                 type="string",
+   *                 example="https://example.com/webhook"
+   *             )
+   *         )
    *     ),
    *     @OA\Response(
    *         response=200,
@@ -605,18 +660,28 @@ class InvoiceController extends BaseController
    *     )
    * )
    */
-  public function transmit($irn)
+  public function transmit(Request $request, $irn)
   {
-    $firs = app(FirsApiService::class);
+    $validated = $request->validate([
+      'webhook_url' => 'nullable|url',
+    ]);
 
-    $response = $firs->transmitInvoice($irn);
+    $transmission = InvoiceTransmission::create([
+      'irn' => $irn,
+      'webhook_url' => $validated['webhook_url'] ?? null,
+      'status' => 'pending',
+    ]);
 
-    if (($response['code'] ?? 500) != 200) {
-      return $this->sendError('Failed to transmit invoice in FIRS', $response, $response['code'] ?? 422);
-    }
+    // Dispatch background job
+    TransmitInvoiceJob::dispatch($transmission)->onQueue('invoices');
 
-    $response["message"] = "Invoice transmission started.";
-    return response()->json($response);
+    return response()->json([
+      'code' => 200,
+      'data' => ['ok' => true],
+      'message' => 'Invoice transmission queued successfully.',
+      'irn' => $irn,
+      'webhook_url' => $transmission->webhook_url,
+    ]);
   }
 
   /**
@@ -726,6 +791,42 @@ class InvoiceController extends BaseController
 
   /**
    * @OA\Get(
+   *     path="/api/v1/invoices/transmit/pull",
+   *     summary="List invoices transmitted to FIRS",
+   *     security={{"sanctum":{}}},
+   *     tags={"Invoices"},
+   *     @OA\Response(
+   *         response=200,
+   *         description="Transmitted Invoices pulled successfully",
+   *         @OA\JsonContent(
+   *             example={
+   *                 "code": 200,
+   *                 "data": {
+   *                     "ok": true,
+   *                     "item": {} 
+   *                 },
+   *                 "message": "Transmitted Invoices pulled successfully."
+   *             }
+   *         )
+   *     )
+   * )
+   */
+  public function pullTransmittedInvoices()
+  {
+    $firs = app(FirsApiService::class);
+
+    $response = $firs->pullTransmittedInvoices();
+
+    if (($response['code'] ?? 500) != 200) {
+      return $this->sendError('Failed to pull transmitted invoices ', $response, $response['code'] ?? 422);
+    }
+
+    $response["message"] = "Transmitted Invoices pulled successfully.";
+    return response()->json($response);
+  }
+
+  /**
+   * @OA\Get(
    *     path="/api/v1/invoices/{irn}/download",
    *     summary="Download an invoice using IRN on FIRS",
    *     security={{"sanctum":{}}},
@@ -767,47 +868,109 @@ class InvoiceController extends BaseController
     return response()->json($response);
   }
 
-  public function acknowledge($irn)
+  /**
+   * @OA\Patch(
+   *     path="/api/v1/invoices/transmit/{irn}/confirmation",
+   *     summary="Acknowledge an invoice transmission with FIRS",
+   *     security={{"sanctum":{}}},
+   *     tags={"Invoices"},
+   *     @OA\Parameter(
+   *         name="irn",
+   *         in="path",
+   *         required=true,
+   *         @OA\Schema(type="string")
+   *     ),
+   *     @OA\RequestBody(
+   *         required=true,
+   *         @OA\JsonContent(
+   *             required={
+   *                 "agent_id",
+   *                 "base_amount",
+   *                 "beneficiary_tin",
+   *                 "currency",
+   *                 "item_description",
+   *                 "irn",
+   *                 "total_amount",
+   *                 "transaction_date",
+   *                 "integrator_service_id",
+   *                 "vat_calculated",
+   *                 "vat_rate",
+   *                 "vat_status"
+   *             },
+   *             @OA\Property(property="agent_id", type="string", example="01060087-0001"),
+   *             @OA\Property(property="base_amount", type="string", example="100000.00"),
+   *             @OA\Property(property="beneficiary_tin", type="string", example="01060087-0001"),
+   *             @OA\Property(property="currency", type="string", example="NGN"),
+   *             @OA\Property(property="item_description", type="string", example="Items"),
+   *             @OA\Property(property="irn", type="string", example="1234567890"),
+   *             @OA\Property(property="other_taxes", type="string", example="5000.00"),
+   *             @OA\Property(property="total_amount", type="string", example="112500.00"),
+   *             @OA\Property(property="transaction_date", type="string", format="date", example="2024-11-18"),
+   *             @OA\Property(property="integrator_service_id", type="string", example="772392"),
+   *             @OA\Property(property="vat_calculated", type="string", example="7500.00"),
+   *             @OA\Property(property="vat_rate", type="string", example="7.5"),
+   *             @OA\Property(property="vat_status", type="string", example="STANDARD_VAT")
+   *         )
+   *     ),
+   *     @OA\Response(
+   *         response=200,
+   *         description="Invoice acknowledgment submitted successfully",
+   *         @OA\JsonContent(
+   *             example={
+   *                 "code": 200,
+   *                 "data": {
+   *                     "status": "acknowledged",
+   *                     "irn": "1234567890"
+   *                 },
+   *                 "message": "Invoice acknowledgment sent to FIRS successfully."
+   *             }
+   *         )
+   *     ),
+   *     @OA\Response(
+   *         response=422,
+   *         description="Validation error or FIRS acknowledgment failed",
+   *         @OA\JsonContent(
+   *             example={
+   *                 "code": 422,
+   *                 "message": "Failed to acknowledge invoice with FIRS",
+   *                 "errors": {}
+   *             }
+   *         )
+   *     )
+   * )
+   */
+  public function acknowledge(string $irn): JsonResponse
   {
+    $validated = request()->validate([
+      'agent_id' => 'required|string',
+      'base_amount' => 'required|numeric',
+      'beneficiary_tin' => 'required|string',
+      'currency' => 'required|string|size:3',
+      'item_description' => 'required|string',
+      'irn' => 'required|string',
+      'other_taxes' => 'nullable|numeric',
+      'total_amount' => 'required|numeric',
+      'transaction_date' => 'required|date',
+      'integrator_service_id' => 'required|string',
+      'vat_calculated' => 'required|numeric',
+      'vat_rate' => 'required|numeric',
+      'vat_status' => 'required|string',
+    ]);
+
     $firs = app(FirsApiService::class);
 
-    // {
-    //   "agent_tin": "01060087-0001",
-    //   "base_amount": "100000.00",
-    //   "beneficiary_tin": "01060087-0001",
-    //   "currency": "NGN",
-    //   "item_description": "Items",
-    //   "irn": "{{TEST_IRN}}",
-    //   "other_taxes": "5000.00",
-    //   "total_amount": "112500.00",
-    //   "transaction_date": "2024-11-18",
-    //   "integrator_service_id":"772392",
-    //   "vat_calculated": "7500.00",
-    //   "vat_rate": "7.5",
-    //   "vat_status": "STANDARD_VAT"
-    // }
+    $response = $firs->confirmInvoiceTransmission($irn, $validated);
 
-    $transmission = CustomerTransmission::where('irn', $irn)->firstOrFail();
-    $transmission->update(['acknowledged_at' => now()]);
+    if (($response['code'] ?? 500) != 200) {
+      return $this->sendError('Failed to acknowledge invoice with FIRS', $response, $response['code'] ?? 422);
+    }
 
-    $payload = [
-      'agent_id' => $transmission->accounting_supplier_party['tin'],
-      'base_amount' => $transmission->legal_monetary_total['tax_exclusive_amount'],
-      'beneficiary_tin' => $transmission->accounting_supplier_party['tin'],
-      'currency' => $transmission->document_currency_code,
-      'item_description' => $transmission->note,
-      'irn' => $transmission->irn,
-      'other_taxes' => 0,
-      'total_amount' => $transmission->legal_monetary_total['payable_amount'],
-      'transaction_date' => $transmission->issue_date,
-      'integrator_service_id' => config('services.firs.integrator_service_id'),
-      'vat_calculated' => $transmission->tax_total[0]['tax_amount'] ?? 0,
-      'vat_rate' => $transmission->tax_total[0]['tax_subtotal'][0]['tax_category']['percent'] ?? 0,
-      'vat_status' => 'STANDARD_VAT',
+    $response['message'] = 'Invoice acknowledgment sent to FIRS successfully.';
+    $response['data'] = [
+      'status' => 'acknowledged',
+      'irn' => $irn,
     ];
 
-    $firs->confirmInvoiceTransmission($irn, $payload);
-
-    return response()->json(['status' => 'acknowledged']);
+    return response()->json($response);
   }
 }

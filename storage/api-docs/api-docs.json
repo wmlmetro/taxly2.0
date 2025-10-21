@@ -224,6 +224,65 @@
                 ]
             }
         },
+        "/api/v1/auth/tax-payer-login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Tax Payer Login",
+                "operationId": "a96db8e6722c264fc1a15bb2d927fdd3",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "your firs e-invoice login email"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "your firs e-invoice login password"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "User logged in successfully",
+                                    "success": true,
+                                    "data": {
+                                        "id": "********-323c-****-9061-***********",
+                                        "status": "200 OK",
+                                        "message": "User logged in",
+                                        "received_at": "2025-10-21T16:01:56.517426199+01:00",
+                                        "entity_id": "********-b06e-****-a89d-***********"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid credentials"
+                    }
+                }
+            }
+        },
         "/api/v1/buyer/invoices/{invoice}/accept": {
             "post": {
                 "tags": [

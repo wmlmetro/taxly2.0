@@ -257,4 +257,59 @@ class AuthController extends BaseController
 
         return $this->sendSuccess(['message' => 'Logged out successfully']);
     }
+
+    /**
+     * @OA\Post(
+     *     path="/api/v1/auth/tax-payer-login",
+     *     summary="Tax Payer Login",
+     *     tags={"Auth"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"email","password"},
+     *             @OA\Property(property="email", type="string", format="email", example="your firs e-invoice login email"),
+     *             @OA\Property(property="password", type="string", format="password", example="your firs e-invoice login password")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Login successful",
+     *         @OA\JsonContent(example={
+     *             "message": "User logged in successfully",
+     *             "success": true,
+     *             "data": {
+     *                     "id": "********-323c-****-9061-***********",
+     *                     "status": "200 OK",
+     *                     "message": "User logged in",
+     *                     "received_at": "2025-10-21T16:01:56.517426199+01:00",
+     *                     "entity_id": "********-b06e-****-a89d-***********"
+     *             }
+     *         })
+     *     ),
+     *     @OA\Response(response=401, description="Invalid credentials")
+     * )
+     */
+    public function taxPayerLogin(Request $request): JsonResponse
+    {
+        if (!empty($request->email) && !empty($request->password)) {
+            $doLogin = app(FirsApiService::class)->login($request->email, $request->password);
+
+            if (!$doLogin || ($doLogin['code'] ?? 500) != 200) {
+                throw new \Exception('FIRS authentication failed');
+            }
+
+            $firsLoginData = $doLogin['data'] ?? [];
+
+            $request['entity_id'] = $firsLoginData['entity_id'] ?? null;
+
+            return $this->sendResponse(
+                $firsLoginData,
+                'User logged in successfully',
+                200,
+                true
+            );
+        }
+
+        return $this->sendError('Email and password are required.', 401);
+    }
 }

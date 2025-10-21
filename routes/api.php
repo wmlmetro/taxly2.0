@@ -16,7 +16,16 @@ Route::prefix('v1/auth')->group(function () {
     Route::post('/tax-payer-login', [AuthController::class, 'taxPayerLogin']);
 });
 
-// ✅ Common invoice and buyer routes (to be reused)
+// 🛠️ Resources routes - Now public
+Route::prefix('v1/resources')->group(function () {
+    Route::get('/invoice-types', [ResourceController::class, 'getInvoiceTypes']);
+    Route::get('/payment-means', [ResourceController::class, 'getPaymentMeans']);
+    Route::get('/tax-categories', [ResourceController::class, 'getTaxCategories']);
+    Route::get('/tin/{tin_number}', [ResourceController::class, 'getTin']);
+    Route::get('/entity/{entity_id}', [ResourceController::class, 'getEntity']);
+});
+
+// ✅ Common invoice and buyer routes (to be reused) - Resources routes removed
 $invoiceRoutes = function () {
     // Invoices
     Route::get('/invoices/search/{business_id}', [InvoiceController::class, 'search']);
@@ -36,13 +45,6 @@ $invoiceRoutes = function () {
     // Buyer actions
     Route::post('/buyer/invoices/{invoice}/accept', [BuyerInvoiceController::class, 'accept']);
     Route::post('/buyer/invoices/{invoice}/reject', [BuyerInvoiceController::class, 'reject']);
-
-    // Resources
-    Route::get('/resources/invoice-types', [ResourceController::class, 'getInvoiceTypes']);
-    Route::get('/resources/payment-means', [ResourceController::class, 'getPaymentMeans']);
-    Route::get('/resources/tax-categories', [ResourceController::class, 'getTaxCategories']);
-    Route::get('/resources/tin/{tin_number}', [ResourceController::class, 'getTin']);
-    Route::get('/resources/entity/{entity_id}', [ResourceController::class, 'getEntity']);
 };
 
 // ✅ Protected routes (auth:sanctum)

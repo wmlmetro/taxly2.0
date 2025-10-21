@@ -20,7 +20,6 @@ class ResourceController extends Controller
    * @OA\Get(
    *     path="/api/v1/resources/invoice-types",
    *     tags={"Resources"},
-   *     security={{"sanctum":{}}},
    *     summary="Get available invoice types",
    *     description="Fetch a list of invoice types available from FIRS.",
    *     @OA\Response(
@@ -49,7 +48,6 @@ class ResourceController extends Controller
    * @OA\Get(
    *     path="/api/v1/resources/payment-means",
    *     tags={"Resources"},
-   *     security={{"sanctum":{}}},
    *     summary="Get available payment means",
    *     description="Fetch a list of available payment means from FIRS.",
    *     @OA\Response(
@@ -78,7 +76,6 @@ class ResourceController extends Controller
    * @OA\Get(
    *     path="/api/v1/resources/tax-categories",
    *     tags={"Resources"},
-   *     security={{"sanctum":{}}},
    *     summary="Get available tax categories",
    *     description="Fetch all tax categories available in FIRS.",
    *     @OA\Response(
@@ -107,7 +104,6 @@ class ResourceController extends Controller
    * @OA\Get(
    *     path="/api/v1/resources/tin/{tin_number}",
    *     tags={"Resources"},
-   *     security={{"sanctum":{}}},
    *     summary="Lookup taxpayer by TIN",
    *     description="Retrieve taxpayer details by Tax Identification Number (TIN).",
    *     @OA\Parameter(
@@ -147,7 +143,6 @@ class ResourceController extends Controller
    * @OA\Get(
    *     path="/api/v1/resources/entity/{entity_id}",
    *     tags={"Resources"},
-   *     security={{"sanctum":{}}},
    *     summary="Retrieve entity details by ID",
    *     description="Fetch entity details using its unique identifier.",
    *     @OA\Parameter(

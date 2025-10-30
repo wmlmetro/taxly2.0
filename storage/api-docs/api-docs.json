@@ -2107,12 +2107,7 @@
                     "500": {
                         "description": "Failed to fetch invoice types"
                     }
-                },
-                "security": [
-                    {
-                        "sanctum": []
-                    }
-                ]
+                }
             }
         },
         "/api/v1/resources/payment-means": {
@@ -2137,12 +2132,7 @@
                     "500": {
                         "description": "Failed to fetch payment means"
                     }
-                },
-                "security": [
-                    {
-                        "sanctum": []
-                    }
-                ]
+                }
             }
         },
         "/api/v1/resources/tax-categories": {
@@ -2167,12 +2157,7 @@
                     "500": {
                         "description": "Failed to fetch tax categories"
                     }
-                },
-                "security": [
-                    {
-                        "sanctum": []
-                    }
-                ]
+                }
             }
         },
         "/api/v1/resources/tin/{tin_number}": {
@@ -2212,12 +2197,7 @@
                     "500": {
                         "description": "Failed to fetch TIN details"
                     }
-                },
-                "security": [
-                    {
-                        "sanctum": []
-                    }
-                ]
+                }
             }
         },
         "/api/v1/resources/entity/{entity_id}": {
@@ -2257,12 +2237,7 @@
                     "500": {
                         "description": "Failed to fetch entity details"
                     }
-                },
-                "security": [
-                    {
-                        "sanctum": []
-                    }
-                ]
+                }
             }
         },
         "/api/v1/tenants": {

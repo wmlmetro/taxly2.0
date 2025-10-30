@@ -123,7 +123,7 @@ class FirsApiService
    */
   public function getPaymentMeans()
   {
-    return $this->get('invoice/resources/payment_means');
+    return $this->get('invoice/resources/payment-means');
   }
 
   public function getTaxCategories()

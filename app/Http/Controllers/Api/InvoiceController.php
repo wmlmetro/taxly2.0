@@ -13,6 +13,7 @@ use App\Services\FirsApiService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class InvoiceController extends BaseController
 {
@@ -674,7 +675,8 @@ class InvoiceController extends BaseController
 
     // Dispatch background job
     TransmitInvoiceJob::dispatch($transmission)->onQueue('invoices');
-
+    Log::info('Dispatched TransmitInvoiceJob for IRN: ' . $irn);
+    Log::info('Webhook URL: ' . ($transmission->webhook_url ?? 'None'));
     return response()->json([
       'code' => 200,
       'data' => ['ok' => true],

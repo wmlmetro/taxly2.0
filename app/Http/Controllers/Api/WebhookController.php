@@ -36,6 +36,19 @@ class WebhookController extends Controller
       'message' => $data['message'],
     ]);
 
+    // Send feedback to the integrator webhook (if provided)
+    if (!empty($data['webhook_url'])) {
+      try {
+        Http::post($data['webhook_url'], [
+          'irn' => $data['irn'],
+          'message' => $data['message'],
+        ]);
+        Log::info('Webhook forwarded successfully to ' . $data['webhook_url']);
+      } catch (\Exception $e) {
+        Log::error('Failed to forward webhook: ' . $e->getMessage());
+      }
+    }
+
     // Step 3: Locate invoice transmission data
     $transmissionInfo = CustomerTransmission::where('irn', $data['irn'])->first();
 

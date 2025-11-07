@@ -204,6 +204,7 @@ class FirsApiService
 
   public function transmitInvoice(string $irn)
   {
+
     return $this->post("invoice/transmit/{$irn}");
   }
 

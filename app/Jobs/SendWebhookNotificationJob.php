@@ -36,6 +36,11 @@ class SendWebhookNotificationJob implements ShouldQueue
             'status' => 'pending',
         ]);
 
+        Log::info("🚀 Starting webhook delivery to: {$this->webhookUrl}", [
+            'irn' => $this->payload['irn'] ?? null,
+            'payload' => $this->payload,
+        ]);
+
         try {
             $response = Http::timeout(15)->post($this->webhookUrl, $this->payload);
 
@@ -46,19 +51,47 @@ class SendWebhookNotificationJob implements ShouldQueue
                 'sent_at' => now(),
             ]);
 
-            if ($response->failed()) {
+            if ($response->successful()) {
+                Log::info("✅ Webhook successfully delivered to {$this->webhookUrl}", [
+                    'status_code' => $response->status(),
+                    'irn' => $this->payload['irn'] ?? null,
+                ]);
+            } else {
+                Log::warning("⚠️ Webhook delivery returned non-success status: {$response->status()}", [
+                    'url' => $this->webhookUrl,
+                    'status_code' => $response->status(),
+                    'response_body' => $response->body(),
+                    'irn' => $this->payload['irn'] ?? null,
+                ]);
+
+                // Don't throw exception for 4xx errors, just log them
+                if ($response->status() >= 400 && $response->status() < 500) {
+                    return; // Don't retry client errors
+                }
+
                 throw new \Exception("Webhook returned status: {$response->status()}");
             }
-
-            Log::info("✅ Webhook successfully delivered to {$this->webhookUrl}");
         } catch (\Throwable $e) {
-            Log::error("❌ Webhook delivery failed: {$e->getMessage()}");
+            Log::error("❌ Webhook delivery failed: {$e->getMessage()}", [
+                'url' => $this->webhookUrl,
+                'error' => $e->getMessage(),
+                'irn' => $this->payload['irn'] ?? null,
+            ]);
 
             $log->update([
                 'status' => 'failed',
                 'error_message' => $e->getMessage(),
                 'sent_at' => now(),
             ]);
+
+            // Only retry on network/connection errors, not on 4xx errors
+            if (str_contains($e->getMessage(), '404') || str_contains($e->getMessage(), '400')) {
+                Log::warning("🚫 Not retrying webhook due to client error (4xx)", [
+                    'url' => $this->webhookUrl,
+                    'error' => $e->getMessage(),
+                ]);
+                return; // Don't retry client errors
+            }
 
             throw $e;
         }

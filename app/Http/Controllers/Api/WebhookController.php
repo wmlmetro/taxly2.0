@@ -3,13 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Mail\InvoiceTransmissionMail;
 use App\Models\CustomerTransmission;
 use App\Models\WebhookEndpoint;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
 use Throwable;
 
 class WebhookController extends Controller
@@ -42,48 +40,16 @@ class WebhookController extends Controller
       Log::warning("⚠️ No CustomerTransmission record found for IRN: {$data['irn']}");
     }
 
-    // 4️⃣ Send email notifications
-    $this->notifyParties($transmission, $data['irn']);
-
-    // 5️⃣ Forward webhook if provided
+    // 4️⃣ Forward webhook if provided
     if (!empty($data['webhook_url'])) {
       return $this->forwardWebhook($data, $webhookRecord);
     }
 
-    // 6️⃣ If not forwarded, just confirm receipt
+    // 5️⃣ If not forwarded, just confirm receipt
     return response()->json([
       'status'  => 'received',
       'message' => 'Webhook received and processed successfully',
     ]);
-  }
-
-  /**
-   * Send invoice transmission emails to supplier and customer.
-   */
-  protected function notifyParties(?CustomerTransmission $transmission, string $irn): void
-  {
-    if (!$transmission) {
-      return;
-    }
-
-    try {
-      if ($transmission->supplier_email) {
-        Mail::to($transmission->supplier_email)
-          ->queue(new InvoiceTransmissionMail($irn, $transmission->supplier_name));
-      }
-
-      if ($transmission->customer_email) {
-        Mail::to($transmission->customer_email)
-          ->queue(new InvoiceTransmissionMail($irn, $transmission->customer_name));
-      }
-
-      Log::info("📨 Notification emails queued for IRN {$irn}");
-    } catch (Throwable $e) {
-      Log::error('❌ Failed to send invoice notification emails', [
-        'irn' => $irn,
-        'error' => $e->getMessage(),
-      ]);
-    }
   }
 
   /**

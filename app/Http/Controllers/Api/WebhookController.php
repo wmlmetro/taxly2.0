@@ -2,131 +2,141 @@
 
 namespace App\Http\Controllers\Api;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Http;
 use App\Http\Controllers\Controller;
 use App\Mail\InvoiceTransmissionMail;
 use App\Models\CustomerTransmission;
 use App\Models\WebhookEndpoint;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Throwable;
 
 class WebhookController extends Controller
 {
   /**
-   * Handle incoming webhook from FIRS and optionally forward it
-   * to a client (Integrator) webhook.
+   * Handle incoming webhook from FIRS and forward or notify as needed.
    */
   public function handle(Request $request)
   {
-    // Step 1: Validate FIRS payload + optional integrator webhook URL
+    // 1️⃣ Validate incoming payload
     $data = $request->validate([
       'irn'         => 'required|string',
       'message'     => 'required|string',
-      'webhook_url' => 'nullable|url', // optional, supplied by integrator or from DB
+      'webhook_url' => 'nullable|url',
     ]);
 
     Log::info('📩 FIRS Webhook Received', $data);
 
-    // Step 2: Persist webhook log for audit
+    // 2️⃣ Persist log
     $webhookRecord = WebhookEndpoint::create([
       'url'     => $data['webhook_url'] ?? env('APP_URL') . '/api/webhooks/firs',
       'irn'     => $data['irn'],
       'message' => $data['message'],
     ]);
 
-    // Send feedback to the integrator webhook (if provided)
+    // 3️⃣ Find invoice transmission info
+    $transmission = CustomerTransmission::where('irn', $data['irn'])->first();
+
+    if (!$transmission) {
+      Log::warning("⚠️ No CustomerTransmission record found for IRN: {$data['irn']}");
+    }
+
+    // 4️⃣ Send email notifications
+    $this->notifyParties($transmission, $data['irn']);
+
+    // 5️⃣ Forward webhook if provided
     if (!empty($data['webhook_url'])) {
-      try {
-        Http::post($data['webhook_url'], [
-          'irn' => $data['irn'],
-          'message' => $data['message'],
-        ]);
-        Log::info('Webhook forwarded successfully to ' . $data['webhook_url']);
-      } catch (\Exception $e) {
-        Log::error('Failed to forward webhook: ' . $e->getMessage());
-      }
+      return $this->forwardWebhook($data, $webhookRecord);
     }
 
-    // Step 3: Locate invoice transmission data
-    $transmissionInfo = CustomerTransmission::where('irn', $data['irn'])->first();
-
-    if (!$transmissionInfo) {
-      Log::warning('⚠️ No CustomerTransmission record found for IRN: ' . $data['irn']);
-    }
-
-    // Step 4: Notify supplier and customer by email (optional)
-    try {
-      if ($transmissionInfo?->supplier_email) {
-        Mail::to($transmissionInfo->supplier_email)
-          ->queue(new InvoiceTransmissionMail($data['irn'], $transmissionInfo->supplier_name));
-      }
-
-      if ($transmissionInfo?->customer_email) {
-        Mail::to($transmissionInfo->customer_email)
-          ->queue(new InvoiceTransmissionMail($data['irn'], $transmissionInfo->customer_name));
-      }
-    } catch (Throwable $e) {
-      Log::error('❌ Failed to send notification emails', ['error' => $e->getMessage()]);
-    }
-
-    // Step 5: Forward webhook to integrator (if provided)
-    if (!empty($data['webhook_url'])) {
-      try {
-        Log::info('🚀 Forwarding webhook to integrator', [
-          'destination' => $data['webhook_url'],
-          'payload' => $data,
-        ]);
-
-        $response = Http::timeout(10)
-          ->retry(3, 2000) // retry 3 times with 2s delay
-          ->post($data['webhook_url'], [
-            'irn'     => $data['irn'],
-            'message' => $data['message'],
-            'source'  => 'taxly', // to identify it came from middleware
-          ]);
-
-        Log::info('✅ Forwarded webhook successfully', [
-          'status' => $response->status(),
-          'body'   => $response->json(),
-        ]);
-
-        $webhookRecord->update([
-          'forwarded_to' => $data['webhook_url'],
-          'forward_status' => $response->successful() ? 'success' : 'failed',
-          'response_body' => $response->json(),
-        ]);
-
-        return response()->json([
-          'status'  => 'forwarded',
-          'message' => 'Webhook forwarded successfully',
-          'response' => $response->json(),
-        ], 200);
-      } catch (Throwable $e) {
-        Log::error('❌ Failed to forward webhook', [
-          'error' => $e->getMessage(),
-          'destination' => $data['webhook_url'],
-        ]);
-
-        $webhookRecord->update([
-          'forwarded_to' => $data['webhook_url'],
-          'forward_status' => 'failed',
-          'response_body' => ['error' => $e->getMessage()],
-        ]);
-
-        return response()->json([
-          'status'  => 'error',
-          'message' => 'Failed to forward webhook to integrator',
-          'error'   => $e->getMessage(),
-        ], 500);
-      }
-    }
-
-    // Step 6: If no forwarding webhook provided, just confirm receipt
+    // 6️⃣ If not forwarded, just confirm receipt
     return response()->json([
       'status'  => 'received',
-      'message' => 'FIRS webhook received and processed successfully',
-    ], 200);
+      'message' => 'Webhook received and processed successfully',
+    ]);
+  }
+
+  /**
+   * Send invoice transmission emails to supplier and customer.
+   */
+  protected function notifyParties(?CustomerTransmission $transmission, string $irn): void
+  {
+    if (!$transmission) {
+      return;
+    }
+
+    try {
+      if ($transmission->supplier_email) {
+        Mail::to($transmission->supplier_email)
+          ->queue(new InvoiceTransmissionMail($irn, $transmission->supplier_name));
+      }
+
+      if ($transmission->customer_email) {
+        Mail::to($transmission->customer_email)
+          ->queue(new InvoiceTransmissionMail($irn, $transmission->customer_name));
+      }
+
+      Log::info("📨 Notification emails queued for IRN {$irn}");
+    } catch (Throwable $e) {
+      Log::error('❌ Failed to send invoice notification emails', [
+        'irn' => $irn,
+        'error' => $e->getMessage(),
+      ]);
+    }
+  }
+
+  /**
+   * Forward the webhook to the integrator or external endpoint.
+   */
+  protected function forwardWebhook(array $data, WebhookEndpoint $record)
+  {
+    try {
+      Log::info('🚀 Forwarding webhook to integrator', [
+        'destination' => $data['webhook_url'],
+        'payload'     => $data,
+      ]);
+
+      $response = Http::timeout(10)
+        ->retry(3, 2000)
+        ->post($data['webhook_url'], [
+          'irn'     => $data['irn'],
+          'message' => $data['message'],
+          'source'  => 'taxly',
+        ]);
+
+      $record->update([
+        'forwarded_to'   => $data['webhook_url'],
+        'forward_status' => $response->successful() ? 'success' : 'failed',
+        'response_body'  => $response->json(),
+      ]);
+
+      Log::info("✅ Webhook forwarded successfully to {$data['webhook_url']}", [
+        'status' => $response->status(),
+      ]);
+
+      return response()->json([
+        'status'   => 'forwarded',
+        'message'  => 'Webhook forwarded successfully',
+        'response' => $response->json(),
+      ]);
+    } catch (Throwable $e) {
+      Log::error('❌ Webhook forwarding failed', [
+        'destination' => $data['webhook_url'],
+        'error'       => $e->getMessage(),
+      ]);
+
+      $record->update([
+        'forwarded_to'   => $data['webhook_url'],
+        'forward_status' => 'failed',
+        'response_body'  => ['error' => $e->getMessage()],
+      ]);
+
+      return response()->json([
+        'status'  => 'error',
+        'message' => 'Failed to forward webhook to integrator',
+        'error'   => $e->getMessage(),
+      ], 500);
+    }
   }
 }

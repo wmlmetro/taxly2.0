@@ -27,11 +27,19 @@ class WebhookController extends Controller
     Log::info('📩 FIRS Webhook Received', $data);
 
     // 2️⃣ Persist log
-    $webhookRecord = WebhookEndpoint::create([
-      'url'     => $data['webhook_url'] ?? env('APP_URL') . '/api/webhooks/firs',
-      'irn'     => $data['irn'],
-      'message' => $data['message'],
-    ]);
+    $webhookRecord = WebhookEndpoint::firstOrCreate(
+      [
+        'irn'     => $data['irn'],
+        'message' => $data['message'],
+      ],
+      [
+        'url' => $data['webhook_url'] ?? env('APP_URL') . '/api/webhooks/firs',
+      ]
+    );
+
+    if (!$webhookRecord->wasRecentlyCreated) {
+      Log::info("🔁 Duplicate webhook ignored for IRN {$data['irn']} and message {$data['message']}");
+    }
 
     // 3️⃣ Find invoice transmission info
     $transmission = CustomerTransmission::where('irn', $data['irn'])->first();

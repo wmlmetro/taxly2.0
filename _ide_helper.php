@@ -27454,6 +27454,21 @@ namespace App\Filament\Resources\Users\Pages {
             }
     }
 
+namespace App\Filament\Resources\WebhookLogs\Pages {
+    /**
+     */
+    class CreateWebhookLog extends \Filament\Resources\Pages\CreateRecord {
+            }
+    /**
+     */
+    class EditWebhookLog extends \Filament\Resources\Pages\EditRecord {
+            }
+    /**
+     */
+    class ListWebhookLogs extends \Filament\Resources\Pages\ListRecords {
+            }
+    }
+
 namespace Filament\Widgets {
     /**
      */

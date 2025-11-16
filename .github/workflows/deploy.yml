@@ -1,0 +1,81 @@
+name: Build and Deploy to Kubernetes
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  REGISTRY: registry.digitalocean.com
+  IMAGE_NAME: vendra-registry  # Your DOCR repository name
+  K8S_CLUSTER_ID: "0315a234-4213-4bf8-957d-801e651491d9"
+
+jobs:
+  build-and-push:
+    name: Build and Push Docker Image
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+
+      - name: Log in to DigitalOcean Container Registry
+        run: doctl registry login --expiry-seconds 600
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/taxly-app:latest
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/taxly-app:${{ github.sha }}
+          cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/taxly-app:buildcache
+          cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/taxly-app:buildcache,mode=max
+
+  deploy:
+    name: Deploy to Kubernetes
+    runs-on: ubuntu-latest
+    needs: build-and-push
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+
+      - name: Save DigitalOcean kubeconfig
+        run: doctl kubernetes cluster kubeconfig save ${{ env.K8S_CLUSTER_ID }}
+
+      - name: Update deployment image
+        run: |
+          kubectl set image deployment/taxly-app \
+            taxly-app=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/taxly-app:latest \
+            -n taxly
+
+      - name: Verify deployment
+        run: |
+          kubectl rollout status deployment/taxly-app -n taxly --timeout=5m
+
+      - name: Run database migrations
+        run: |
+          kubectl exec -n taxly deployment/taxly-app -- php artisan migrate --force
+
+      - name: Clear application cache
+        run: |
+          kubectl exec -n taxly deployment/taxly-app -- php artisan cache:clear
+          kubectl exec -n taxly deployment/taxly-app -- php artisan config:clear
+          kubectl exec -n taxly deployment/taxly-app -- php artisan view:clear

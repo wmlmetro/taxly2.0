@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: taxly-app
+  namespace: taxly
+spec:
+  replicas: 3  # Production: minimum 3 replicas for HA
+  selector:
+    matchLabels:
+      app: taxly-app
+  template:
+    metadata:
+      labels:
+        app: taxly-app
+    spec:
+      imagePullSecrets:
+        - name: docr-secret
+      containers:
+        - name: taxly-app
+          image: registry.digitalocean.com/vendra-registry/taxly-app:latest
+          ports:
+            - containerPort: 80
+              name: http
+          envFrom:
+            - configMapRef:
+                name: taxly-config
+            - secretRef:
+                name: taxly-secrets
+          volumeMounts:
+            - name: storage
+              mountPath: /var/www/storage
+            - name: cache
+              mountPath: /var/www/bootstrap/cache
+          resources:
+            requests:
+              memory: "768Mi"  # Increased for production load
+              cpu: "500m"      # Higher baseline for production
+            limits:
+              memory: "1536Mi" # 1.5Gi for peak loads
+              cpu: "1000m"     # 1 CPU core for production traffic
+          livenessProbe:
+            httpGet:
+              path: /up
+              port: 80
+            initialDelaySeconds: 120
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /up
+              port: 80
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c", "sleep 30"]
+      volumes:
+        - name: storage
+          emptyDir: {}  # Ephemeral storage for production scaling
+        - name: cache
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: taxly-app-service
+  namespace: taxly
+spec:
+  selector:
+    app: taxly-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: ClusterIP

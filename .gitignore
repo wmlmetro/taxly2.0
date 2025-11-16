@@ -21,3 +21,8 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+
+# Kubernetes secrets (contains sensitive production credentials)
+# Note: The secrets.yaml in the repo contains example values from .env.docker
+# For production, create a separate secrets file and add it here
+# k8s/secrets.production.yaml

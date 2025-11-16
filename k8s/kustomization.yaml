@@ -1,0 +1,15 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: taxly
+
+resources:
+  - namespace.yaml
+  - secrets.yaml
+  - configmap.yaml
+  - mysql-deployment.yaml
+  - mysql-loadbalancer.yaml
+  - redis-deployment.yaml
+  - app-deployment.yaml
+  - cert-issuer.yaml
+  - ingress.yaml

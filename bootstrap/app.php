@@ -16,6 +16,17 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'auth-or-apikey' => \App\Http\Middleware\ApiKeyOrTokenMiddleware::class,
         ]);
+
+        // Trust all proxies for HTTPS behind ingress
+        $middleware->trustProxies(
+            at: '*',
+            headers: \Illuminate\Http\Request::HEADER_X_FORWARDED_FOR |
+                     \Illuminate\Http\Request::HEADER_X_FORWARDED_HOST |
+                     \Illuminate\Http\Request::HEADER_X_FORWARDED_PORT |
+                     \Illuminate\Http\Request::HEADER_X_FORWARDED_PROTO |
+                     \Illuminate\Http\Request::HEADER_X_FORWARDED_PREFIX
+        );
+
         // $middleware->group('api', [
         //     ForceJsonResponse::class,
         // ]);

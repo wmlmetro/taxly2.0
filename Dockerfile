@@ -42,6 +42,9 @@ COPY . .
 # Now run composer scripts and optimize autoloader (include dev for seeding)
 RUN composer dump-autoload --optimize
 
+# Generate Swagger documentation
+RUN php artisan l5-swagger:generate
+
 # Set permissions
 RUN chown -R www-data:www-data /var/www \
     && chmod -R 755 /var/www/storage \

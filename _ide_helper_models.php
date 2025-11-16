@@ -39,9 +39,21 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * @property int $id
+ * @property string $name
+ * @property string $key
+ * @property int $active
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ApiKey newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ApiKey newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ApiKey query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ApiKey whereActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ApiKey whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ApiKey whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ApiKey whereKey($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ApiKey whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ApiKey whereUpdatedAt($value)
  */
 	class ApiKey extends \Eloquent {}
 }
@@ -303,6 +315,7 @@ namespace App\Models{
  * @property int $base_quantity
  * @property string $price_unit
  * @property string $line_total
+ * @property string $tax_rate
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Invoice $invoice
@@ -331,9 +344,33 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereProductCategory($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereQuantity($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereSellersItemIdentification($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereTaxRate($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereUpdatedAt($value)
  */
 	class InvoiceItem extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * @property int $id
+ * @property string $irn
+ * @property string|null $webhook_url
+ * @property string $status
+ * @property array<array-key, mixed>|null $response_data
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceTransmission newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceTransmission newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceTransmission query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceTransmission whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceTransmission whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceTransmission whereIrn($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceTransmission whereResponseData($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceTransmission whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceTransmission whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceTransmission whereWebhookUrl($value)
+ */
+	class InvoiceTransmission extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -600,13 +637,16 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User withoutPermission($permissions)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User withoutRole($roles, $guard = null)
  */
-	class User extends \Eloquent {}
+	class User extends \Eloquent implements \Filament\Models\Contracts\FilamentUser {}
 }
 
 namespace App\Models{
 /**
  * @property int $id
  * @property string $url
+ * @property string|null $forwarded_to
+ * @property string $forward_status
+ * @property array<array-key, mixed>|null $response_body
  * @property string $irn
  * @property string $message
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -616,12 +656,46 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|WebhookEndpoint newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|WebhookEndpoint query()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|WebhookEndpoint whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WebhookEndpoint whereForwardStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WebhookEndpoint whereForwardedTo($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|WebhookEndpoint whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|WebhookEndpoint whereIrn($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|WebhookEndpoint whereMessage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WebhookEndpoint whereResponseBody($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|WebhookEndpoint whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|WebhookEndpoint whereUrl($value)
  */
 	class WebhookEndpoint extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * @property int $id
+ * @property string $webhook_url
+ * @property string|null $irn
+ * @property string $status
+ * @property array<array-key, mixed> $payload
+ * @property int|null $status_code
+ * @property string|null $response_body
+ * @property string|null $error_message
+ * @property \Illuminate\Support\Carbon|null $sent_at
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WebhookLog newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WebhookLog newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WebhookLog query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WebhookLog whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WebhookLog whereErrorMessage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WebhookLog whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WebhookLog whereIrn($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WebhookLog wherePayload($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WebhookLog whereResponseBody($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WebhookLog whereSentAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WebhookLog whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WebhookLog whereStatusCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WebhookLog whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WebhookLog whereWebhookUrl($value)
+ */
+	class WebhookLog extends \Eloquent {}
 }
 

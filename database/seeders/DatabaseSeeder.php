@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
         $superAdmin = User::factory()->create([
             'name' => 'Super Admin',
             'email' => 'super@admin.com',
-            'is_landlord' => 1,
+            // 'is_landlord' => 1,
             'password' => Hash::make('!12345678'),
         ]);
 

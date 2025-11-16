@@ -63,8 +63,12 @@ jobs:
       - name: Update deployment image
         run: |
           kubectl set image deployment/taxly-app \
-            taxly-app=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/taxly-app:latest \
+            taxly-app=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/taxly-app:${{ github.sha }} \
             -n taxly
+
+      - name: Restart deployment to ensure pods pick up new image
+        run: |
+          kubectl rollout restart deployment/taxly-app -n taxly
 
       - name: Verify deployment
         run: |

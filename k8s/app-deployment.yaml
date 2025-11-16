@@ -18,6 +18,7 @@ spec:
       containers:
         - name: taxly-app
           image: registry.digitalocean.com/vendra-registry/taxly-app:latest
+          imagePullPolicy: Always  # Always pull latest image to ensure updates
           ports:
             - containerPort: 80
               name: http

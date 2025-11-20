@@ -4,6 +4,7 @@ namespace App\Observers;
 
 use App\Models\Invoice;
 use App\Models\AuditEvent;
+use App\Models\UsageMeter;
 use Illuminate\Support\Facades\Auth;
 
 class InvoiceObserver
@@ -16,6 +17,11 @@ class InvoiceObserver
             Auth::id(),
             $invoice->toArray()
         );
+
+        // Increment invoice counter for the tenant
+        if ($invoice->organization && $invoice->organization->tenant) {
+            UsageMeter::incrementCounter($invoice->organization->tenant->id, 'invoice_count');
+        }
     }
 
     public function updated(Invoice $invoice): void
@@ -31,6 +37,11 @@ class InvoiceObserver
                     Auth::id(),
                     $invoice->getChanges()
                 );
+
+                // Increment submission counter for the tenant
+                if ($invoice->organization && $invoice->organization->tenant) {
+                    UsageMeter::incrementCounter($invoice->organization->tenant->id, 'submission_count');
+                }
             } elseif ($newStatus === 'validated') {
                 AuditEvent::record(
                     "invoice:{$invoice->id}",

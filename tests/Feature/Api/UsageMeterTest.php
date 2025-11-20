@@ -6,9 +6,10 @@ use App\Models\Organization;
 use App\Models\UsageMeter;
 use App\Models\User;
 use Laravel\Sanctum\Sanctum;
+use Spatie\Permission\Models\Permission;
 
 beforeEach(function () {
-  $tenant = Tenant::factory()->create();
+  $this->tenant = Tenant::factory()->create();
 
   $this->organization = Organization::factory()->create([
     'tenant_id' => $this->tenant->id,
@@ -18,7 +19,12 @@ beforeEach(function () {
     'organization_id' => $this->organization->id,
   ]);
 
-  $this->tenant = $tenant;
+  // Create and assign permissions
+  Permission::firstOrCreate(['name' => 'create invoices', 'guard_name' => 'web']);
+  Permission::firstOrCreate(['name' => 'update invoices', 'guard_name' => 'web']);
+
+  $this->user->givePermissionTo(['create invoices', 'update invoices']);
+
   Sanctum::actingAs($this->user);
 });
 

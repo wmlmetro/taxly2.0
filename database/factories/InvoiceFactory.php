@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Invoice;
 use App\Models\Organization;
+use App\Models\Customer;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class InvoiceFactory extends Factory
@@ -14,6 +15,7 @@ class InvoiceFactory extends Factory
   {
     return [
       'organization_id' => Organization::factory(),
+      'customer_id' => Customer::factory(),
       'buyer_organization_ref' => 'TIN-' . $this->faker->unique()->numerify('########'),
       'total_amount' => $this->faker->randomFloat(2, 1000, 100000),
       'tax_breakdown' => [

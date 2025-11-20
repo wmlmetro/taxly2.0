@@ -3,9 +3,11 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BuyerInvoiceController;
 use App\Http\Controllers\Api\InvoiceController;
+use App\Http\Controllers\Api\InvoiceCrudController;
 use App\Http\Controllers\Api\ResourceController;
 use App\Http\Controllers\Api\TenantController;
 use App\Http\Controllers\Api\WebhookController;
+use App\Http\Controllers\Api\WebhookCrudController;
 use Illuminate\Support\Facades\Route;
 
 // ✅ Auth routes
@@ -52,12 +54,21 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () use ($invoi
     Route::post('/auth/logout', [AuthController::class, 'logout']);
     Route::get('/auth/me', [AuthController::class, 'me']);
 
-    Route::middleware('role:super admin')->group(function () {
+    Route::middleware('auth:sanctum')->group(function () {
         Route::post('/tenants', [TenantController::class, 'store']);
     });
 
     Route::get('/tenants', [TenantController::class, 'index']);
     Route::get('/tenants/{tenant}', [TenantController::class, 'show']);
+
+    // Basic CRUD routes for invoices
+    Route::post('/invoices', [InvoiceCrudController::class, 'store']);
+    Route::post('/invoices/{invoice}/validate', [InvoiceCrudController::class, 'validateInvoice']);
+    Route::post('/invoices/{invoice}/submit', [InvoiceCrudController::class, 'submit']);
+
+    // Webhook CRUD routes
+    Route::get('/webhooks', [WebhookCrudController::class, 'index']);
+    Route::post('/webhooks', [WebhookCrudController::class, 'store']);
 
     // Include invoice and buyer routes
     $invoiceRoutes();

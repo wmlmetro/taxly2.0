@@ -10,19 +10,18 @@ it('registers a new user and org', function () {
     'password'     => 'secret123',
     'password_confirmation' => 'secret123',
     'tin'          => 'TIN123',
-    'legal_name'   => 'Acme Corporation',
-    'address'      => '123 Main St',
+    'trade_name'   => 'Acme Corporation',
+    'street_name'  => '123 Main St',
   ]);
 
   $response->assertCreated()
     ->assertJsonStructure([
       'message',
-      'token',
-      'user' => [
-        'id',
-        'name',
-        'email',
-        'organization_id',
+      'data' => [
+        'tenant',
+        'organization',
+        'user',
+        'token'
       ]
     ]);
 });

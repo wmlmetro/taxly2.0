@@ -135,7 +135,7 @@ class InvoiceController extends BaseController
    *     @OA\RequestBody(
    *         required=true,
    *         @OA\JsonContent(
-   *             required={"channel", "business_id", "invoice_reference", "irn", "issue_date", "invoice_type_code", "document_currency_code", "accounting_supplier_party", "accounting_customer_party", "legal_monetary_total", "invoice_line"},
+   *             required={"channel", "business_id", "invoice_reference", "irn", "issue_date", "invoice_type_code", "document_currency_code", "accounting_supplier_party", "legal_monetary_total", "invoice_line"},
    *             @OA\Property(property="channel", type="string", example="api", description="Submission channel"),
    *             @OA\Property(property="business_id", type="string", example="414a50c3-9ce5-49ec-9ccb-37c28f7cf6be", description="Business ID"),
    *             @OA\Property(property="invoice_reference", type="string", example="INV000002", description="Invoice reference"),
@@ -286,7 +286,13 @@ class InvoiceController extends BaseController
   {
     $firs = app(FirsApiService::class);
 
-    $validateInvoice = $firs->validateInvoice($req->all());
+    // Prepare payload - remove accounting_customer_party if not provided
+    $payload = $req->all();
+    if (empty($payload['accounting_customer_party'])) {
+      unset($payload['accounting_customer_party']);
+    }
+
+    $validateInvoice = $firs->validateInvoice($payload);
     if (($validateInvoice['code'] ?? 500) != 200) {
       return $this->sendError(
         'FIRS Invoice validation failed',
@@ -309,7 +315,7 @@ class InvoiceController extends BaseController
    *     @OA\RequestBody(
    *         required=true,
    *         @OA\JsonContent(
-   *             required={"channel", "business_id", "invoice_reference", "irn", "issue_date", "invoice_type_code", "document_currency_code", "accounting_supplier_party", "accounting_customer_party", "legal_monetary_total", "invoice_line"},
+   *             required={"channel", "business_id", "invoice_reference", "irn", "issue_date", "invoice_type_code", "document_currency_code", "accounting_supplier_party", "legal_monetary_total", "invoice_line"},
    *             @OA\Property(property="channel", type="string", example="api", description="Submission channel"),
    *             @OA\Property(property="business_id", type="string", example="414a50c3-9ce5-49ec-9ccb-37c28f7cf6be", description="Business ID"),
    *             @OA\Property(property="invoice_reference", type="string", example="INV000002", description="Invoice reference"),
@@ -460,6 +466,12 @@ class InvoiceController extends BaseController
   {
     $firs = app(FirsApiService::class);
 
+    // Prepare payload - remove accounting_customer_party if not provided
+    $payload = $req->all();
+    if (empty($payload['accounting_customer_party'])) {
+      unset($payload['accounting_customer_party']);
+    }
+
     // Step 1. Validate IRN
     $validateIRN = $firs->validateIrn($req->invoice_reference, $req->business_id, $req->irn);
     if (($validateIRN['code'] ?? 500) != 200) {
@@ -471,7 +483,7 @@ class InvoiceController extends BaseController
     }
 
     // Step 2. Validate Invoice structure
-    $validateInvoice = $firs->validateInvoice($req->all());
+    $validateInvoice = $firs->validateInvoice($payload);
     if (($validateInvoice['code'] ?? 500) != 200) {
       return $this->sendError(
         'FIRS Invoice validation failed',
@@ -481,7 +493,7 @@ class InvoiceController extends BaseController
     }
 
     // Step 3. Sign invoice
-    $signedInvoice = $firs->invoiceSigning($req->all());
+    $signedInvoice = $firs->invoiceSigning($payload);
     if (($signedInvoice['code'] ?? 500) != 201) {
       return $this->sendError(
         'FIRS Invoice signing failed',

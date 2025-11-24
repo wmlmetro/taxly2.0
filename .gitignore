@@ -21,6 +21,8 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+.DS_Store
+
 
 # Kubernetes secrets (contains sensitive production credentials)
 # Note: The secrets.yaml in the repo contains example values from .env.docker

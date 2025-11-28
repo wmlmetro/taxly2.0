@@ -5,6 +5,11 @@ use App\Http\Controllers\InvoicePdfController;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 
+// Welcome/Homepage Route - Beautiful Documentation
+Route::get('/', function () {
+    return view('welcome');
+})->name('home');
+
 Route::middleware(['auth'])->group(function () {
     Route::get('invoices/{invoice}/pdf', [InvoicePdfController::class, 'download'])
         ->name('invoices.pdf');
@@ -13,7 +18,7 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::middleware(['auth'])->group(function () {
-    Volt::route('/', 'dashboard')->name('dashboard');
+    Volt::route('/dashboard', 'dashboard')->name('dashboard');
 
     Route::redirect('settings', 'settings/profile');
 

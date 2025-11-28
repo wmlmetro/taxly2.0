@@ -68,7 +68,7 @@
             <div class="flex justify-between items-center h-16">
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
-                        <h1 class="text-2xl font-bold gradient-text">Taxly</h1>
+                        <img src="{{ asset('logo.png') }}" alt="no logo" class="h-10 w-auto">
                     </div>
                 </div>
                 <div class="hidden md:block">
@@ -137,6 +137,92 @@
         <div class="absolute top-20 left-10 w-20 h-20 bg-white/10 rounded-full animate-pulse"></div>
         <div class="absolute bottom-20 right-10 w-32 h-32 bg-white/10 rounded-full animate-pulse delay-1000"></div>
         <div class="absolute top-1/2 left-1/4 w-16 h-16 bg-white/10 rounded-full animate-pulse delay-500"></div>
+    </section>
+
+    <!-- Security Ecosystem Section -->
+    <section
+        class="py-20 bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 text-white relative overflow-hidden">
+        <div class="absolute inset-0 bg-black/30"></div>
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="text-3xl md:text-5xl font-bold mb-6">
+                    <span class="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                        Military-Grade Security Architecture
+                    </span>
+                </h2>
+                <p class="text-xl text-slate-300 max-w-4xl mx-auto mb-8">
+                    Experience the most comprehensive security ecosystem for e-invoicing in Nigeria.
+                    Built with FIRS compliance, cryptographic signing, and enterprise-grade protection.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="/ecosystem"
+                        class="bg-blue-600 text-white px-8 py-4 rounded-xl font-semibold hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 flex items-center">
+                        <i class="fas fa-shield-alt mr-3"></i>
+                        Explore Security Ecosystem
+                    </a>
+                    <a href="#features"
+                        class="border-2 border-blue-400 text-blue-400 px-8 py-4 rounded-xl font-semibold hover:bg-blue-400 hover:text-white transition-all duration-300">
+                        View Features
+                    </a>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white/10 backdrop-blur-sm p-8 rounded-xl border border-white/20" data-aos="fade-up"
+                    data-aos-delay="100">
+                    <div
+                        class="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center mb-6">
+                        <i class="fas fa-lock text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">🔐 End-to-End Encryption</h3>
+                    <p class="text-slate-300">TLS 1.3 with perfect forward secrecy, certificate pinning, and zero-trust
+                        architecture protecting every transaction.</p>
+                </div>
+
+                <div class="bg-white/10 backdrop-blur-sm p-8 rounded-xl border border-white/20" data-aos="fade-up"
+                    data-aos-delay="200">
+                    <div
+                        class="w-16 h-16 bg-gradient-to-br from-green-500 to-teal-600 rounded-xl flex items-center justify-center mb-6">
+                        <i class="fas fa-certificate text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">✍️ Cryptographic Signing</h3>
+                    <p class="text-slate-300">FIPS 140-2 Level 3 HSM-backed digital signatures with PKCS#7 envelopes and
+                        RFC 3161 timestamp authority.</p>
+                </div>
+
+                <div class="bg-white/10 backdrop-blur-sm p-8 rounded-xl border border-white/20" data-aos="fade-up"
+                    data-aos-delay="300">
+                    <div
+                        class="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl flex items-center justify-center mb-6">
+                        <i class="fas fa-university text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">🏛️ FIRS Integration</h3>
+                    <p class="text-slate-300">Direct government connection with mutual TLS authentication, dedicated
+                        VPN tunnels, and automated compliance validation.</p>
+                </div>
+            </div>
+
+            <div class="mt-12 text-center" data-aos="fade-up">
+                <div class="inline-flex items-center space-x-6 text-slate-400">
+                    <div class="flex items-center">
+                        <i class="fas fa-shield-alt text-green-400 mr-2"></i>
+                        <span>99.9% Uptime SLA</span>
+                    </div>
+                    <div class="flex items-center">
+                        <i class="fas fa-clock text-blue-400 mr-2"></i>
+                        <span>24/7 Monitoring</span>
+                    </div>
+                    <div class="flex items-center">
+                        <i class="fas fa-database text-purple-400 mr-2"></i>
+                        <span>7-Year Retention</span>
+                    </div>
+                    <div class="flex items-center">
+                        <i class="fas fa-globe text-teal-400 mr-2"></i>
+                        <span>Geo-Redundant</span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 
     <!-- Features Section -->
@@ -262,84 +348,181 @@
         </div>
     </section>
 
-    <!-- Architecture Section -->
+    <!-- Security Architecture Section -->
     <section id="architecture" class="py-20 bg-gray-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16" data-aos="fade-up">
-                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Modern Architecture</h2>
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Security Architecture</h2>
                 <p class="text-xl text-gray-600 max-w-3xl mx-auto">
-                    Built with cutting-edge technologies for scalability, reliability, and performance.
+                    Military-grade security framework with FIRS compliance, cryptographic protection, and
+                    enterprise-grade safeguards.
                 </p>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-12">
                 <div data-aos="fade-right">
-                    <h3 class="text-2xl font-bold text-gray-900 mb-6">Technology Stack</h3>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-6">Multi-Layer Security Framework</h3>
 
                     <div class="space-y-6">
                         <div class="flex items-start space-x-4">
-                            <div class="tech-badge px-3 py-1 rounded-full text-sm font-medium">Backend</div>
+                            <div
+                                class="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-shield-alt text-white text-sm"></i>
+                            </div>
                             <div>
-                                <h4 class="font-semibold text-gray-900">Laravel 12.x</h4>
-                                <p class="text-gray-600">Modern PHP framework with Filament admin panel</p>
+                                <h4 class="font-semibold text-gray-900">Threat Protection Layer</h4>
+                                <p class="text-gray-600">ML-powered WAF, DDoS shield, and intelligent bot filtering
+                                    with challenge mechanisms</p>
                             </div>
                         </div>
 
                         <div class="flex items-start space-x-4">
-                            <div class="tech-badge px-3 py-1 rounded-full text-sm font-medium">Frontend</div>
+                            <div
+                                class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-door-open text-white text-sm"></i>
+                            </div>
                             <div>
-                                <h4 class="font-semibold text-gray-900">Livewire + Flux</h4>
-                                <p class="text-gray-600">Reactive components with modern UI framework</p>
+                                <h4 class="font-semibold text-gray-900">API Gateway Security</h4>
+                                <p class="text-gray-600">JWT validation, rate limiting, schema enforcement, and
+                                    zero-trust verification</p>
                             </div>
                         </div>
 
                         <div class="flex items-start space-x-4">
-                            <div class="tech-badge px-3 py-1 rounded-full text-sm font-medium">Database</div>
+                            <div
+                                class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-lock text-white text-sm"></i>
+                            </div>
                             <div>
-                                <h4 class="font-semibold text-gray-900">MySQL + Redis</h4>
-                                <p class="text-gray-600">Relational database with caching and queuing</p>
+                                <h4 class="font-semibold text-gray-900">Cryptographic Protection</h4>
+                                <p class="text-gray-600">FIPS 140-2 Level 3 HSM, RSA-2048 signatures, PKCS#7 envelopes,
+                                    and RFC 3161 timestamps</p>
                             </div>
                         </div>
 
                         <div class="flex items-start space-x-4">
-                            <div class="tech-badge px-3 py-1 rounded-full text-sm font-medium">Queue</div>
+                            <div
+                                class="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-university text-white text-sm"></i>
+                            </div>
                             <div>
-                                <h4 class="font-semibold text-gray-900">Laravel Horizon</h4>
-                                <p class="text-gray-600">Redis-powered job processing with monitoring</p>
+                                <h4 class="font-semibold text-gray-900">Government Integration</h4>
+                                <p class="text-gray-600">Mutual TLS with FIRS, dedicated VPN tunnels, and automated
+                                    compliance validation</p>
                             </div>
                         </div>
 
                         <div class="flex items-start space-x-4">
-                            <div class="tech-badge px-3 py-1 rounded-full text-sm font-medium">Deployment</div>
+                            <div
+                                class="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-archive text-white text-sm"></i>
+                            </div>
                             <div>
-                                <h4 class="font-semibold text-gray-900">Docker + Kubernetes</h4>
-                                <p class="text-gray-600">Containerized deployment with auto-scaling</p>
+                                <h4 class="font-semibold text-gray-900">Immutable Compliance</h4>
+                                <p class="text-gray-600">WORM storage, SHA-256 integrity seals, 7-year retention, and
+                                    hash-chained audit trails</p>
                             </div>
                         </div>
+                    </div>
+
+                    <div class="mt-8">
+                        <a href="/ecosystem"
+                            class="inline-flex items-center px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">
+                            <i class="fas fa-shield-alt mr-2"></i>
+                            View Complete Security Architecture
+                        </a>
                     </div>
                 </div>
 
                 <div data-aos="fade-left">
-                    <div class="code-block p-6 rounded-xl">
-                        <div class="flex items-center space-x-2 mb-4">
-                            <div class="w-3 h-3 bg-red-500 rounded-full"></div>
-                            <div class="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                            <div class="w-3 h-3 bg-green-500 rounded-full"></div>
-                            <span class="text-gray-400 text-sm ml-2">composer.json</span>
+                    <div class="bg-gradient-to-br from-slate-900 to-blue-900 p-8 rounded-xl text-white">
+                        <h4 class="text-xl font-bold mb-6 flex items-center">
+                            <i class="fas fa-certificate text-yellow-400 mr-3"></i>
+                            Security Certifications & Standards
+                        </h4>
+
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between">
+                                <span class="text-slate-300">Transport Security</span>
+                                <span class="bg-green-500/20 text-green-300 px-3 py-1 rounded-full text-sm">TLS
+                                    1.3</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-slate-300">Encryption Standard</span>
+                                <span
+                                    class="bg-blue-500/20 text-blue-300 px-3 py-1 rounded-full text-sm">AES-256</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-slate-300">Digital Signatures</span>
+                                <span
+                                    class="bg-purple-500/20 text-purple-300 px-3 py-1 rounded-full text-sm">RSA-2048</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-slate-300">Hash Algorithm</span>
+                                <span
+                                    class="bg-orange-500/20 text-orange-300 px-3 py-1 rounded-full text-sm">SHA-256</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-slate-300">HSM Certification</span>
+                                <span class="bg-red-500/20 text-red-300 px-3 py-1 rounded-full text-sm">FIPS 140-2
+                                    L3</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-slate-300">Uptime SLA</span>
+                                <span
+                                    class="bg-green-500/20 text-green-300 px-3 py-1 rounded-full text-sm">99.9%</span>
+                            </div>
                         </div>
-                        <pre class="text-sm overflow-x-auto"><code>{
-  "require": {
-    "php": "^8.2",
-    "laravel/framework": "^12.0",
-    "filament/filament": "^4.0",
-    "livewire/flux": "^2.1.1",
-    "livewire/volt": "^1.7.0",
-    "laravel/horizon": "^5.33",
-    "darkaonline/l5-swagger": "^9.0",
-    "spatie/laravel-permission": "^6.21"
-  }
-}</code></pre>
+
+                        <div class="mt-6 pt-6 border-t border-slate-700">
+                            <div class="flex items-center justify-between text-sm">
+                                <span class="text-slate-400">Data Retention</span>
+                                <span class="text-slate-300">7 Years</span>
+                            </div>
+                            <div class="flex items-center justify-between text-sm mt-2">
+                                <span class="text-slate-400">Audit Trail</span>
+                                <span class="text-slate-300">Immutable</span>
+                            </div>
+                            <div class="flex items-center justify-between text-sm mt-2">
+                                <span class="text-slate-400">Compliance</span>
+                                <span class="text-slate-300">FIRS Certified</span>
+                            </div>
+                        </div>
                     </div>
+
+                    <div class="mt-6 grid grid-cols-2 gap-4">
+                        <div class="bg-white p-4 rounded-lg border border-gray-200 text-center">
+                            <div class="text-2xl font-bold text-indigo-600">14</div>
+                            <div class="text-sm text-gray-600">Security Layers</div>
+                        </div>
+                        <div class="bg-white p-4 rounded-lg border border-gray-200 text-center">
+                            <div class="text-2xl font-bold text-green-600">24/7</div>
+                            <div class="text-sm text-gray-600">Monitoring</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-r from-red-50 to-orange-50 p-8 rounded-xl border border-red-200"
+                data-aos="fade-up">
+                <h3 class="text-xl font-bold text-gray-900 mb-4 flex items-center">
+                    <i class="fas fa-exclamation-triangle text-red-500 mr-3"></i>
+                    Complete Security Flow
+                </h3>
+                <p class="text-gray-700 mb-6">
+                    From client authentication to immutable archival, every transaction follows a 14-step security
+                    process
+                    including OAuth 2.0/SMS OTP authentication, TLS 1.3 encryption, FIRS validation, cryptographic
+                    signing,
+                    and government clearance with dedicated VPN tunnels.
+                </p>
+                <div class="flex flex-wrap gap-3">
+                    <span class="bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm">OAuth 2.0</span>
+                    <span class="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm">TLS 1.3</span>
+                    <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm">FIPS 140-2</span>
+                    <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">FIRS Certified</span>
+                    <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">PKCS#7</span>
+                    <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm">WORM Archive</span>
                 </div>
             </div>
         </div>

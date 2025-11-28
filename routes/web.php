@@ -10,6 +10,16 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
+// Ecosystem Security Architecture Page
+Route::get('/ecosystem', function () {
+    return view('ecosystem-detailed');
+})->name('ecosystem');
+
+// Simple test page
+Route::get('/ecosystem-test', function () {
+    return view('ecosystem-simple');
+})->name('ecosystem-test');
+
 Route::middleware(['auth'])->group(function () {
     Route::get('invoices/{invoice}/pdf', [InvoicePdfController::class, 'download'])
         ->name('invoices.pdf');

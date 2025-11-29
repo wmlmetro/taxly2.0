@@ -124,6 +124,7 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Invoice> $invoices
  * @property-read int|null $invoices_count
+ * @method static \Database\Factories\CustomerFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer query()
@@ -150,8 +151,8 @@ namespace App\Models{
  * @property string|null $irn
  * @property string $supplier_name
  * @property string $supplier_email
- * @property string $customer_name
- * @property string $customer_email
+ * @property string|null $customer_name
+ * @property string|null $customer_email
  * @property string|null $agent_tin
  * @property string|null $base_amount
  * @property string|null $beneficiary_tin

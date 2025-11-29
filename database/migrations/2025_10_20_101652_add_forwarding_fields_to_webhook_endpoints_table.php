@@ -12,11 +12,17 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('webhook_endpoints', function (Blueprint $table) {
-            $table->string('forwarded_to')->nullable()->after('url');
-            $table->enum('forward_status', ['pending', 'success', 'failed'])
-                ->default('pending')
-                ->after('forwarded_to');
-            $table->json('response_body')->nullable()->after('forward_status');
+            if (! Schema::hasColumn('webhook_endpoints', 'forwarded_to')) {
+                $table->string('forwarded_to')->nullable()->after('url');
+            }
+            if (! Schema::hasColumn('webhook_endpoints', 'forward_status')) {
+                $table->enum('forward_status', ['pending', 'success', 'failed'])
+                    ->default('pending')
+                    ->after('forwarded_to');
+            }
+            if (! Schema::hasColumn('webhook_endpoints', 'response_body')) {
+                $table->json('response_body')->nullable()->after('forward_status');
+            }
         });
     }
 

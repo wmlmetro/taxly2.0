@@ -10,16 +10,20 @@ class WebhookEndpoint extends Model
     use HasFactory;
 
     protected $fillable = [
+        'organization_id',
         'url',
         'irn',
         'message',
         'forwarded_to',
         'forward_status',
         'response_body',
+        'secret',
+        'subscribed_events',
     ];
 
     protected $casts = [
         'response_body' => 'array',
+        'subscribed_events' => 'array',
     ];
 
     public function org()

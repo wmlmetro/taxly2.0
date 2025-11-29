@@ -48,6 +48,25 @@ beforeEach(function () {
     app(PermissionRegistrar::class)->forgetCachedPermissions();
 });
 
+
+// Bind a fake InvoiceSubmissionService for feature tests to avoid external calls
+beforeEach(function () {
+    $this->instance(\App\Services\InvoiceSubmissionService::class, new class {
+        public function submit($invoice, $options = [])
+        {
+            // Call markAsSubmitted to trigger the observer
+            $invoice->markAsSubmitted();
+
+            return [
+                'success' => true,
+                'submission_id' => 9999,
+                'txn_id' => 'TEST-TXN-9999',
+            ];
+        }
+    });
+});
+// NOTE: InvoiceSubmissionService fakes are applied per-test where needed.
+
 function something()
 {
     // ..

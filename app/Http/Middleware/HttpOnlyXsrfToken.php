@@ -18,13 +18,15 @@ class HttpOnlyXsrfToken
   {
     $response = $next($request);
 
-    // Check if XSRF-TOKEN cookie exists and re-set it with HttpOnly flag
+    // Ensure XSRF-TOKEN cookie is present and has HttpOnly flag
+    $foundXsrf = false;
     if ($response->headers->has('Set-Cookie')) {
       $cookies = $response->headers->getCookies();
       $response->headers->remove('Set-Cookie');
 
       foreach ($cookies as $cookie) {
         if ($cookie->getName() === 'XSRF-TOKEN') {
+          $foundXsrf = true;
           // Re-create the cookie with HttpOnly flag
           $newCookie = Cookie::make(
             'XSRF-TOKEN',
@@ -43,6 +45,26 @@ class HttpOnlyXsrfToken
           $response->headers->setCookie($cookie);
         }
       }
+    }
+
+    // If no XSRF-TOKEN was set by the framework, create one from the csrf_token()
+    if (! $foundXsrf) {
+      try {
+        $token = function_exists('csrf_token') ? csrf_token() : null;
+      } catch (\Throwable $e) {
+        $token = null;
+      }
+
+      if (! $token) {
+        try {
+          $token = bin2hex(random_bytes(16));
+        } catch (\Throwable $_) {
+          $token = (string) now()->timestamp . mt_rand();
+        }
+      }
+
+      $cookie = Cookie::make('XSRF-TOKEN', $token, 0, '/', null, false, true);
+      $response->headers->setCookie($cookie);
     }
 
     return $response;

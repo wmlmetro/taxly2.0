@@ -13,9 +13,15 @@ return new class extends Migration
     {
         Schema::create('webhook_endpoints', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('organization_id')->nullable()->index();
             $table->string('url');
-            $table->string('irn');
-            $table->string('message');
+            $table->string('irn')->nullable();
+            $table->string('message')->nullable();
+            $table->string('secret')->nullable();
+            $table->json('subscribed_events')->nullable();
+            $table->string('forwarded_to')->nullable();
+            $table->enum('forward_status', ['pending', 'success', 'failed'])->default('pending');
+            $table->json('response_body')->nullable();
             $table->timestamps();
 
             $table->unique(['irn', 'message']);

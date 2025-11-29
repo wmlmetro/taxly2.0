@@ -10,6 +10,16 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
+// Serve robots.txt from public directory so tests and servers receive proper status codes
+Route::get('/robots.txt', function () {
+    $path = public_path('robots.txt');
+    if (file_exists($path)) {
+        return response(file_get_contents($path), 200)
+            ->header('Content-Type', 'text/plain');
+    }
+    abort(404);
+});
+
 // Ecosystem Security Architecture Page
 Route::get('/ecosystem', function () {
     return view('ecosystem-detailed');

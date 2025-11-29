@@ -1,5 +1,6 @@
 <?php
 
+use Laravel\Sanctum\Sanctum;
 use App\Models\Tenant;
 use App\Models\Invoice;
 use App\Models\AuditEvent;
@@ -31,8 +32,10 @@ beforeEach(function () {
   Permission::firstOrCreate(['name' => 'update invoices', 'guard_name' => 'web']);
   $this->user->syncPermissions(['create invoices', 'update invoices']);
 
-  // Authenticate
-  $this->actingAs($this->user);
+  // Authenticate for API routes using Sanctum
+  Sanctum::actingAs($this->user);
+  // Also authenticate for the web guard so Auth::id() is available in observers
+  $this->actingAs($this->user, 'web');
 });
 
 it('logs audit event when invoice is created', function () {
@@ -55,6 +58,7 @@ it('logs audit event when invoice is submitted', function () {
     'status' => 'validated'
   ]);
 
+  // The global fake from Pest.php should handle this, but ensure it calls markAsSubmitted
   $this->postJson("/api/v1/invoices/{$invoice->id}/submit", ['channel' => 'api'])
     ->assertAccepted();
 

@@ -25,8 +25,11 @@ class SecurityHeaders
       '127.0.0.1:8000'
     ];
 
+    // Check both the resolved host and the explicit Host header (if provided)
     $host = $request->getHost();
-    if (!in_array($host, $allowedHosts)) {
+    $hostHeader = $request->header('Host');
+
+    if (!in_array($host, $allowedHosts) || ($hostHeader && !in_array($hostHeader, $allowedHosts))) {
       abort(400, 'Invalid host header');
     }
 

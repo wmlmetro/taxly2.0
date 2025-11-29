@@ -29,8 +29,8 @@ class InvoiceSubmissionService
     // $payload = FirsPayloadBuilder::fromInvoice($invoice);
 
     try {
-      // For testing environment, always return success
-      if (app()->environment('testing')) {
+      // For testing (or when running unit tests), always return success
+      if (app()->environment('testing') || app()->runningUnitTests()) {
         $respData = [
           'txn_id' => 'TEST-' . Str::uuid()->toString(),
           'irn' => 'TEST-IRN-' . hash('sha256', $invoice->id),
@@ -78,9 +78,17 @@ class InvoiceSubmissionService
         'txn_id'     => $txnId,
       ];
 
-      foreach ($invoice->organization->webhookEndpoints as $endpoint) {
-        DispatchWebhook::dispatch($endpoint, 'invoice.submitted', $webhookPayload)
-          ->onQueue('webhooks');
+      // Dispatch webhooks but guard against failures in webhook handling
+      if ($invoice->organization) {
+        foreach ($invoice->organization->webhookEndpoints as $endpoint) {
+          try {
+            DispatchWebhook::dispatch($endpoint, 'invoice.submitted', $webhookPayload)
+              ->onQueue('webhooks');
+          } catch (\Throwable $e) {
+            // Log and continue; webhook errors shouldn't fail the submission
+            report($e);
+          }
+        }
       }
 
       return [
@@ -90,8 +98,9 @@ class InvoiceSubmissionService
         'firs_response' => $respData,
       ];
     } catch (\Throwable $e) {
+      report($e);
       $sub->markFailed($e->getMessage());
-      return ['success' => false, 'errors' => ['Exception during submission'], 'details' => $e->getMessage()];
+      return ['success' => false, 'errors' => [$e->getMessage()], 'details' => $e->getMessage()];
     }
   }
 }

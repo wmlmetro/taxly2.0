@@ -27,11 +27,11 @@
         }
 
         .gradient-bg {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #2FA838 0%, #1a7a26 100%);
         }
 
         .gradient-text {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #2FA838 0%, #1a7a26 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -46,12 +46,12 @@
         }
 
         .feature-icon {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #2FA838 0%, #1a7a26 100%);
         }
 
         .tech-badge {
-            background: rgba(102, 126, 234, 0.1);
-            color: #667eea;
+            background: rgba(47, 168, 56, 0.1);
+            color: #2FA838;
         }
 
         .code-block {
@@ -74,20 +74,20 @@
                 <div class="hidden md:block">
                     <div class="ml-10 flex items-baseline space-x-4">
                         <a href="#features"
-                            class="text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Features</a>
+                            class="text-gray-700 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Features</a>
                         <a href="#architecture"
-                            class="text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Architecture</a>
+                            class="text-gray-700 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Architecture</a>
                         <a href="#api"
-                            class="text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">API</a>
+                            class="text-gray-700 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">API</a>
                         <a href="#deployment"
-                            class="text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Deployment</a>
+                            class="text-gray-700 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Deployment</a>
                         <a href="#docs"
-                            class="bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-indigo-700 transition-colors">Documentation</a>
+                            class="bg-green-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-green-700 transition-colors">Documentation</a>
                     </div>
                 </div>
                 <div class="md:hidden">
                     <button type="button"
-                        class="text-gray-700 hover:text-indigo-600 focus:outline-none focus:text-indigo-600"
+                        class="text-gray-700 hover:text-green-600 focus:outline-none focus:text-green-600"
                         id="mobile-menu-button">
                         <i class="fas fa-bars text-xl"></i>
                     </button>
@@ -98,11 +98,11 @@
         <!-- Mobile menu -->
         <div class="hidden md:hidden bg-white border-t border-gray-200" id="mobile-menu">
             <div class="px-2 pt-2 pb-3 space-y-1">
-                <a href="#features" class="block px-3 py-2 text-gray-700 hover:text-indigo-600">Features</a>
-                <a href="#architecture" class="block px-3 py-2 text-gray-700 hover:text-indigo-600">Architecture</a>
-                <a href="#api" class="block px-3 py-2 text-gray-700 hover:text-indigo-600">API</a>
-                <a href="#deployment" class="block px-3 py-2 text-gray-700 hover:text-indigo-600">Deployment</a>
-                <a href="#docs" class="block px-3 py-2 text-indigo-600 font-medium">Documentation</a>
+                <a href="#features" class="block px-3 py-2 text-gray-700 hover:text-green-600">Features</a>
+                <a href="#architecture" class="block px-3 py-2 text-gray-700 hover:text-green-600">Architecture</a>
+                <a href="#api" class="block px-3 py-2 text-gray-700 hover:text-green-600">API</a>
+                <a href="#deployment" class="block px-3 py-2 text-gray-700 hover:text-green-600">Deployment</a>
+                <a href="#docs" class="block px-3 py-2 text-green-600 font-medium">Documentation</a>
             </div>
         </div>
     </nav>
@@ -122,11 +122,11 @@
                 </p>
                 <div class="flex flex-col sm:flex-row gap-4 justify-center">
                     <a href="#features"
-                        class="bg-white text-indigo-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+                        class="bg-white text-green-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
                         Explore Features
                     </a>
                     <a href="#api"
-                        class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-indigo-600 transition-colors">
+                        class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-green-600 transition-colors">
                         View API Docs
                     </a>
                 </div>
@@ -141,12 +141,12 @@
 
     <!-- Security Ecosystem Section -->
     <section
-        class="py-20 bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 text-white relative overflow-hidden">
+        class="py-20 bg-gradient-to-br from-slate-900 via-green-900 to-emerald-900 text-white relative overflow-hidden">
         <div class="absolute inset-0 bg-black/30"></div>
         <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16" data-aos="fade-up">
                 <h2 class="text-3xl md:text-5xl font-bold mb-6">
-                    <span class="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                    <span class="bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">
                         Military-Grade Security Architecture
                     </span>
                 </h2>
@@ -156,12 +156,12 @@
                 </p>
                 <div class="flex flex-col sm:flex-row gap-4 justify-center">
                     <a href="/ecosystem"
-                        class="bg-blue-600 text-white px-8 py-4 rounded-xl font-semibold hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 flex items-center">
+                        class="bg-green-600 text-white px-8 py-4 rounded-xl font-semibold hover:bg-green-700 transition-all duration-300 transform hover:scale-105 flex items-center">
                         <i class="fas fa-shield-alt mr-3"></i>
                         Explore Security Ecosystem
                     </a>
                     <a href="#features"
-                        class="border-2 border-blue-400 text-blue-400 px-8 py-4 rounded-xl font-semibold hover:bg-blue-400 hover:text-white transition-all duration-300">
+                        class="border-2 border-green-400 text-green-400 px-8 py-4 rounded-xl font-semibold hover:bg-green-400 hover:text-white transition-all duration-300">
                         View Features
                     </a>
                 </div>
@@ -171,7 +171,7 @@
                 <div class="bg-white/10 backdrop-blur-sm p-8 rounded-xl border border-white/20" data-aos="fade-up"
                     data-aos-delay="100">
                     <div
-                        class="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center mb-6">
+                        class="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center mb-6">
                         <i class="fas fa-lock text-white text-2xl"></i>
                     </div>
                     <h3 class="text-xl font-bold mb-4">🔐 End-to-End Encryption</h3>
@@ -427,7 +427,7 @@
 
                     <div class="mt-8">
                         <a href="/ecosystem"
-                            class="inline-flex items-center px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">
+                            class="inline-flex items-center px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
                             <i class="fas fa-shield-alt mr-2"></i>
                             View Complete Security Architecture
                         </a>
@@ -435,7 +435,7 @@
                 </div>
 
                 <div data-aos="fade-left">
-                    <div class="bg-gradient-to-br from-slate-900 to-blue-900 p-8 rounded-xl text-white">
+                    <div class="bg-gradient-to-br from-slate-900 to-green-900 p-8 rounded-xl text-white">
                         <h4 class="text-xl font-bold mb-6 flex items-center">
                             <i class="fas fa-certificate text-yellow-400 mr-3"></i>
                             Security Certifications & Standards
@@ -492,7 +492,7 @@
 
                     <div class="mt-6 grid grid-cols-2 gap-4">
                         <div class="bg-white p-4 rounded-lg border border-gray-200 text-center">
-                            <div class="text-2xl font-bold text-indigo-600">14</div>
+                            <div class="text-2xl font-bold text-green-600">14</div>
                             <div class="text-sm text-gray-600">Security Layers</div>
                         </div>
                         <div class="bg-white p-4 rounded-lg border border-gray-200 text-center">
@@ -626,7 +626,7 @@
 
                     <div class="mt-8">
                         <a href="/api/documentation"
-                            class="inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">
+                            class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
                             <i class="fas fa-external-link-alt mr-2"></i>
                             View API Docs
                         </a>
@@ -725,9 +725,9 @@ kubectl apply -k .</code></pre>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <div class="card-hover bg-gradient-to-br from-blue-50 to-indigo-50 p-8 rounded-xl border border-blue-100"
+                <div class="card-hover bg-gradient-to-br from-green-50 to-emerald-50 p-8 rounded-xl border border-green-100"
                     data-aos="fade-up" data-aos-delay="100">
-                    <div class="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center mb-6">
+                    <div class="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center mb-6">
                         <i class="fas fa-book text-white text-xl"></i>
                     </div>
                     <h3 class="text-xl font-bold text-gray-900 mb-4">Getting Started</h3>
@@ -735,11 +735,11 @@ kubectl apply -k .</code></pre>
                         Step-by-step guide to install, configure, and run Taxly in your environment.
                     </p>
                     <ul class="text-sm text-gray-600 space-y-2 mb-6">
-                        <li><i class="fas fa-arrow-right text-blue-500 mr-2"></i>Installation guide</li>
-                        <li><i class="fas fa-arrow-right text-blue-500 mr-2"></i>Environment setup</li>
-                        <li><i class="fas fa-arrow-right text-blue-500 mr-2"></i>Configuration options</li>
+                        <li><i class="fas fa-arrow-right text-green-500 mr-2"></i>Installation guide</li>
+                        <li><i class="fas fa-arrow-right text-green-500 mr-2"></i>Environment setup</li>
+                        <li><i class="fas fa-arrow-right text-green-500 mr-2"></i>Configuration options</li>
                     </ul>
-                    <a href="#" class="text-blue-600 font-semibold hover:text-blue-700">
+                    <a href="#" class="text-green-600 font-semibold hover:text-green-700">
                         Read Guide <i class="fas fa-arrow-right ml-1"></i>
                     </a>
                 </div>
@@ -763,9 +763,9 @@ kubectl apply -k .</code></pre>
                     </a>
                 </div>
 
-                <div class="card-hover bg-gradient-to-br from-purple-50 to-violet-50 p-8 rounded-xl border border-purple-100"
+                <div class="card-hover bg-gradient-to-br from-teal-50 to-cyan-50 p-8 rounded-xl border border-teal-100"
                     data-aos="fade-up" data-aos-delay="300">
-                    <div class="w-12 h-12 bg-purple-500 rounded-lg flex items-center justify-center mb-6">
+                    <div class="w-12 h-12 bg-teal-500 rounded-lg flex items-center justify-center mb-6">
                         <i class="fas fa-cloud text-white text-xl"></i>
                     </div>
                     <h3 class="text-xl font-bold text-gray-900 mb-4">Deployment Guide</h3>
@@ -773,11 +773,11 @@ kubectl apply -k .</code></pre>
                         Production deployment strategies with Docker, Kubernetes, and cloud platforms.
                     </p>
                     <ul class="text-sm text-gray-600 space-y-2 mb-6">
-                        <li><i class="fas fa-arrow-right text-purple-500 mr-2"></i>Docker deployment</li>
-                        <li><i class="fas fa-arrow-right text-purple-500 mr-2"></i>Kubernetes setup</li>
-                        <li><i class="fas fa-arrow-right text-purple-500 mr-2"></i>CI/CD pipelines</li>
+                        <li><i class="fas fa-arrow-right text-teal-500 mr-2"></i>Docker deployment</li>
+                        <li><i class="fas fa-arrow-right text-teal-500 mr-2"></i>Kubernetes setup</li>
+                        <li><i class="fas fa-arrow-right text-teal-500 mr-2"></i>CI/CD pipelines</li>
                     </ul>
-                    <a href="#" class="text-purple-600 font-semibold hover:text-purple-700">
+                    <a href="#" class="text-teal-600 font-semibold hover:text-teal-700">
                         Deploy Now <i class="fas fa-arrow-right ml-1"></i>
                     </a>
                 </div>
@@ -791,7 +791,7 @@ kubectl apply -k .</code></pre>
                     </p>
                     <div class="flex flex-col sm:flex-row gap-4 justify-center">
                         <a href="/api/documentation"
-                            class="bg-indigo-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-indigo-700 transition-colors">
+                            class="bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors">
                             <i class="fas fa-book mr-2"></i>
                             Full Documentation
                         </a>

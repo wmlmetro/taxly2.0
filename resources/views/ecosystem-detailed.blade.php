@@ -33,14 +33,14 @@
         }
 
         .gradient-text {
-            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            background: linear-gradient(135deg, #2FA838 0%, #1a7a26 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
         .security-card {
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
-            border: 1px solid rgba(59, 130, 246, 0.2);
+            background: linear-gradient(135deg, rgba(47, 168, 56, 0.1) 0%, rgba(26, 122, 38, 0.1) 100%);
+            border: 1px solid rgba(47, 168, 56, 0.2);
         }
 
         .threat-card {
@@ -54,7 +54,7 @@
         }
 
         .flow-step {
-            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            background: linear-gradient(135deg, #2FA838 0%, #1a7a26 100%);
         }
 
         .code-block {
@@ -96,7 +96,7 @@
             color: #94a3b8;
         }
 
-        .text-blue-400 {
+        .text-green-400 {
             color: #60a5fa;
         }
 
@@ -104,7 +104,7 @@
             color: #4ade80;
         }
 
-        .text-purple-400 {
+        .text-teal-400 {
             color: #c084fc;
         }
 
@@ -139,12 +139,12 @@
         }
 
         ::-webkit-scrollbar-thumb {
-            background: #3b82f6;
+            background: #2FA838;
             border-radius: 4px;
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: #60a5fa;
+            background: #4ade80;
         }
     </style>
 </head>
@@ -162,23 +162,23 @@
                 <div class="hidden md:block">
                     <div class="ml-10 flex items-baseline space-x-4">
                         <a href="/"
-                            class="text-slate-300 hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">Home</a>
+                            class="text-slate-300 hover:text-green-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">Home</a>
                         <a href="#overview"
-                            class="text-slate-300 hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">Overview</a>
+                            class="text-slate-300 hover:text-green-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">Overview</a>
                         <a href="#applications"
-                            class="text-slate-300 hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">Applications</a>
+                            class="text-slate-300 hover:text-green-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">Applications</a>
                         <a href="#security"
-                            class="text-slate-300 hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">Security</a>
+                            class="text-slate-300 hover:text-green-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">Security</a>
                         <a href="#flow"
-                            class="text-slate-300 hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">Security
+                            class="text-slate-300 hover:text-green-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">Security
                             Flow</a>
                         <a href="#controls"
-                            class="text-slate-300 hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">Controls</a>
+                            class="text-slate-300 hover:text-green-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">Controls</a>
                     </div>
                 </div>
                 <div class="md:hidden">
                     <button type="button"
-                        class="text-slate-300 hover:text-blue-400 focus:outline-none focus:text-blue-400"
+                        class="text-slate-300 hover:text-green-400 focus:outline-none focus:text-green-400"
                         id="mobile-menu-button">
                         <i class="fas fa-bars text-xl"></i>
                     </button>
@@ -189,12 +189,12 @@
         <!-- Mobile menu -->
         <div class="hidden md:hidden bg-slate-800 border-t border-slate-700" id="mobile-menu">
             <div class="px-2 pt-2 pb-3 space-y-1">
-                <a href="/" class="block px-3 py-2 text-slate-300 hover:text-blue-400">Home</a>
-                <a href="#overview" class="block px-3 py-2 text-slate-300 hover:text-blue-400">Overview</a>
-                <a href="#applications" class="block px-3 py-2 text-slate-300 hover:text-blue-400">Applications</a>
-                <a href="#security" class="block px-3 py-2 text-slate-300 hover:text-blue-400">Security</a>
-                <a href="#flow" class="block px-3 py-2 text-slate-300 hover:text-blue-400">Security Flow</a>
-                <a href="#controls" class="block px-3 py-2 text-slate-300 hover:text-blue-400">Controls</a>
+                <a href="/" class="block px-3 py-2 text-slate-300 hover:text-green-400">Home</a>
+                <a href="#overview" class="block px-3 py-2 text-slate-300 hover:text-green-400">Overview</a>
+                <a href="#applications" class="block px-3 py-2 text-slate-300 hover:text-green-400">Applications</a>
+                <a href="#security" class="block px-3 py-2 text-slate-300 hover:text-green-400">Security</a>
+                <a href="#flow" class="block px-3 py-2 text-slate-300 hover:text-green-400">Security Flow</a>
+                <a href="#controls" class="block px-3 py-2 text-slate-300 hover:text-green-400">Controls</a>
             </div>
         </div>
     </nav>
@@ -205,7 +205,7 @@
         <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center" data-aos="fade-up">
             <h1 class="text-4xl md:text-6xl font-bold text-white mb-6">
                 Taxly E-Invoicing<br>
-                <span class="text-blue-400">Security Ecosystem</span>
+                <span class="text-green-400">Security Ecosystem</span>
             </h1>
             <p class="text-xl text-slate-300 mb-8 max-w-4xl mx-auto">
                 Comprehensive security architecture for FIRS compliance. Military-grade protection powering B2B and B2C
@@ -213,11 +213,11 @@
             </p>
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
                 <a href="#overview"
-                    class="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+                    class="bg-green-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors">
                     Explore Architecture
                 </a>
                 <a href="#flow"
-                    class="border-2 border-blue-400 text-blue-400 px-8 py-3 rounded-lg font-semibold hover:bg-blue-400 hover:text-white transition-colors">
+                    class="border-2 border-green-400 text-green-400 px-8 py-3 rounded-lg font-semibold hover:bg-green-400 hover:text-white transition-colors">
                     View Security Flow
                 </a>
             </div>
@@ -225,16 +225,16 @@
 
         <!-- Floating security icons -->
         <div
-            class="absolute top-20 left-10 w-16 h-16 bg-blue-500/20 rounded-full flex items-center justify-center animate-pulse">
-            <i class="fas fa-shield-alt text-blue-400 text-2xl"></i>
+            class="absolute top-20 left-10 w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center animate-pulse">
+            <i class="fas fa-shield-alt text-green-400 text-2xl"></i>
         </div>
         <div
             class="absolute bottom-20 right-10 w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center animate-pulse delay-1000">
             <i class="fas fa-lock text-green-400 text-2xl"></i>
         </div>
         <div
-            class="absolute top-1/2 left-1/4 w-12 h-12 bg-purple-500/20 rounded-full flex items-center justify-center animate-pulse delay-500">
-            <i class="fas fa-key text-purple-400 text-xl"></i>
+            class="absolute top-1/2 left-1/4 w-12 h-12 bg-emerald-500/20 rounded-full flex items-center justify-center animate-pulse delay-500">
+            <i class="fas fa-key text-emerald-400 text-xl"></i>
         </div>
     </section>
 
@@ -260,10 +260,10 @@
                     hospitality—all protected by military-grade security architecture.
                 </p>
                 <div class="flex flex-wrap gap-3">
-                    <span class="bg-blue-500/20 text-blue-300 px-3 py-1 rounded-full text-sm">FIRS Certified</span>
+                    <span class="bg-green-500/20 text-green-300 px-3 py-1 rounded-full text-sm">FIRS Certified</span>
                     <span class="bg-green-500/20 text-green-300 px-3 py-1 rounded-full text-sm">5-Corner
                         Framework</span>
-                    <span class="bg-purple-500/20 text-purple-300 px-3 py-1 rounded-full text-sm">Military-Grade
+                    <span class="bg-emerald-500/20 text-emerald-300 px-3 py-1 rounded-full text-sm">Military-Grade
                         Security</span>
                 </div>
             </div>
@@ -284,7 +284,7 @@
                 <!-- Vendra -->
                 <div class="security-card interactive-hover p-8 rounded-xl" data-aos="fade-up" data-aos-delay="100">
                     <div class="flex items-center mb-6">
-                        <div class="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center mr-4">
+                        <div class="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center mr-4">
                             <span class="text-white font-bold text-xl">✓</span>
                         </div>
                         <h3 class="text-2xl font-bold text-white">Vendra</h3>
@@ -296,27 +296,28 @@
                     </p>
                     <div class="space-y-3">
                         <div class="flex items-center text-slate-300">
-                            <i class="fas fa-check text-blue-400 mr-3"></i>
+                            <i class="fas fa-check text-green-400 mr-3"></i>
                             <span class="text-sm">Multi-tier access including WhatsApp-native interface</span>
                         </div>
                         <div class="flex items-center text-slate-300">
-                            <i class="fas fa-check text-blue-400 mr-3"></i>
+                            <i class="fas fa-check text-green-400 mr-3"></i>
                             <span class="text-sm">Full-featured enterprise portal</span>
                         </div>
                     </div>
                     <div class="mt-6 flex flex-wrap gap-2">
-                        <span class="bg-blue-500/20 text-blue-300 px-2 py-1 rounded text-xs">🔐 SSO Integration</span>
-                        <span class="bg-blue-500/20 text-blue-300 px-2 py-1 rounded text-xs">🛡️ 2FA Required</span>
-                        <span class="bg-blue-500/20 text-blue-300 px-2 py-1 rounded text-xs">💬 WhatsApp E2E</span>
-                        <span class="bg-blue-500/20 text-blue-300 px-2 py-1 rounded text-xs">📊 Bulk CSV</span>
-                        <span class="bg-blue-500/20 text-blue-300 px-2 py-1 rounded text-xs">🔢 IRN Generation</span>
+                        <span class="bg-green-500/20 text-green-300 px-2 py-1 rounded text-xs">🔐 SSO
+                            Integration</span>
+                        <span class="bg-green-500/20 text-green-300 px-2 py-1 rounded text-xs">🛡️ 2FA Required</span>
+                        <span class="bg-green-500/20 text-green-300 px-2 py-1 rounded text-xs">💬 WhatsApp E2E</span>
+                        <span class="bg-green-500/20 text-green-300 px-2 py-1 rounded text-xs">📊 Bulk CSV</span>
+                        <span class="bg-green-500/20 text-green-300 px-2 py-1 rounded text-xs">🔢 IRN Generation</span>
                     </div>
                 </div>
 
                 <!-- Akraa -->
                 <div class="security-card interactive-hover p-8 rounded-xl" data-aos="fade-up" data-aos-delay="200">
                     <div class="flex items-center mb-6">
-                        <div class="w-12 h-12 bg-purple-500 rounded-lg flex items-center justify-center mr-4">
+                        <div class="w-12 h-12 bg-teal-500 rounded-lg flex items-center justify-center mr-4">
                             <span class="text-white font-bold text-xl">△</span>
                         </div>
                         <h3 class="text-2xl font-bold text-white">Akraa</h3>
@@ -326,9 +327,9 @@
                         business verticals with industry-tailored workflows and automation.
                     </p>
                     <div class="mt-6 flex flex-wrap gap-2">
-                        <span class="bg-purple-500/20 text-purple-300 px-2 py-1 rounded text-xs">🔐 OAuth 2.0</span>
-                        <span class="bg-purple-500/20 text-purple-300 px-2 py-1 rounded text-xs">🔑 API Access</span>
-                        <span class="bg-purple-500/20 text-purple-300 px-2 py-1 rounded text-xs">🛡️ MFA</span>
+                        <span class="bg-teal-500/20 text-teal-300 px-2 py-1 rounded text-xs">🔐 OAuth 2.0</span>
+                        <span class="bg-teal-500/20 text-teal-300 px-2 py-1 rounded text-xs">🔑 API Access</span>
+                        <span class="bg-teal-500/20 text-teal-300 px-2 py-1 rounded text-xs">🛡️ MFA</span>
                     </div>
                 </div>
 
@@ -357,7 +358,7 @@
             </div>
 
             <div class="bg-slate-700/50 p-6 rounded-xl" data-aos="fade-up">
-                <h4 class="text-lg font-semibold text-blue-400 mb-3">🔒 Application-to-Core Security</h4>
+                <h4 class="text-lg font-semibold text-green-400 mb-3">🔒 Application-to-Core Security</h4>
                 <p class="text-slate-300">
                     All traffic between business applications and Taxly core uses TLS 1.3 with perfect forward secrecy.
                     Authentication via OAuth 2.0 bearer tokens with 60-minute validity and automatic refresh mechanisms.
@@ -405,7 +406,7 @@
                     <div class="security-card interactive-hover p-6 rounded-xl" data-aos="fade-up"
                         data-aos-delay="200">
                         <div class="flex items-center mb-4">
-                            <div class="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center mr-3">
+                            <div class="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center mr-3">
                                 <span class="text-white font-bold">📄</span>
                             </div>
                             <h4 class="text-xl font-bold text-white">PO Orchestration</h4>
@@ -415,10 +416,10 @@
                             distribution (WhatsApp/Portal), and acknowledgment tracking with deadline enforcement.
                         </p>
                         <div class="flex flex-wrap gap-2">
-                            <span class="bg-blue-500/20 text-blue-300 px-2 py-1 rounded text-xs">🔄
+                            <span class="bg-green-500/20 text-green-300 px-2 py-1 rounded text-xs">🔄
                                 Auto-Transform</span>
-                            <span class="bg-blue-500/20 text-blue-300 px-2 py-1 rounded text-xs">📱 WhatsApp Bot</span>
-                            <span class="bg-blue-500/20 text-blue-300 px-2 py-1 rounded text-xs">✅ Status
+                            <span class="bg-green-500/20 text-green-300 px-2 py-1 rounded text-xs">📱 WhatsApp Bot</span>
+                            <span class="bg-green-500/20 text-green-300 px-2 py-1 rounded text-xs">✅ Status
                                 Tracking</span>
                         </div>
                     </div>
@@ -429,7 +430,7 @@
                     <div class="security-card interactive-hover p-6 rounded-xl" data-aos="fade-up"
                         data-aos-delay="300">
                         <div class="flex items-center mb-4">
-                            <div class="w-10 h-10 bg-purple-500 rounded-lg flex items-center justify-center mr-3">
+                            <div class="w-10 h-10 bg-teal-500 rounded-lg flex items-center justify-center mr-3">
                                 <span class="text-white font-bold">📨</span>
                             </div>
                             <h4 class="text-xl font-bold text-white">Invoice Routing</h4>
@@ -440,11 +441,11 @@
                             format translation.
                         </p>
                         <div class="flex flex-wrap gap-2">
-                            <span class="bg-purple-500/20 text-purple-300 px-2 py-1 rounded text-xs">✅ 3-Way
+                            <span class="bg-teal-500/20 text-teal-300 px-2 py-1 rounded text-xs">✅ 3-Way
                                 Match</span>
-                            <span class="bg-purple-500/20 text-purple-300 px-2 py-1 rounded text-xs">🔄 ERP
+                            <span class="bg-teal-500/20 text-teal-300 px-2 py-1 rounded text-xs">🔄 ERP
                                 Connectors</span>
-                            <span class="bg-purple-500/20 text-purple-300 px-2 py-1 rounded text-xs">📊 Format
+                            <span class="bg-teal-500/20 text-teal-300 px-2 py-1 rounded text-xs">📊 Format
                                 Bridge</span>
                         </div>
                     </div>
@@ -453,7 +454,7 @@
                     <div class="security-card interactive-hover p-6 rounded-xl" data-aos="fade-up"
                         data-aos-delay="400">
                         <div class="flex items-center mb-4">
-                            <div class="w-10 h-10 bg-indigo-500 rounded-lg flex items-center justify-center mr-3">
+                            <div class="w-10 h-10 bg-emerald-500 rounded-lg flex items-center justify-center mr-3">
                                 <span class="text-white font-bold">💬</span>
                             </div>
                             <h4 class="text-xl font-bold text-white">WhatsApp Lite</h4>
@@ -463,18 +464,18 @@
                             invoice creation - zero software installation required.
                         </p>
                         <div class="flex flex-wrap gap-2">
-                            <span class="bg-indigo-500/20 text-indigo-300 px-2 py-1 rounded text-xs">📱 Zero
+                            <span class="bg-emerald-500/20 text-emerald-300 px-2 py-1 rounded text-xs">📱 Zero
                                 Install</span>
-                            <span class="bg-indigo-500/20 text-indigo-300 px-2 py-1 rounded text-xs">🔐 SMS
+                            <span class="bg-emerald-500/20 text-emerald-300 px-2 py-1 rounded text-xs">🔐 SMS
                                 Verification</span>
-                            <span class="bg-indigo-500/20 text-indigo-300 px-2 py-1 rounded text-xs">✅ Simple UX</span>
+                            <span class="bg-emerald-500/20 text-emerald-300 px-2 py-1 rounded text-xs">✅ Simple UX</span>
                         </div>
                     </div>
                 </div>
             </div>
 
             <div class="bg-slate-700/50 p-6 rounded-xl" data-aos="fade-up">
-                <h4 class="text-lg font-semibold text-indigo-400 mb-3">🔑 Authentication Framework</h4>
+                <h4 class="text-lg font-semibold text-green-400 mb-3">🔑 Authentication Framework</h4>
                 <p class="text-slate-300">
                     Layered authentication strategy - OAuth 2.0 for web/API clients, SMS-based OTP for WhatsApp users,
                     mandatory 2FA for administrative functions. All sessions expire after 15 minutes of inactivity.
@@ -520,7 +521,7 @@
                 </div>
 
                 <div class="security-card interactive-hover p-8 rounded-xl" data-aos="fade-up" data-aos-delay="200">
-                    <div class="w-16 h-16 bg-blue-500 rounded-lg flex items-center justify-center mb-6">
+                    <div class="w-16 h-16 bg-green-500 rounded-lg flex items-center justify-center mb-6">
                         <i class="fas fa-door-open text-white text-2xl"></i>
                     </div>
                     <h3 class="text-xl font-bold text-white mb-4">🚪 API Gateway</h3>
@@ -530,15 +531,15 @@
                     </p>
                     <div class="space-y-2">
                         <div class="flex items-center text-slate-400">
-                            <i class="fas fa-check text-blue-400 mr-2"></i>
+                            <i class="fas fa-check text-green-400 mr-2"></i>
                             <span class="text-sm">JWT Verify</span>
                         </div>
                         <div class="flex items-center text-slate-400">
-                            <i class="fas fa-check text-blue-400 mr-2"></i>
+                            <i class="fas fa-check text-green-400 mr-2"></i>
                             <span class="text-sm">Rate Control</span>
                         </div>
                         <div class="flex items-center text-slate-400">
-                            <i class="fas fa-check text-blue-400 mr-2"></i>
+                            <i class="fas fa-check text-green-400 mr-2"></i>
                             <span class="text-sm">Schema Check</span>
                         </div>
                     </div>
@@ -586,10 +587,10 @@
                         <p class="text-slate-400 text-sm">Blocks injection attacks and malicious payloads</p>
                     </div>
                     <div class="text-center">
-                        <div class="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center mx-auto mb-3">
+                        <div class="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center mx-auto mb-3">
                             <i class="fas fa-cogs text-white"></i>
                         </div>
-                        <h4 class="font-semibold text-blue-400 mb-2">API Gateway</h4>
+                        <h4 class="font-semibold text-green-400 mb-2">API Gateway</h4>
                         <p class="text-slate-400 text-sm">Enforces business logic and schema validation</p>
                     </div>
                     <div class="text-center">
@@ -647,7 +648,7 @@
                 </div>
 
                 <div class="security-card interactive-hover p-8 rounded-xl" data-aos="fade-up" data-aos-delay="200">
-                    <div class="w-16 h-16 bg-purple-500 rounded-lg flex items-center justify-center mb-6">
+                    <div class="w-16 h-16 bg-teal-500 rounded-lg flex items-center justify-center mb-6">
                         <i class="fas fa-signature text-white text-2xl"></i>
                     </div>
                     <h3 class="text-xl font-bold text-white mb-4">✍️ Cryptographic Signing</h3>
@@ -657,15 +658,15 @@
                     </p>
                     <div class="space-y-2">
                         <div class="flex items-center text-slate-400">
-                            <i class="fas fa-check text-purple-400 mr-2"></i>
+                            <i class="fas fa-check text-teal-400 mr-2"></i>
                             <span class="text-sm">HSM-Backed</span>
                         </div>
                         <div class="flex items-center text-slate-400">
-                            <i class="fas fa-check text-purple-400 mr-2"></i>
+                            <i class="fas fa-check text-teal-400 mr-2"></i>
                             <span class="text-sm">PKI Chain</span>
                         </div>
                         <div class="flex items-center text-slate-400">
-                            <i class="fas fa-check text-purple-400 mr-2"></i>
+                            <i class="fas fa-check text-teal-400 mr-2"></i>
                             <span class="text-sm">Timestamp</span>
                         </div>
                     </div>
@@ -673,7 +674,7 @@
 
                 <div class="compliance-card interactive-hover p-8 rounded-xl" data-aos="fade-up"
                     data-aos-delay="300">
-                    <div class="w-16 h-16 bg-blue-500 rounded-lg flex items-center justify-center mb-6">
+                    <div class="w-16 h-16 bg-green-500 rounded-lg flex items-center justify-center mb-6">
                         <i class="fas fa-qrcode text-white text-2xl"></i>
                     </div>
                     <h3 class="text-xl font-bold text-white mb-4">📱 Verification Codes</h3>
@@ -683,15 +684,15 @@
                     </p>
                     <div class="space-y-2">
                         <div class="flex items-center text-slate-400">
-                            <i class="fas fa-check text-blue-400 mr-2"></i>
+                            <i class="fas fa-check text-green-400 mr-2"></i>
                             <span class="text-sm">Crypto-Bound</span>
                         </div>
                         <div class="flex items-center text-slate-400">
-                            <i class="fas fa-check text-blue-400 mr-2"></i>
+                            <i class="fas fa-check text-green-400 mr-2"></i>
                             <span class="text-sm">Tamper-Proof</span>
                         </div>
                         <div class="flex items-center text-slate-400">
-                            <i class="fas fa-check text-blue-400 mr-2"></i>
+                            <i class="fas fa-check text-green-400 mr-2"></i>
                             <span class="text-sm">Public Verify</span>
                         </div>
                     </div>
@@ -714,17 +715,17 @@
                         <h4 class="font-semibold text-green-400 text-sm">SHA-256 Hash</h4>
                     </div>
                     <div class="text-center p-4 bg-slate-800/50 rounded-lg">
-                        <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-2">
+                        <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-2">
                             <span class="text-white font-bold">2</span>
                         </div>
-                        <h4 class="font-semibold text-blue-400 text-sm">HSM Signing</h4>
+                        <h4 class="font-semibold text-green-400 text-sm">HSM Signing</h4>
                     </div>
                     <div class="text-center p-4 bg-slate-800/50 rounded-lg">
                         <div
-                            class="w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-2">
+                            class="w-10 h-10 bg-teal-500 rounded-full flex items-center justify-center mx-auto mb-2">
                             <span class="text-white font-bold">3</span>
                         </div>
-                        <h4 class="font-semibold text-purple-400 text-sm">PKCS#7 Envelope</h4>
+                        <h4 class="font-semibold text-teal-400 text-sm">PKCS#7 Envelope</h4>
                     </div>
                     <div class="text-center p-4 bg-slate-800/50 rounded-lg">
                         <div
@@ -779,7 +780,7 @@
 
                 <div class="security-card interactive-hover p-8 rounded-xl" data-aos="fade-up" data-aos-delay="200">
                     <div class="flex items-center mb-6">
-                        <div class="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center mr-4">
+                        <div class="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center mr-4">
                             <i class="fas fa-sync-alt text-white text-xl"></i>
                         </div>
                         <h3 class="text-2xl font-bold text-white">🔄 Resilience Layer</h3>
@@ -790,15 +791,15 @@
                     </p>
                     <div class="space-y-3">
                         <div class="flex items-center text-slate-300">
-                            <i class="fas fa-redo text-blue-400 mr-3"></i>
+                            <i class="fas fa-redo text-green-400 mr-3"></i>
                             <span class="text-sm">Smart Retry</span>
                         </div>
                         <div class="flex items-center text-slate-300">
-                            <i class="fas fa-bolt text-blue-400 mr-3"></i>
+                            <i class="fas fa-bolt text-green-400 mr-3"></i>
                             <span class="text-sm">Circuit Break</span>
                         </div>
                         <div class="flex items-center text-slate-300">
-                            <i class="fas fa-check-double text-blue-400 mr-3"></i>
+                            <i class="fas fa-check-double text-green-400 mr-3"></i>
                             <span class="text-sm">Auto Reconcile</span>
                         </div>
                     </div>
@@ -822,17 +823,17 @@
                         <p class="text-slate-400 text-sm">Government-issued for mutual authentication</p>
                     </div>
                     <div class="text-center p-4 bg-slate-800/50 rounded-lg">
-                        <div class="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center mx-auto mb-3">
+                        <div class="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center mx-auto mb-3">
                             <i class="fas fa-network-wired text-white"></i>
                         </div>
-                        <h4 class="font-semibold text-blue-400 mb-2">Dedicated VPN</h4>
+                        <h4 class="font-semibold text-green-400 mb-2">Dedicated VPN</h4>
                         <p class="text-slate-400 text-sm">Isolated from public internet</p>
                     </div>
                     <div class="text-center p-4 bg-slate-800/50 rounded-lg">
-                        <div class="w-12 h-12 bg-purple-500 rounded-lg flex items-center justify-center mx-auto mb-3">
+                        <div class="w-12 h-12 bg-teal-500 rounded-lg flex items-center justify-center mx-auto mb-3">
                             <i class="fas fa-shield-alt text-white"></i>
                         </div>
-                        <h4 class="font-semibold text-purple-400 mb-2">Circuit Breaker</h4>
+                        <h4 class="font-semibold text-teal-400 mb-2">Circuit Breaker</h4>
                         <p class="text-slate-400 text-sm">Activates after 5 consecutive failures</p>
                     </div>
                 </div>
@@ -881,7 +882,7 @@
 
                 <div class="security-card interactive-hover p-8 rounded-xl" data-aos="fade-up" data-aos-delay="200">
                     <div class="flex items-center mb-6">
-                        <div class="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center mr-4">
+                        <div class="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center mr-4">
                             <i class="fas fa-file-alt text-white text-xl"></i>
                         </div>
                         <h3 class="text-2xl font-bold text-white">📋 Evidence Bundles</h3>
@@ -893,15 +894,15 @@
                     </p>
                     <div class="space-y-3">
                         <div class="flex items-center text-slate-300">
-                            <i class="fas fa-box text-blue-400 mr-3"></i>
+                            <i class="fas fa-box text-green-400 mr-3"></i>
                             <span class="text-sm">Full Package</span>
                         </div>
                         <div class="flex items-center text-slate-300">
-                            <i class="fas fa-chart-bar text-blue-400 mr-3"></i>
+                            <i class="fas fa-chart-bar text-green-400 mr-3"></i>
                             <span class="text-sm">Multi-Format</span>
                         </div>
                         <div class="flex items-center text-slate-300">
-                            <i class="fas fa-search text-blue-400 mr-3"></i>
+                            <i class="fas fa-search text-green-400 mr-3"></i>
                             <span class="text-sm">Searchable</span>
                         </div>
                     </div>
@@ -925,18 +926,18 @@
                         <p class="text-slate-400 text-xs">Integrity checksums</p>
                     </div>
                     <div class="text-center p-4 bg-slate-800/50 rounded-lg">
-                        <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-2">
+                        <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-2">
                             <i class="fas fa-server text-white"></i>
                         </div>
-                        <h4 class="font-semibold text-blue-400 text-sm">Physical Separation</h4>
+                        <h4 class="font-semibold text-green-400 text-sm">Physical Separation</h4>
                         <p class="text-slate-400 text-xs">From operational systems</p>
                     </div>
                     <div class="text-center p-4 bg-slate-800/50 rounded-lg">
                         <div
-                            class="w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-2">
+                            class="w-10 h-10 bg-teal-500 rounded-full flex items-center justify-center mx-auto mb-2">
                             <i class="fas fa-globe text-white"></i>
                         </div>
-                        <h4 class="font-semibold text-purple-400 text-sm">Geo-Redundant</h4>
+                        <h4 class="font-semibold text-teal-400 text-sm">Geo-Redundant</h4>
                         <p class="text-slate-400 text-xs">Within Nigeria</p>
                     </div>
                     <div class="text-center p-4 bg-slate-800/50 rounded-lg">
@@ -989,7 +990,7 @@
                 </div>
 
                 <div class="security-card interactive-hover p-6 rounded-xl" data-aos="fade-up" data-aos-delay="200">
-                    <div class="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center mb-4">
+                    <div class="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center mb-4">
                         <i class="fas fa-clipboard-list text-white text-xl"></i>
                     </div>
                     <h3 class="text-lg font-bold text-white mb-3">📝 Audit System</h3>
@@ -999,15 +1000,15 @@
                     </p>
                     <div class="space-y-1">
                         <div class="flex items-center text-slate-400 text-xs">
-                            <i class="fas fa-link text-blue-400 mr-2"></i>
+                            <i class="fas fa-link text-green-400 mr-2"></i>
                             <span>Hash Chain</span>
                         </div>
                         <div class="flex items-center text-slate-400 text-xs">
-                            <i class="fas fa-lock text-blue-400 mr-2"></i>
+                            <i class="fas fa-lock text-green-400 mr-2"></i>
                             <span>Encrypted</span>
                         </div>
                         <div class="flex items-center text-slate-400 text-xs">
-                            <i class="fas fa-clock text-blue-400 mr-2"></i>
+                            <i class="fas fa-clock text-green-400 mr-2"></i>
                             <span>Timestamped</span>
                         </div>
                     </div>
@@ -1065,7 +1066,7 @@
                 </div>
 
                 <div class="security-card interactive-hover p-6 rounded-xl" data-aos="fade-up" data-aos-delay="500">
-                    <div class="w-12 h-12 bg-purple-500 rounded-lg flex items-center justify-center mb-4">
+                    <div class="w-12 h-12 bg-teal-500 rounded-lg flex items-center justify-center mb-4">
                         <i class="fas fa-database text-white text-xl"></i>
                     </div>
                     <h3 class="text-lg font-bold text-white mb-3">💾 Data Protection</h3>
@@ -1075,15 +1076,15 @@
                     </p>
                     <div class="space-y-1">
                         <div class="flex items-center text-slate-400 text-xs">
-                            <i class="fas fa-key text-purple-400 mr-2"></i>
+                            <i class="fas fa-key text-teal-400 mr-2"></i>
                             <span>AES-256</span>
                         </div>
                         <div class="flex items-center text-slate-400 text-xs">
-                            <i class="fas fa-user-shield text-purple-400 mr-2"></i>
+                            <i class="fas fa-user-shield text-teal-400 mr-2"></i>
                             <span>Access Control</span>
                         </div>
                         <div class="flex items-center text-slate-400 text-xs">
-                            <i class="fas fa-clipboard-check text-purple-400 mr-2"></i>
+                            <i class="fas fa-clipboard-check text-teal-400 mr-2"></i>
                             <span>Compliance</span>
                         </div>
                     </div>
@@ -1121,17 +1122,17 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div class="text-center">
-                        <div class="w-16 h-16 bg-blue-500 rounded-lg flex items-center justify-center mx-auto mb-4">
+                        <div class="w-16 h-16 bg-green-500 rounded-lg flex items-center justify-center mx-auto mb-4">
                             <i class="fas fa-lock text-white text-2xl"></i>
                         </div>
-                        <h4 class="font-semibold text-blue-400 mb-3">Transport Security</h4>
+                        <h4 class="font-semibold text-green-400 mb-3">Transport Security</h4>
                         <p class="text-slate-400 text-sm">TLS 1.3 with forward secrecy and certificate pinning</p>
                     </div>
                     <div class="text-center">
-                        <div class="w-16 h-16 bg-purple-500 rounded-lg flex items-center justify-center mx-auto mb-4">
+                        <div class="w-16 h-16 bg-teal-500 rounded-lg flex items-center justify-center mx-auto mb-4">
                             <i class="fas fa-key text-white text-2xl"></i>
                         </div>
-                        <h4 class="font-semibold text-purple-400 mb-3">Cryptography</h4>
+                        <h4 class="font-semibold text-teal-400 mb-3">Cryptography</h4>
                         <p class="text-slate-400 text-sm">AES-256 storage, RSA-2048 signatures, SHA-256 hashing</p>
                     </div>
                     <div class="text-center">
@@ -1177,9 +1178,9 @@
                             integrations). Mandatory 2FA for privileged operations.
                         </p>
                         <div class="flex flex-wrap gap-2">
-                            <span class="bg-blue-500/20 text-blue-300 px-3 py-1 rounded text-xs">OAuth 2.0</span>
+                            <span class="bg-green-500/20 text-green-300 px-3 py-1 rounded text-xs">OAuth 2.0</span>
                             <span class="bg-green-500/20 text-green-300 px-3 py-1 rounded text-xs">SMS OTP</span>
-                            <span class="bg-purple-500/20 text-purple-300 px-3 py-1 rounded text-xs">API Keys</span>
+                            <span class="bg-teal-500/20 text-teal-300 px-3 py-1 rounded text-xs">API Keys</span>
                             <span class="bg-red-500/20 text-red-300 px-3 py-1 rounded text-xs">Mandatory 2FA</span>
                         </div>
                     </div>
@@ -1197,9 +1198,9 @@
                             transformation into FIRS-compliant XML structure.
                         </p>
                         <div class="flex flex-wrap gap-2">
-                            <span class="bg-blue-500/20 text-blue-300 px-3 py-1 rounded text-xs">Web Portal</span>
+                            <span class="bg-green-500/20 text-green-300 px-3 py-1 rounded text-xs">Web Portal</span>
                             <span class="bg-green-500/20 text-green-300 px-3 py-1 rounded text-xs">Bulk CSV</span>
-                            <span class="bg-purple-500/20 text-purple-300 px-3 py-1 rounded text-xs">FIRS XML</span>
+                            <span class="bg-teal-500/20 text-teal-300 px-3 py-1 rounded text-xs">FIRS XML</span>
                         </div>
                     </div>
                 </div>
@@ -1217,8 +1218,8 @@
                         </p>
                         <div class="flex flex-wrap gap-2">
                             <span class="bg-green-500/20 text-green-300 px-3 py-1 rounded text-xs">WhatsApp Bot</span>
-                            <span class="bg-blue-500/20 text-blue-300 px-3 py-1 rounded text-xs">Vendor Portal</span>
-                            <span class="bg-purple-500/20 text-purple-300 px-3 py-1 rounded text-xs">E2E
+                            <span class="bg-green-500/20 text-green-300 px-3 py-1 rounded text-xs">Vendor Portal</span>
+                            <span class="bg-teal-500/20 text-teal-300 px-3 py-1 rounded text-xs">E2E
                                 Encryption</span>
                         </div>
                     </div>
@@ -1238,8 +1239,8 @@
                         <div class="flex flex-wrap gap-2">
                             <span class="bg-green-500/20 text-green-300 px-3 py-1 rounded text-xs">Conversational
                                 UI</span>
-                            <span class="bg-blue-500/20 text-blue-300 px-3 py-1 rounded text-xs">Web Forms</span>
-                            <span class="bg-purple-500/20 text-purple-300 px-3 py-1 rounded text-xs">Zero
+                            <span class="bg-green-500/20 text-green-300 px-3 py-1 rounded text-xs">Web Forms</span>
+                            <span class="bg-teal-500/20 text-teal-300 px-3 py-1 rounded text-xs">Zero
                                 Install</span>
                         </div>
                     </div>
@@ -1257,10 +1258,10 @@
                             certificate pinning.
                         </p>
                         <div class="flex flex-wrap gap-2">
-                            <span class="bg-blue-500/20 text-blue-300 px-3 py-1 rounded text-xs">TLS 1.3</span>
+                            <span class="bg-green-500/20 text-green-300 px-3 py-1 rounded text-xs">TLS 1.3</span>
                             <span class="bg-green-500/20 text-green-300 px-3 py-1 rounded text-xs">Perfect
                                 Secrecy</span>
-                            <span class="bg-purple-500/20 text-purple-300 px-3 py-1 rounded text-xs">Cert
+                            <span class="bg-teal-500/20 text-teal-300 px-3 py-1 rounded text-xs">Cert
                                 Pinning</span>
                         </div>
                     </div>
@@ -1279,7 +1280,7 @@
                         </p>
                         <div class="flex flex-wrap gap-2">
                             <span class="bg-red-500/20 text-red-300 px-3 py-1 rounded text-xs">WAF Protection</span>
-                            <span class="bg-blue-500/20 text-blue-300 px-3 py-1 rounded text-xs">Schema
+                            <span class="bg-green-500/20 text-green-300 px-3 py-1 rounded text-xs">Schema
                                 Validation</span>
                             <span class="bg-yellow-500/20 text-yellow-300 px-3 py-1 rounded text-xs">Rate
                                 Limiting</span>
@@ -1301,8 +1302,8 @@
                         <div class="flex flex-wrap gap-2">
                             <span class="bg-green-500/20 text-green-300 px-3 py-1 rounded text-xs">FIRS
                                 Compliance</span>
-                            <span class="bg-blue-500/20 text-blue-300 px-3 py-1 rounded text-xs">Tax Validation</span>
-                            <span class="bg-purple-500/20 text-purple-300 px-3 py-1 rounded text-xs">Business
+                            <span class="bg-green-500/20 text-green-300 px-3 py-1 rounded text-xs">Tax Validation</span>
+                            <span class="bg-teal-500/20 text-teal-300 px-3 py-1 rounded text-xs">Business
                                 Rules</span>
                         </div>
                     </div>

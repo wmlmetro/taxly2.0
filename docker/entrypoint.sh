@@ -42,9 +42,7 @@ php artisan config:cache
 php artisan route:cache
 php artisan view:cache
 
-# Run Laravel migrations
-echo "Running migrations..."
-php artisan migrate --force
+
 
 # Create storage link if it doesn't exist
 echo "Creating storage link..."

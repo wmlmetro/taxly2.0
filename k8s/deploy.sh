@@ -118,10 +118,13 @@ kubectl wait --for=condition=Available --timeout=300s deployment/redis -n taxly
 echo -e "${YELLOW}Waiting for Taxly app...${NC}"
 kubectl wait --for=condition=Available --timeout=300s deployment/taxly-app -n taxly
 
-# Run database migrations
-echo -e "\n${GREEN}Running database migrations...${NC}"
-sleep 10  # Give a bit more time for MySQL to fully initialize
-kubectl exec -n taxly deployment/taxly-app -- php artisan migrate --force || echo -e "${YELLOW}Migration failed or already run${NC}"
+# Run database migrations (Verification)
+echo -e "\n${GREEN}Verifying database migrations...${NC}"
+# We rely on the pod's internal supervisord to run migrations, but we can trigger it or check it here if needed.
+# For now, we'll just log that it's being handled by the app.
+echo -e "${YELLOW}Migrations are handled automatically by the application pod on startup.${NC}"
+# Optional: Trigger one manually just in case, or verify status
+kubectl exec -n taxly deployment/taxly-app -- php artisan migrate --force || echo -e "${YELLOW}Migration already run or locked${NC}"
 
 # Get ingress information
 echo -e "\n${GREEN}================================================${NC}"

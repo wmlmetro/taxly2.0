@@ -4,7 +4,7 @@ metadata:
   name: taxly-app
   namespace: taxly
 spec:
-  replicas: 3  # Production: minimum 3 replicas for HA
+  replicas: 3 # Production: minimum 3 replicas for HA
   selector:
     matchLabels:
       app: taxly-app
@@ -18,7 +18,7 @@ spec:
       containers:
         - name: taxly-app
           image: registry.digitalocean.com/vendra-registry/taxly-app:latest
-          imagePullPolicy: Always  # Always pull latest image to ensure updates
+          imagePullPolicy: Always # Always pull latest image to ensure updates
           ports:
             - containerPort: 80
               name: http
@@ -34,14 +34,14 @@ spec:
               mountPath: /var/www/bootstrap/cache
           resources:
             requests:
-              memory: "768Mi"  # Increased for production load
-              cpu: "500m"      # Higher baseline for production
+              memory: "768Mi" # Increased for production load
+              cpu: "500m" # Higher baseline for production
             limits:
               memory: "1536Mi" # 1.5Gi for peak loads
-              cpu: "1000m"     # 1 CPU core for production traffic
-          livenessProbe:
+              cpu: "1000m" # 1 CPU core for production traffic
+            livenessProbe:
             httpGet:
-              path: /up
+              path: /health
               port: 80
             initialDelaySeconds: 120
             periodSeconds: 10
@@ -61,7 +61,7 @@ spec:
                 command: ["/bin/sh", "-c", "sleep 30"]
       volumes:
         - name: storage
-          emptyDir: {}  # Ephemeral storage for production scaling
+          emptyDir: {} # Ephemeral storage for production scaling
         - name: cache
           emptyDir: {}
 ---

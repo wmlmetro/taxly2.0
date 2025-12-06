@@ -52,11 +52,14 @@ RUN chown -R www-data:www-data /var/www \
 
 # Copy nginx configuration
 COPY docker/nginx/nginx.conf /etc/nginx/nginx.conf
-COPY docker/nginx/default.conf /etc/nginx/sites-available/default
+COPY docker/nginx/default.conf /etc/nginx/conf.d/default.conf
 
 # Create nginx cache directory with proper permissions
 RUN mkdir -p /var/cache/nginx/fastcgi && \
-    chown -R www-data:www-data /var/cache/nginx
+    chown -R www-data:www-data /var/cache/nginx && \
+    rm -rf /etc/nginx/sites-enabled/default && \
+    echo "OK" > /var/www/public/health && \
+    chown www-data:www-data /var/www/public/health
 
 # Copy supervisor configuration
 COPY docker/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf

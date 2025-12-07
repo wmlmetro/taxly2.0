@@ -18,6 +18,7 @@ class SecurityHeaders
     // Validate host header to prevent host header poisoning
     $allowedHosts = [
       'dev.taxly.ng',
+      'taxly.ng',
       'localhost',
       '127.0.0.1',
       'taxly.test',
@@ -29,7 +30,11 @@ class SecurityHeaders
     $host = $request->getHost();
     $hostHeader = $request->header('Host');
 
-    if (!in_array($host, $allowedHosts) || ($hostHeader && !in_array($hostHeader, $allowedHosts))) {
+    // Allow internal pod IPs (10.x.x.x) for Kubernetes health checks
+    $isInternalPodIP = preg_match('/^10\.\d{1,3}\.\d{1,3}\.\d{1,3}(:\d+)?$/', $host) ||
+                       ($hostHeader && preg_match('/^10\.\d{1,3}\.\d{1,3}\.\d{1,3}(:\d+)?$/', $hostHeader));
+
+    if (!$isInternalPodIP && (!in_array($host, $allowedHosts) || ($hostHeader && !in_array($hostHeader, $allowedHosts)))) {
       abort(400, 'Invalid host header');
     }
 

@@ -39,7 +39,7 @@ spec:
             limits:
               memory: "1536Mi" # 1.5Gi for peak loads
               cpu: "1000m" # 1 CPU core for production traffic
-            livenessProbe:
+          livenessProbe:
             httpGet:
               path: /health
               port: 80

@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Ensure we are in the directory of the script
+cd "$(dirname "$0")"
+
 set -e
 
 # Colors for output
@@ -17,6 +20,39 @@ echo ""
 if ! command -v kubectl &> /dev/null; then
     echo -e "${RED}Error: kubectl is not installed${NC}"
     exit 1
+fi
+
+build_and_push() {
+    REGISTRY_IMAGE="registry.digitalocean.com/vendra-registry/taxly-app:latest"
+    echo -e "\n${YELLOW}Building and pushing Docker image...${NC}"
+    
+    # Login to registry
+    echo "Logging into DigitalOcean Container Registry..."
+    if ! doctl registry login; then
+        echo -e "${RED}Failed to login to DOCR. Make sure doctl is configured.${NC}"
+        exit 1
+    fi
+
+    # Build image
+    echo "Building image: $REGISTRY_IMAGE"
+    # Go to root for build context
+    cd ..
+    docker build --platform linux/amd64 -t $REGISTRY_IMAGE .
+    
+    # Push image
+    echo "Pushing image..."
+    docker push $REGISTRY_IMAGE
+    
+    # Return to k8s dir
+    cd k8s
+    echo -e "${GREEN}Image built and pushed successfully!${NC}"
+}
+
+# Prompt for build
+read -p "Do you want to build and push the Docker image first? (y/n) " -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+    build_and_push
 fi
 
 # Check if connected to cluster

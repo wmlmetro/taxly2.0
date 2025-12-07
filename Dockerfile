@@ -58,9 +58,7 @@ COPY docker/nginx/default.conf /etc/nginx/conf.d/default.conf
 # Create nginx cache directory with proper permissions
 RUN mkdir -p /var/cache/nginx/fastcgi && \
     chown -R www-data:www-data /var/cache/nginx && \
-    rm -rf /etc/nginx/sites-enabled/default && \
-    echo "OK" > /var/www/public/health && \
-    chown www-data:www-data /var/www/public/health
+    rm -rf /etc/nginx/sites-enabled/default
 
 # Copy supervisor configuration
 COPY docker/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf

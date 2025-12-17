@@ -42,7 +42,9 @@ php artisan config:cache
 php artisan route:cache
 php artisan view:cache
 
-
+# Generate Swagger documentation
+echo "Generating Swagger documentation..."
+php artisan l5-swagger:generate
 
 # Create storage link if it doesn't exist
 echo "Creating storage link..."

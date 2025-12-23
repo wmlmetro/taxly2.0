@@ -11,8 +11,12 @@ use OpenApi\Attributes as OA;
         description: 'API documentation for Taxly platform'
     ),
     OA\Server(
-        url: 'https://taxly.test',
+        url: 'http://taxly.test',
         description: 'Local Server'
+    ),
+    OA\Server(
+        url: 'https://dev.taxly.ng',
+        description: 'Development Server'
     ),
     OA\Server(
         url: 'https://taxly.ng',
@@ -24,6 +28,13 @@ use OpenApi\Attributes as OA;
         scheme: 'bearer',
         bearerFormat: 'JWT',
         description: 'Use the token from login'
+    ),
+    OA\SecurityScheme(
+        securityScheme: 'apiKey',
+        type: 'apiKey',
+        in: 'header',
+        name: 'X-API-KEY',
+        description: 'API key for authentication'
     )
 ]
 class BaseController extends Controller

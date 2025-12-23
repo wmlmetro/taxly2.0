@@ -8,17 +8,22 @@ use App\Http\Controllers\Api\ResourceController;
 use App\Http\Controllers\Api\TenantController;
 use App\Http\Controllers\Api\WebhookController;
 use App\Http\Controllers\Api\WebhookCrudController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 
-// ✅ Auth routes
+// --------------------
+// Public Auth Routes
+// --------------------
 Route::prefix('v1/auth')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
-
     Route::post('/tax-payer-login', [AuthController::class, 'taxPayerLogin']);
 });
 
-// 🛠️ Resources routes - Now public
+// --------------------
+// Public Resource Routes
+// --------------------
 Route::prefix('v1/resources')->group(function () {
     Route::get('/invoice-types', [ResourceController::class, 'getInvoiceTypes']);
     Route::get('/payment-means', [ResourceController::class, 'getPaymentMeans']);
@@ -27,56 +32,72 @@ Route::prefix('v1/resources')->group(function () {
     Route::get('/entity/{entity_id}', [ResourceController::class, 'getEntity']);
 });
 
-// ✅ Common invoice and buyer routes (to be reused) - Resources routes removed
-$invoiceRoutes = function () {
-    // Invoices
-    Route::get('/invoices/search/{business_id}', [InvoiceController::class, 'search']);
-    Route::get('/invoices/{irn}/download', [InvoiceController::class, 'download']);
-    Route::get('/invoices/{irn}/confirm', [InvoiceController::class, 'confirm']);
-    Route::patch('/invoices/{irn}/update', [InvoiceController::class, 'update']);
-    Route::post('/invoices/irn/validate', [InvoiceController::class, 'validateInvoiceIRN']);
-    Route::post('/invoices/validate', [InvoiceController::class, 'validateInvoice']);
-    Route::post('/invoices/submit', [InvoiceController::class, 'submit']);
-    Route::post('/invoices/{irn}/transmit', [InvoiceController::class, 'transmit']);
-    Route::get('/invoices/transmit/health-check', [InvoiceController::class, 'healthCheck']);
-    Route::get('/invoices/transmit/{irn}/lookup', [InvoiceController::class, 'getInvoiceTransmitted']);
-    Route::get('/invoices/transmit/tin/{tin}/lookup', [InvoiceController::class, 'getInvoiceTransmittedByTin']);
-    Route::get('/invoices/transmit/pull', [InvoiceController::class, 'pullTransmittedInvoices']);
-    Route::patch('/invoices/transmit/{irn}/confirmation', [InvoiceController::class, 'acknowledge']);
+// --------------------
+// Routes Supporting Either Sanctum or API Key
+// --------------------
+Route::middleware(['auth-or-apikey'])->prefix('v1')->group(function () {
 
-    // Buyer actions
-    Route::post('/buyer/invoices/{invoice}/accept', [BuyerInvoiceController::class, 'accept']);
-    Route::post('/buyer/invoices/{invoice}/reject', [BuyerInvoiceController::class, 'reject']);
-};
+    // Invoice Operations (support both auth methods)
+    Route::prefix('invoices')->group(function () {
+        Route::get('/search/{business_id}', [InvoiceController::class, 'search']);
+        Route::get('/{irn}/download', [InvoiceController::class, 'download']);
+        Route::get('/{irn}/confirm', [InvoiceController::class, 'confirm']);
+        Route::patch('/{irn}/update', [InvoiceController::class, 'update']);
+        Route::post('/validate', [InvoiceController::class, 'validateInvoice']);
+        Route::post('/submit', [InvoiceController::class, 'submit']);
+        Route::post('/{irn}/transmit', [InvoiceController::class, 'transmit']);
+        Route::get('/transmit/health-check', [InvoiceController::class, 'healthCheck']);
+        Route::get('/transmit/{irn}/lookup', [InvoiceController::class, 'getInvoiceTransmitted']);
+        Route::get('/transmit/tin/{tin}/lookup', [InvoiceController::class, 'getInvoiceTransmittedByTin']);
+        Route::get('/transmit/pull', [InvoiceController::class, 'pullTransmittedInvoices']);
+        Route::patch('/transmit/{irn}/confirmation', [InvoiceController::class, 'acknowledge']);
 
-// ✅ Protected routes (auth:sanctum)
-Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () use ($invoiceRoutes) {
+        // IRN validation endpoint
+        Route::post('/irn/validate', [InvoiceController::class, 'validateInvoiceIRN']);
+    });
+
+    // Webhooks CRUD (support both auth methods)
+    Route::get('/webhooks', [WebhookCrudController::class, 'index']);
+    Route::post('/webhooks', [WebhookCrudController::class, 'store']);
+
+    // Buyer actions (support both auth methods)
+    Route::prefix('buyer/invoices')->group(function () {
+        Route::post('/{invoice}/accept', [BuyerInvoiceController::class, 'accept']);
+        Route::post('/{invoice}/reject', [BuyerInvoiceController::class, 'reject']);
+    });
+
+    // Optional test endpoint for debugging middleware
+    Route::get('/test-middleware', function (Request $request) {
+        Log::info('Middleware hit', $request->headers->all());
+        return response()->json(['message' => 'Middleware working']);
+    });
+});
+
+// --------------------
+// Protected Routes via Sanctum
+// --------------------
+Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
+
+    // Auth
     Route::post('/auth/logout', [AuthController::class, 'logout']);
     Route::get('/auth/me', [AuthController::class, 'me']);
 
-    Route::middleware('auth:sanctum')->group(function () {
-        Route::post('/tenants', [TenantController::class, 'store']);
-    });
-
+    // Tenants
+    Route::post('/tenants', [TenantController::class, 'store']);
     Route::get('/tenants', [TenantController::class, 'index']);
     Route::get('/tenants/{tenant}', [TenantController::class, 'show']);
 
-    // Basic CRUD routes for invoices
+    // Invoice CRUD (Sanctum-only routes)
     Route::post('/invoices', [InvoiceCrudController::class, 'store']);
     Route::post('/invoices/{invoice}/validate', [InvoiceCrudController::class, 'validateInvoice']);
     Route::post('/invoices/{invoice}/submit', [InvoiceCrudController::class, 'submit']);
 
-    // Webhook CRUD routes
-    Route::get('/webhooks', [WebhookCrudController::class, 'index']);
-    Route::post('/webhooks', [WebhookCrudController::class, 'store']);
-
-    // Include invoice and buyer routes
-    $invoiceRoutes();
+    // Note: Invoice operations, webhooks CRUD, and buyer actions are now in the auth-or-apikey group
+    // They support both API Key and Sanctum authentication through the auth-or-apikey middleware
 });
 
-// ✅ API Key or Auth routes
-Route::middleware(['auth-or-apikey'])->prefix('v1')->group($invoiceRoutes);
-
-// ✅ Webhooks
+// --------------------
+// Webhooks (public)
+// --------------------
 Route::post('/webhooks/firs', [WebhookController::class, 'handle']);
 Route::patch('/v1/invoice/transmit/{irn}', [InvoiceController::class, 'acknowledge']);

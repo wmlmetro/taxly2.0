@@ -85,7 +85,10 @@ class InvoiceController extends BaseController
    * @OA\Post(
    *     path="/api/v1/invoices/irn/validate",
    *     summary="Validate an invoice IRN on FIRS",
-   *     security={{"sanctum":{}}},
+   *     security={
+   *        {"sanctum":{}},
+   *        {"ApiKeyAuth": {}}
+   *      },
    *     tags={"Invoices"},
    *     @OA\RequestBody(
    *         required=true,
@@ -114,6 +117,7 @@ class InvoiceController extends BaseController
     $firs = app(FirsApiService::class);
 
     $validateIRN = $firs->validateIrn($req->invoice_reference, $req->business_id, $req->irn);
+    Log::info('FIRS IRN Validation Response:', $validateIRN);
     if (($validateIRN['code'] ?? 500) != 200) {
       return $this->sendError(
         'FIRS IRN validation failed',

@@ -207,6 +207,12 @@ return [
                             "scopes" => []
                         ],
                     ],
+                ],*/
+                'ApiKeyAuth' => [
+                    'type' => 'apiKey',
+                    'description' => 'Use your API key in header',
+                    'name' => 'X-API-KEY',
+                    'in' => 'header',
                 ],
                 'sanctum' => [ // Unique name of security
                     'type' => 'apiKey', // Valid values are "basic", "apiKey" or "oauth2".
@@ -214,7 +220,7 @@ return [
                     'name' => 'Authorization', // The name of the header or query parameter to be used.
                     'in' => 'header', // The location of the API key. Valid values are "query" or "header".
                 ],
-                */],
+            ],
             'security' => [
                 /*
                  * Examples of Securities

@@ -6,6 +6,7 @@ use App\Models\ApiKey;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 
 class ApiKeyOrTokenMiddleware
@@ -17,11 +18,13 @@ class ApiKeyOrTokenMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::guard('sanctum')->check()) {
+        // Check for Sanctum authentication first (using default guard)
+        if ($request->user()) {
             return $next($request);
         }
 
-        $apiKey = $request->header('X-Api-Key');
+        // Check for API key authentication
+        $apiKey = $request->header('x-api-key') ?? $request->header('X-Api-Key');
         if ($apiKey && ApiKey::where('key', $apiKey)->where('active', true)->exists()) {
             return $next($request);
         }

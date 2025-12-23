@@ -23,6 +23,7 @@ class FirsApiService
       'x-api-key'    => $this->apiKey,
       'x-api-secret' => $this->secret,
       'Accept'       => 'application/json',
+      'Content-Type' => 'application/json',
     ]);
   }
 
@@ -165,6 +166,7 @@ class FirsApiService
   public function validateIrn(string $invoiceRef, string $businessId, string $irn)
   {
     return $this->post('invoice/irn/validate', [
+      'channel'           => 'api',
       'invoice_reference' => $invoiceRef,
       'business_id'       => $businessId,
       'irn'               => $irn,

@@ -65,12 +65,6 @@ Route::middleware(['auth-or-apikey'])->prefix('v1')->group(function () {
         Route::post('/{invoice}/accept', [BuyerInvoiceController::class, 'accept']);
         Route::post('/{invoice}/reject', [BuyerInvoiceController::class, 'reject']);
     });
-
-    // Optional test endpoint for debugging middleware
-    Route::get('/test-middleware', function (Request $request) {
-        Log::info('Middleware hit', $request->headers->all());
-        return response()->json(['message' => 'Middleware working']);
-    });
 });
 
 // --------------------

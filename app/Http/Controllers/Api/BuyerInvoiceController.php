@@ -17,7 +17,10 @@ class BuyerInvoiceController extends BaseController
    * @OA\Post(
    *     path="/api/v1/buyer/invoices/{invoice}/accept",
    *     summary="Accept an invoice",
-   *     security={{"sanctum":{}}},
+   *     security={
+   *        {"sanctum":{}},
+   *        {"ApiKeyAuth": {}}
+   *      },
    *     tags={"Buyer"},
    *     @OA\Parameter(name="invoice", in="path", required=true, @OA\Schema(type="integer")),
    *     @OA\Response(
@@ -58,7 +61,10 @@ class BuyerInvoiceController extends BaseController
    * @OA\Post(
    *     path="/api/v1/buyer/invoices/{invoice}/reject",
    *     summary="Reject an invoice",
-   *     security={{"sanctum":{}}},
+   *     security={
+   *        {"sanctum":{}},
+   *        {"ApiKeyAuth": {}}
+   *      },
    *     tags={"Buyer"},
    *     @OA\Parameter(name="invoice", in="path", required=true, @OA\Schema(type="integer")),
    *     @OA\Response(

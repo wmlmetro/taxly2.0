@@ -23,7 +23,10 @@ class InvoiceController extends BaseController
    * @OA\Get(
    *     path="/api/v1/invoices/search/{business_id}",
    *     summary="Search for invoices from FIRS",
-   *     security={{"sanctum":{}}},
+   *     security={
+   *        {"sanctum":{}},
+   *        {"ApiKeyAuth": {}}
+   *      },
    *     tags={"Invoices"},
    *     @OA\Parameter(
    *         name="business_id",
@@ -134,7 +137,10 @@ class InvoiceController extends BaseController
    * @OA\Post(
    *     path="/api/v1/invoices/validate",
    *     summary="Validate an invoice on FIRS",
-   *     security={{"sanctum":{}}},
+   *     security={
+   *        {"sanctum":{}},
+   *        {"ApiKeyAuth": {}}
+   *      },
    *     tags={"Invoices"},
    *     @OA\RequestBody(
    *         required=true,
@@ -313,7 +319,10 @@ class InvoiceController extends BaseController
    * @OA\Post(
    *     path="/api/v1/invoices/submit",
    *     summary="Submit an invoice to FIRS",
-   *     security={{"sanctum":{}}},
+   *     security={
+   *        {"sanctum":{}},
+   *        {"ApiKeyAuth": {}}
+   *      },
    *     description="Calling the submit invoice endpoint, it will first of all validate the IRN, then validate the Invoice and finally submit the invoice",
    *     tags={"Invoices"},
    *     @OA\RequestBody(
@@ -524,7 +533,10 @@ class InvoiceController extends BaseController
    * @OA\Get(
    *     path="/api/v1/invoices/transmit/health-check",
    *     summary="Check the health of the FIRS transmission service",
-   *     security={{"sanctum":{}}},
+   *     security={
+   *        {"sanctum":{}},
+   *        {"ApiKeyAuth": {}}
+   *      },
    *     tags={"Invoices"},
    *     @OA\Response(
    *         response=200,
@@ -560,7 +572,10 @@ class InvoiceController extends BaseController
    * @OA\Get(
    *     path="/api/v1/invoices/transmit/{IRN}/lookup",
    *     summary="Retrieves details about the invoice and the involved parties.",
-   *     security={{"sanctum":{}}},
+   *     security={
+   *        {"sanctum":{}},
+   *        {"ApiKeyAuth": {}}
+   *      },
    *     tags={"Invoices"},
    *     @OA\Parameter(
    *         name="IRN",
@@ -602,7 +617,10 @@ class InvoiceController extends BaseController
    * @OA\Get(
    *     path="/api/v1/invoices/transmit/tin/{tin}/lookup",
    *     summary="Retrieves details about the invoice and the involved parties.",
-   *     security={{"sanctum":{}}},
+   *     security={
+   *        {"sanctum":{}},
+   *        {"ApiKeyAuth": {}}
+   *      },
    *     tags={"Invoices"},
    *     @OA\Parameter(
    *         name="tin",
@@ -644,7 +662,10 @@ class InvoiceController extends BaseController
    * @OA\Post(
    *     path="/api/v1/invoices/{irn}/transmit",
    *     summary="Transmit an invoice using IRN on FIRS",
-   *     security={{"sanctum":{}}},
+   *     security={
+   *        {"sanctum":{}},
+   *        {"ApiKeyAuth": {}}
+   *      },
    *     tags={"Invoices"},
    *     @OA\Parameter(
    *         name="irn",
@@ -706,7 +727,10 @@ class InvoiceController extends BaseController
    * @OA\Patch(
    *     path="/api/v1/invoices/{irn}/update",
    *     summary="Update an invoice using IRN on FIRS",
-   *     security={{"sanctum":{}}},
+   *     security={
+   *        {"sanctum":{}},
+   *        {"ApiKeyAuth": {}}
+   *      },
    *     tags={"Invoices"},
    *     @OA\Parameter(
    *         name="irn",
@@ -765,7 +789,10 @@ class InvoiceController extends BaseController
    * @OA\Get(
    *     path="/api/v1/invoices/{irn}/confirm",
    *     summary="Confirm an invoice using IRN on FIRS",
-   *     security={{"sanctum":{}}},
+   *     security={
+   *        {"sanctum":{}},
+   *        {"ApiKeyAuth": {}}
+   *      },
    *     tags={"Invoices"},
    *     @OA\Parameter(
    *         name="irn",
@@ -811,7 +838,10 @@ class InvoiceController extends BaseController
    * @OA\Get(
    *     path="/api/v1/invoices/transmit/pull",
    *     summary="List invoices transmitted to FIRS",
-   *     security={{"sanctum":{}}},
+   *     security={
+   *        {"sanctum":{}},
+   *        {"ApiKeyAuth": {}}
+   *      },
    *     tags={"Invoices"},
    *     @OA\Response(
    *         response=200,
@@ -847,7 +877,10 @@ class InvoiceController extends BaseController
    * @OA\Get(
    *     path="/api/v1/invoices/{irn}/download",
    *     summary="Download an invoice using IRN on FIRS",
-   *     security={{"sanctum":{}}},
+   *     security={
+   *        {"sanctum":{}},
+   *        {"ApiKeyAuth": {}}
+   *      },
    *     tags={"Invoices"},
    *     @OA\Parameter(
    *         name="irn",
@@ -890,7 +923,10 @@ class InvoiceController extends BaseController
    * @OA\Patch(
    *     path="/api/v1/invoices/transmit/{irn}/confirmation",
    *     summary="Acknowledge an invoice transmission with FIRS",
-   *     security={{"sanctum":{}}},
+   *     security={
+   *        {"sanctum":{}},
+   *        {"ApiKeyAuth": {}}
+   *      },
    *     tags={"Invoices"},
    *     @OA\Parameter(
    *         name="irn",

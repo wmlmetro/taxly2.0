@@ -177,4 +177,172 @@ class ResourceController extends Controller
       return response()->json(['message' => 'Failed to fetch entity details.'], 500);
     }
   }
+
+  /**
+   * @OA\Get(
+   *     path="/api/v1/resources/currencies",
+   *     tags={"Resources"},
+   *     summary="Get available currencies",
+   *     description="Fetch a list of available currencies from FIRS.",
+   *     @OA\Response(
+   *         response=200,
+   *         description="List of currencies successfully retrieved",
+   *         @OA\JsonContent(type="object")
+   *     ),
+   *     @OA\Response(
+   *         response=500,
+   *         description="Failed to fetch currencies"
+   *     )
+   * )
+   */
+  public function getCurrencies()
+  {
+    try {
+      $response = $this->firsApiService->getCurrencies();
+      return response()->json($response, 200);
+    } catch (\Throwable $e) {
+      Log::error('FIRS GetCurrencies Error: ' . $e->getMessage());
+      return response()->json(['message' => 'Failed to fetch currencies.'], 500);
+    }
+  }
+
+  /**
+   * @OA\Get(
+   *     path="/api/v1/resources/hs-codes",
+   *     tags={"Resources"},
+   *     summary="Get available HS-Codes",
+   *     description="Fetch a list of available HS-Codes from FIRS.",
+   *     @OA\Response(
+   *         response=200,
+   *         description="List of HS-Codes successfully retrieved",
+   *         @OA\JsonContent(type="object")
+   *     ),
+   *     @OA\Response(
+   *         response=500,
+   *         description="Failed to fetch HS-Codes"
+   *     )
+   * )
+   */
+  public function getHSCodes()
+  {
+    try {
+      $response = $this->firsApiService->getHSCodes();
+      return response()->json($response, 200);
+    } catch (\Throwable $e) {
+      Log::error('FIRS GetHSCodes Error: ' . $e->getMessage());
+      return response()->json(['message' => 'Failed to fetch hs-codes.'], 500);
+    }
+  }
+
+  /**
+   * @OA\Get(
+   *     path="/api/v1/resources/services-codes",
+   *     tags={"Resources"},
+   *     summary="Get available Service Codes",
+   *     description="Fetch a list of available Service Codes from FIRS.",
+   *     @OA\Response(
+   *         response=200,
+   *         description="List of Service Codes successfully retrieved",
+   *         @OA\JsonContent(type="object")
+   *     ),
+   *     @OA\Response(
+   *         response=500,
+   *         description="Failed to fetch HS-Codes"
+   *     )
+   * )
+   */
+  public function getServiceCodes()
+  {
+    try {
+      $response = $this->firsApiService->getServiceCodes();
+      return response()->json($response, 200);
+    } catch (\Throwable $e) {
+      Log::error('FIRS GetServiceCodes Error: ' . $e->getMessage());
+      return response()->json(['message' => 'Failed to fetch service codes.'], 500);
+    }
+  }
+
+  /**
+   * @OA\Get(
+   *     path="/api/v1/resources/countries",
+   *     tags={"Resources"},
+   *     summary="Get available Countries",
+   *     description="Fetch a list of available Countries from FIRS.",
+   *     @OA\Response(
+   *         response=200,
+   *         description="List of Countries successfully retrieved",
+   *         @OA\JsonContent(type="object")
+   *     ),
+   *     @OA\Response(
+   *         response=500,
+   *         description="Failed to fetch Countries"
+   *     )
+   * )
+   */
+  public function getCountries()
+  {
+    try {
+      $response = $this->firsApiService->getCountries();
+      return response()->json($response, 200);
+    } catch (\Throwable $e) {
+      Log::error('FIRS GetCountries Error: ' . $e->getMessage());
+      return response()->json(['message' => 'Failed to fetch countries.'], 500);
+    }
+  }
+
+  /**
+   * @OA\Get(
+   *     path="/api/v1/resources/states",
+   *     tags={"Resources"},
+   *     summary="Get available States",
+   *     description="Fetch a list of available States from FIRS.",
+   *     @OA\Response(
+   *         response=200,
+   *         description="List of States successfully retrieved",
+   *         @OA\JsonContent(type="object")
+   *     ),
+   *     @OA\Response(
+   *         response=500,
+   *         description="Failed to fetch States"
+   *     )
+   * )
+   */
+  public function getStates()
+  {
+    try {
+      $response = $this->firsApiService->getStates();
+      return response()->json($response, 200);
+    } catch (\Throwable $e) {
+      Log::error('FIRS GetStates Error: ' . $e->getMessage());
+      return response()->json(['message' => 'Failed to fetch States.'], 500);
+    }
+  }
+
+  /**
+   * @OA\Get(
+   *     path="/api/v1/resources/lgas",
+   *     tags={"Resources"},
+   *     summary="Get available LGAs",
+   *     description="Fetch a list of available LGAs from FIRS.",
+   *     @OA\Response(
+   *         response=200,
+   *         description="List of LGAs successfully retrieved",
+   *         @OA\JsonContent(type="object")
+   *     ),
+   *     @OA\Response(
+   *         response=500,
+   *         description="Failed to fetch LGAs"
+   *     )
+   * )
+   */
+  public function getLGAs()
+  {
+    try {
+      $response = $this->firsApiService->getLGAs();
+      return response()->json($response, 200);
+    } catch (\Throwable $e) {
+      Log::error('FIRS GetLGAs Error: ' . $e->getMessage());
+      return response()->json(['message' => 'Failed to fetch LGAs.'], 500);
+    }
+  }
 }

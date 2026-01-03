@@ -7,7 +7,7 @@
     },
     "servers": [
         {
-            "url": "http://taxly.test",
+            "url": "https://taxly.test",
             "description": "Local Server"
         },
         {
@@ -2283,6 +2283,156 @@
                     },
                     "500": {
                         "description": "Failed to fetch entity details"
+                    }
+                }
+            }
+        },
+        "/api/v1/resources/currencies": {
+            "get": {
+                "tags": [
+                    "Resources"
+                ],
+                "summary": "Get available currencies",
+                "description": "Fetch a list of available currencies from FIRS.",
+                "operationId": "372ff1d08b39165e08d00313252f7d2d",
+                "responses": {
+                    "200": {
+                        "description": "List of currencies successfully retrieved",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to fetch currencies"
+                    }
+                }
+            }
+        },
+        "/api/v1/resources/hs-codes": {
+            "get": {
+                "tags": [
+                    "Resources"
+                ],
+                "summary": "Get available HS-Codes",
+                "description": "Fetch a list of available HS-Codes from FIRS.",
+                "operationId": "96b0c4a5c0249982d42d4179897f983b",
+                "responses": {
+                    "200": {
+                        "description": "List of HS-Codes successfully retrieved",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to fetch HS-Codes"
+                    }
+                }
+            }
+        },
+        "/api/v1/resources/services-codes": {
+            "get": {
+                "tags": [
+                    "Resources"
+                ],
+                "summary": "Get available Service Codes",
+                "description": "Fetch a list of available Service Codes from FIRS.",
+                "operationId": "2fd737ced30a49020c731a78a82b981e",
+                "responses": {
+                    "200": {
+                        "description": "List of Service Codes successfully retrieved",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to fetch HS-Codes"
+                    }
+                }
+            }
+        },
+        "/api/v1/resources/countries": {
+            "get": {
+                "tags": [
+                    "Resources"
+                ],
+                "summary": "Get available Countries",
+                "description": "Fetch a list of available Countries from FIRS.",
+                "operationId": "1d92bd523df65f51094567212ac53f41",
+                "responses": {
+                    "200": {
+                        "description": "List of Countries successfully retrieved",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to fetch Countries"
+                    }
+                }
+            }
+        },
+        "/api/v1/resources/states": {
+            "get": {
+                "tags": [
+                    "Resources"
+                ],
+                "summary": "Get available States",
+                "description": "Fetch a list of available States from FIRS.",
+                "operationId": "293a4cc94b4856ed1999046db71438c8",
+                "responses": {
+                    "200": {
+                        "description": "List of States successfully retrieved",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to fetch States"
+                    }
+                }
+            }
+        },
+        "/api/v1/resources/lgas": {
+            "get": {
+                "tags": [
+                    "Resources"
+                ],
+                "summary": "Get available LGAs",
+                "description": "Fetch a list of available LGAs from FIRS.",
+                "operationId": "283e671a31207559159ff701920e832e",
+                "responses": {
+                    "200": {
+                        "description": "List of LGAs successfully retrieved",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to fetch LGAs"
                     }
                 }
             }

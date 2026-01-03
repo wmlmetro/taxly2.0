@@ -132,6 +132,36 @@ class FirsApiService
     return $this->get('invoice/resources/tax-categories');
   }
 
+  public function getCurrencies()
+  {
+    return $this->get('invoice/resources/currencies');
+  }
+
+  public function getHSCodes()
+  {
+    return $this->get('invoice/resources/hs-codes');
+  }
+
+  public function getServiceCodes()
+  {
+    return $this->get('invoice/resources/services-codes');
+  }
+
+  public function getCountries()
+  {
+    return $this->get('invoice/resources/countries');
+  }
+
+  public function getStates()
+  {
+    return $this->get('invoice/resources/states');
+  }
+
+  public function getLGAs()
+  {
+    return $this->get('invoice/resources/lgas');
+  }
+
   public function getTin($tin_number)
   {
     return $this->get("invoice/transmit/lookup/tin/{$tin_number}");

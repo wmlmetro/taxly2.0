@@ -11,7 +11,7 @@ use OpenApi\Attributes as OA;
         description: 'API documentation for Taxly platform'
     ),
     OA\Server(
-        url: 'http://taxly.test',
+        url: 'https://taxly.test',
         description: 'Local Server'
     ),
     OA\Server(

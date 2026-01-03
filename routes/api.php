@@ -30,6 +30,12 @@ Route::prefix('v1/resources')->group(function () {
     Route::get('/tax-categories', [ResourceController::class, 'getTaxCategories']);
     Route::get('/tin/{tin_number}', [ResourceController::class, 'getTin']);
     Route::get('/entity/{entity_id}', [ResourceController::class, 'getEntity']);
+    Route::get('/currencies', [ResourceController::class, 'getCurrencies']);
+    Route::get('/hs-codes', [ResourceController::class, 'getHSCodes']);
+    Route::get('/services-codes', [ResourceController::class, 'getServiceCodes']);
+    Route::get('/countries', [ResourceController::class, 'getCountries']);
+    Route::get('/states', [ResourceController::class, 'getStates']);
+    Route::get('/lgas', [ResourceController::class, 'getLGAs']);
 });
 
 // --------------------

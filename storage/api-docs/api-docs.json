@@ -287,96 +287,6 @@
                 }
             }
         },
-        "/api/v1/buyer/invoices/{invoice}/accept": {
-            "post": {
-                "tags": [
-                    "Buyer"
-                ],
-                "summary": "Accept an invoice",
-                "operationId": "cf3235c0dc12d6c71ae6f9f2800b5378",
-                "parameters": [
-                    {
-                        "name": "invoice",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Invoice accepted",
-                        "content": {
-                            "application/json": {
-                                "schema": {},
-                                "example": {
-                                    "message": "Invoice accepted",
-                                    "success": true,
-                                    "data": {
-                                        "id": 1,
-                                        "status": "accepted"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "sanctum": []
-                    },
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ]
-            }
-        },
-        "/api/v1/buyer/invoices/{invoice}/reject": {
-            "post": {
-                "tags": [
-                    "Buyer"
-                ],
-                "summary": "Reject an invoice",
-                "operationId": "f1e1f9a3c96988c5f3d1664a83c87ded",
-                "parameters": [
-                    {
-                        "name": "invoice",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Invoice rejected",
-                        "content": {
-                            "application/json": {
-                                "schema": {},
-                                "example": {
-                                    "message": "Invoice rejected",
-                                    "success": true,
-                                    "data": {
-                                        "id": 1,
-                                        "status": "rejected"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "sanctum": []
-                    },
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ]
-            }
-        },
         "/api/v1/invoices/search/{business_id}": {
             "get": {
                 "tags": [
@@ -2545,6 +2455,74 @@
                     }
                 }
             }
+        },
+        "/api/firs-exchange/webhook": {
+            "post": {
+                "tags": [
+                    "Exchange"
+                ],
+                "summary": "FIRS Exchange Webhook",
+                "description": "Receive webhook notifications from FIRS Exchange for invoice transmission events",
+                "operationId": "firsExchangeWebhook",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "irn",
+                                    "message"
+                                ],
+                                "properties": {
+                                    "irn": {
+                                        "description": "Invoice Registration Number",
+                                        "type": "string",
+                                        "example": "INV0990-088ED42R-20270920"
+                                    },
+                                    "message": {
+                                        "description": "Transmission status message",
+                                        "type": "string",
+                                        "enum": [
+                                            "TRANSMITTING",
+                                            "TRANSMITTED",
+                                            "ACKNOWLEDGED",
+                                            "FAILED"
+                                        ],
+                                        "example": "TRANSMITTED"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Webhook received successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Webhook received successfully",
+                                    "event_id": 123
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid payload",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "error": "Invalid payload",
+                                    "message": "IRN and message are required"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -2575,10 +2553,6 @@
             "description": "Auth"
         },
         {
-            "name": "Buyer",
-            "description": "Buyer"
-        },
-        {
             "name": "Invoices",
             "description": "Invoices"
         },
@@ -2589,6 +2563,10 @@
         {
             "name": "Tenants",
             "description": "Tenants"
+        },
+        {
+            "name": "Exchange",
+            "description": "Exchange"
         }
     ]
 }

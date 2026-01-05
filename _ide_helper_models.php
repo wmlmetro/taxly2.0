@@ -199,6 +199,69 @@ namespace App\Models{
 namespace App\Models{
 /**
  * @property int $id
+ * @property string $irn
+ * @property string $status
+ * @property array<array-key, mixed> $raw_payload
+ * @property \Illuminate\Support\Carbon|null $processed_at
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ExchangeEvent newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ExchangeEvent newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ExchangeEvent query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ExchangeEvent whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ExchangeEvent whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ExchangeEvent whereIrn($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ExchangeEvent whereProcessedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ExchangeEvent whereRawPayload($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ExchangeEvent whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ExchangeEvent whereUpdatedAt($value)
+ */
+	class ExchangeEvent extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * @property int $id
+ * @property string $irn
+ * @property string $buyer_tin
+ * @property string $seller_tin
+ * @property string $direction
+ * @property string $status
+ * @property array<array-key, mixed> $invoice_data
+ * @property int|null $tenant_id
+ * @property int|null $integrator_id
+ * @property \Illuminate\Support\Carbon|null $acknowledged_at
+ * @property \Illuminate\Support\Carbon|null $webhook_delivered_at
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Tenant|null $integrator
+ * @property-read \App\Models\Tenant|null $tenant
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ExchangeInvoice incoming()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ExchangeInvoice newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ExchangeInvoice newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ExchangeInvoice outgoing()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ExchangeInvoice query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ExchangeInvoice unassigned()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ExchangeInvoice whereAcknowledgedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ExchangeInvoice whereBuyerTin($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ExchangeInvoice whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ExchangeInvoice whereDirection($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ExchangeInvoice whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ExchangeInvoice whereIntegratorId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ExchangeInvoice whereInvoiceData($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ExchangeInvoice whereIrn($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ExchangeInvoice whereSellerTin($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ExchangeInvoice whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ExchangeInvoice whereTenantId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ExchangeInvoice whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ExchangeInvoice whereWebhookDeliveredAt($value)
+ */
+	class ExchangeInvoice extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * @property int $id
  * @property string|null $invoice_number
  * @property int $organization_id
  * @property string|null $business_id

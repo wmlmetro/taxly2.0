@@ -262,4 +262,31 @@ class FirsApiService
   {
     return $this->get("invoice/transmit/pull");
   }
+
+  /**
+   * Get invoice transmission lookup by IRN
+   */
+  public function getInvoiceTransmissionLookup(string $irn)
+  {
+    return $this->get("invoice/transmit/lookup/{$irn}");
+  }
+
+  /**
+   * Get invoice transmission pull (alternative to lookup)
+   */
+  public function getInvoiceTransmissionPull(string $irn)
+  {
+    return $this->get("invoice/transmit/pull", ['irn' => $irn]);
+  }
+
+  /**
+   * Acknowledge invoice transmission to FIRS Exchange
+   */
+  public function acknowledgeInvoiceTransmission(string $irn)
+  {
+    return $this->patch("invoice/transmit/{$irn}", [
+      'status' => 'ACKNOWLEDGED',
+      'acknowledged_at' => now()->toIso8601String(),
+    ]);
+  }
 }

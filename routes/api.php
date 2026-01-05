@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\ResourceController;
 use App\Http\Controllers\Api\TenantController;
 use App\Http\Controllers\Api\WebhookController;
 use App\Http\Controllers\Api\WebhookCrudController;
+use App\Http\Controllers\FirsExchangeWebhookController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
@@ -36,6 +37,14 @@ Route::prefix('v1/resources')->group(function () {
     Route::get('/countries', [ResourceController::class, 'getCountries']);
     Route::get('/states', [ResourceController::class, 'getStates']);
     Route::get('/lgas', [ResourceController::class, 'getLGAs']);
+});
+
+// --------------------
+// FIRS Exchange Webhook Route (Public - Rate Limited)
+// --------------------
+Route::middleware(['throttle:60,1'])->group(function () {
+    Route::post('/firs-exchange/webhook', [FirsExchangeWebhookController::class, 'handleWebhook'])
+        ->name('firs.exchange.webhook');
 });
 
 // --------------------

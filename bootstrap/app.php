@@ -33,12 +33,46 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->append([
             \App\Http\Middleware\SecurityHeaders::class,
             \App\Http\Middleware\HttpOnlyXsrfToken::class,
+            \App\Http\Middleware\SecureRedirect::class,
         ]);
 
-        // $middleware->group('api', [
-        //     ForceJsonResponse::class,
-        // ]);
+        // Apply JSON response middleware to API routes
+        $middleware->group('api', [
+            ForceJsonResponse::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        //
+        // Handle unauthenticated API requests to return JSON instead of redirects
+        $exceptions->render(function (\Illuminate\Auth\AuthenticationException $e, $request) {
+            if ($request->expectsJson() || $request->is('api/*')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Unauthenticated',
+                ], 401);
+            }
+        });
+
+        // Handle other exceptions for API routes
+        $exceptions->render(function (\Throwable $e, $request) {
+            if ($request->expectsJson() || $request->is('api/*')) {
+                // Return JSON response for API routes
+                $statusCode = 500;
+
+                // Handle specific exception types
+                if ($e instanceof \Symfony\Component\HttpKernel\Exception\HttpException) {
+                    $statusCode = $e->getStatusCode();
+                } elseif ($e instanceof \Illuminate\Validation\ValidationException) {
+                    $statusCode = 422;
+                } elseif ($e instanceof \Illuminate\Database\Eloquent\ModelNotFoundException) {
+                    $statusCode = 404;
+                }
+
+                $message = $e->getMessage() ?: 'Internal server error';
+
+                return response()->json([
+                    'success' => false,
+                    'message' => $message,
+                ], $statusCode);
+            }
+        });
     })->create();

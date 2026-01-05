@@ -169,6 +169,121 @@ Monitor the following after deployment:
 -   Security headers in browser developer tools
 -   XSRF-TOKEN cookie properties in browser
 
+### 5. Open Redirection Vulnerability (MEDIUM SEVERITY) ✅ FIXED
+
+**Issue**: The `InvoicePdfController::sendEmail()` method used Laravel's `back()` function which relies on the Referer HTTP header. An attacker could manipulate the Referer header to cause redirects to arbitrary external domains, facilitating phishing attacks.
+
+**Fix Implemented**:
+
+1. **Direct Code Fix**: Replaced `back()->with()` with explicit route redirect in `InvoicePdfController`
+2. **Global Protection**: Created `SecureRedirect` middleware to validate all redirect URLs
+
+**Code Changes**:
+
+**InvoicePdfController** (`app/Http/Controllers/InvoicePdfController.php`):
+
+```php
+// VULNERABLE CODE (REMOVED):
+// return back()->with('success', 'Invoice emailed successfully!');
+
+// SECURE CODE (IMPLEMENTED):
+return redirect()->route('invoices.show', $invoice)->with('success', 'Invoice emailed successfully!');
+```
+
+**SecureRedirect Middleware** (`app/Http/Middleware/SecureRedirect.php`):
+
+```php
+public function handle(Request $request, Closure $next)
+{
+    $response = $next($request);
+
+    if ($response instanceof \Illuminate\Http\RedirectResponse) {
+        $targetUrl = $response->getTargetUrl();
+
+        // Validate that the redirect URL is safe
+        if (!$this->isSafeRedirectUrl($targetUrl, $request)) {
+            // If unsafe, redirect to a safe default URL
+            return redirect()->route('dashboard');
+        }
+    }
+
+    return $response;
+}
+
+protected function isSafeRedirectUrl($url, Request $request)
+{
+    // Parse the URL
+    $parsedUrl = parse_url($url);
+
+    // If no host is specified, it's a relative URL (safe)
+    if (!isset($parsedUrl['host'])) {
+        return true;
+    }
+
+    // Get the application's domain
+    $appHost = $request->getHost();
+
+    // Check if the redirect URL is to the same domain
+    if ($parsedUrl['host'] === $appHost) {
+        return true;
+    }
+
+    // Check for subdomains of the main domain
+    $appDomainParts = explode('.', $appHost);
+    $urlDomainParts = explode('.', $parsedUrl['host']);
+
+    // Compare the last two parts of the domain (e.g., example.com)
+    $appDomain = implode('.', array_slice($appDomainParts, -2));
+    $urlDomain = implode('.', array_slice($urlDomainParts, -2));
+
+    return $appDomain === $urlDomain;
+}
+```
+
+**Middleware Registration** (`bootstrap/app.php`):
+
+```php
+$middleware->append([
+    \App\Http\Middleware\SecurityHeaders::class,
+    \App\Http\Middleware\HttpOnlyXsrfToken::class,
+    \App\Http\Middleware\SecureRedirect::class, // Added secure redirect protection
+]);
+```
+
+## Testing
+
+Created comprehensive tests in `tests/Feature/SecurityFixesTest.php` to verify:
+
+-   XSRF-TOKEN cookie has HttpOnly flag
+-   Security headers are present in responses
+-   Invalid host headers are rejected
+-   Valid host headers are accepted
+-   POST to robots.txt returns 405
+-   GET to robots.txt works normally
+-   Open redirection attempts are blocked
+
+## Verification Scripts
+
+-   `security-test.php`: General security fixes verification
+-   `test-open-redirect-fix.php`: Specific test for open redirection vulnerability fix
+
+## Deployment Notes
+
+1. **Nginx Configuration**: The nginx configuration changes require a server restart
+2. **Laravel Cache**: Clear Laravel cache after deployment: `php artisan cache:clear`
+3. **Config Cache**: Clear config cache: `php artisan config:clear`
+4. **Route Cache**: Clear route cache: `php artisan route:clear`
+
+## Monitoring
+
+Monitor the following after deployment:
+
+-   Application logs for 400 errors (invalid host headers)
+-   Nginx access logs for blocked requests
+-   Security headers in browser developer tools
+-   XSRF-TOKEN cookie properties in browser
+-   Redirect attempts to external domains
+
 ## Conclusion
 
 All identified security vulnerabilities have been addressed:
@@ -177,5 +292,6 @@ All identified security vulnerabilities have been addressed:
 -   ✅ **MEDIUM**: Host header poisoning fixed
 -   ✅ **LOW**: HttpOnly flag for XSRF-TOKEN cookies fixed
 -   ✅ **MEDIUM**: JavaScript "secret" identified as false positive
+-   ✅ **MEDIUM**: Open redirection vulnerability fixed
 
 The application is now more secure with comprehensive protection against the identified vulnerabilities.

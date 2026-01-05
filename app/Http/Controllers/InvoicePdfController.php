@@ -23,6 +23,7 @@ class InvoicePdfController extends Controller
         $recipient = $invoice->buyer_organization_ref . '@example.com'; // Replace with real buyer email field
         Mail::to($recipient)->queue(new InvoiceMail($invoice));
 
-        return back()->with('success', 'Invoice emailed successfully!');
+        // Fixed: Use explicit route instead of back() to prevent open redirection
+        return redirect()->route('invoices.show', $invoice)->with('success', 'Invoice emailed successfully!');
     }
 }

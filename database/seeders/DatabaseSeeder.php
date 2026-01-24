@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Super Admin',
             'email' => 'super@admin.com',
             // 'is_landlord' => 1,
-            'password' => Hash::make('!12345678'),
+            'password' => Hash::make('Zr5@PmN8#kHv3$Lw'),
         ]);
 
         $superAdmin->assignRole('super admin');
@@ -30,7 +30,7 @@ class DatabaseSeeder extends Seeder
         $landlord = Landlord::factory()->create([
             'name' => 'Default Landlord',
             'email' => 'default@landlord.com',
-            'password' => Hash::make('!12345678'),
+            'password' => Hash::make('Zr5@PmN8#kHv3$Lw'),
             'is_active' => true,
         ]);
 
